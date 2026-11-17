@@ -75,3 +75,7 @@ Select a trend point to view its assessment period, or hover/focus for values. O
 ## Partnership branding
 
 The portal pairs the official VISIST.AI and Padukone School of Badminton logos in the sidebar and mobile drawer, plus compact partnership rows on Dashboard and Curriculum. The uploaded `PSB .png` is preserved unchanged; `assets/psb-logo.png` is a byte-identical copy used by the interface. Both marks retain their original colours and proportions.
+
+## Individual skill artwork
+
+All 16 individual skills now have separate generated round enamel-style badge images. Cards, skill details and newly earned individual awards use the same skill-ID mapping. The official Spark, Scout, Star and Champ level artwork and both partner logos are unchanged. Web images are in `assets/skill-badges/`, generated originals are preserved in its `originals/` folder, and the full built-in imagegen prompts and mapping are recorded in [the artwork manifest](artifacts/skill-badge-assets.json).

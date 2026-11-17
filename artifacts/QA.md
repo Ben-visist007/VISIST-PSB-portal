@@ -127,3 +127,16 @@ Both official marks are now paired in the persistent sidebar/mobile drawer and i
 Parent checks confirmed successful image decoding, full containment and no page overflow on Dashboard, Curriculum and Students at375px. Desktop1440 and mobile375 previews were visually inspected. Module syntax checks and Git whitespace checks pass. No workflow, analytics or stored record behavior was changed. Asset version: `20261117-partnership`.
 
 [Desktop partnership preview](partnership-desktop.png) · [Mobile partnership preview](partnership-mobile.png)
+
+
+## Individual skill image set — 17 November 2026
+
+Sixteen distinct, generated round enamel-style skill pins replace the repeated generic hexagonal skill icon. Copper/emerald, silver/teal, gold/forest and platinum/cobalt palettes tie skills to their four collections. The artwork illustrates each skill separately, including the reference ball-catching activity for Hawk Eye and ladder footwork for Shadow. Raster images have no baked-in text or partner logos. Names remain editable HTML.
+
+Stable skill IDs select matching images in all 16 cards, detail dialogs and new individual-award celebrations. Uncollected art is lightly muted; earned art is vivid with a check indicator. Baseline, reassessment and promotion behavior is unchanged. Official level images and both partner logos have unchanged SHA-1 hashes; they retain the supplied artwork in level-specific locations.
+
+All 19 unit tests and module syntax checks pass. [59 asset and award assertions](skill-art-checks.json), [61 workflow assertions](skill-art-workflows.json) and [12 refresh assertions](skill-art-refresh.json) pass. The checks confirm all 16 files decode, each has transparent corner pixels, all 16 paths and file hashes are distinct, details match their skill, and earning a Champ skill for a Spark student shows its individual art while leaving the Spark level art and current level unchanged. Tests ran in an isolated browser session.
+
+Full generated PNGs and 512px web derivatives are saved locally. [Generation method and complete prompts](skill-badge-assets.json) · [Complete collection](skill-badges-collection.png) · [Desktop preview](skill-badges-desktop.png) · [Mobile preview](skill-badges-mobile.png). Asset version: `20261117-skill-art`.
+
+The independent visual review passed: all 16 desktop scenes are distinct and coherent; mobile artwork remains legible at 102px with no page overflow at 375px. Earned checks, needs-practice status, eager detail images and individual award binding remain correct. No required visual fixes were found.

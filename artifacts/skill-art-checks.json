@@ -1,0 +1,242 @@
+{
+  "failed": 0,
+  "passed": 59,
+  "results": [
+    {
+      "name": "All sixteen skill cards retain actions",
+      "passed": true
+    },
+    {
+      "name": "Skill 1 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 1 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 1 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 2 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 2 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 2 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 3 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 3 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 3 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 4 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 4 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 4 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 5 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 5 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 5 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 6 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 6 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 6 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 7 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 7 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 7 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 8 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 8 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 8 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 9 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 9 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 9 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 10 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 10 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 10 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 11 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 11 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 11 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 12 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 12 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 12 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 13 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 13 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 13 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 14 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 14 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 14 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 15 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 15 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 15 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Skill 16 uses its generated art",
+      "passed": true
+    },
+    {
+      "name": "Skill 16 image decodes",
+      "passed": true
+    },
+    {
+      "name": "Skill 16 has transparent background",
+      "passed": true
+    },
+    {
+      "name": "Each skill has a distinct image path",
+      "passed": true
+    },
+    {
+      "name": "Official level headers still use supplied files",
+      "passed": true
+    },
+    {
+      "name": "Skill 1 details use matching art",
+      "passed": true
+    },
+    {
+      "name": "Skill 5 details use matching art",
+      "passed": true
+    },
+    {
+      "name": "Skill 9 details use matching art",
+      "passed": true
+    },
+    {
+      "name": "Skill 13 details use matching art",
+      "passed": true
+    },
+    {
+      "name": "Skill 16 details use matching art",
+      "passed": true
+    },
+    {
+      "name": "New individual award shows that skill image",
+      "passed": true
+    },
+    {
+      "name": "Individual award leaves official level art unchanged",
+      "passed": true
+    },
+    {
+      "name": "Individual skill does not promote student",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "method": "Built-in image_gen; sixteen independent calls, one distinct skill illustration per asset; true transparency requested. Original outputs preserved; 512px PNG web derivatives resized by macOS sips without visual modification.",
+  "usage": "Individual skill badges only. Official main level artwork and academy logos remain unchanged.",
+  "badges": [
+    {
+      "skillId": 1,
+      "name": "grip",
+      "path": "assets/skill-badges/01-grip.png",
+      "original": "assets/skill-badges/originals/01-grip.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: warm polished copper metal rim, deep teal and emerald enamel inner field, warm cream illustration details. Central illustration: bold stylized hand confidently holding a badminton racket handle, visible grip texture, a tiny clean racket-head hint. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 2,
+      "name": "airtoss",
+      "path": "assets/skill-badges/02-airtoss.png",
+      "original": "assets/skill-badges/originals/02-airtoss.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: warm polished copper metal rim, deep teal and emerald enamel inner field, warm cream illustration details. Central illustration: white badminton shuttle hovering above a racket face with a clear upward bounce arc. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 3,
+      "name": "keep-lift",
+      "path": "assets/skill-badges/03-keep-lift.png",
+      "original": "assets/skill-badges/originals/03-keep-lift.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: warm polished copper metal rim, deep teal and emerald enamel inner field, warm cream illustration details. Central illustration: underarm badminton racket beneath a shuttle, a rising lift arc and a small footstep marker. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 4,
+      "name": "low-serve",
+      "path": "assets/skill-badges/04-low-serve.png",
+      "original": "assets/skill-badges/originals/04-low-serve.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: warm polished copper metal rim, deep teal and emerald enamel inner field, warm cream illustration details. Central illustration: badminton racket and shuttle flying just above a small net cord, a low flat trajectory. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 5,
+      "name": "grip-change",
+      "path": "assets/skill-badges/05-grip-change.png",
+      "original": "assets/skill-badges/originals/05-grip-change.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: brushed polished silver metal rim, rich emerald and teal enamel inner field, bright cyan and ivory illustration accents. Central illustration: two distinct stylized hands holding badminton racket handles in different grip positions with circular switching arrows. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 6,
+      "name": "fore-court",
+      "path": "assets/skill-badges/06-fore-court.png",
+      "original": "assets/skill-badges/originals/06-fore-court.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: brushed polished silver metal rim, rich emerald and teal enamel inner field, bright cyan and ivory illustration accents. Central illustration: miniature front court and net with two footprints and a shuttle placed close to the net. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 7,
+      "name": "hawk-eye",
+      "path": "assets/skill-badges/07-hawk-eye.png",
+      "original": "assets/skill-badges/originals/07-hawk-eye.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: brushed polished silver metal rim, rich emerald and teal enamel inner field, bright cyan and ivory illustration accents. Central illustration: a striking stylized focused eye and a bright small round ball following a throw-and-catch arc; this is a ball-catching skill, not a shuttle icon. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 8,
+      "name": "high-serve",
+      "path": "assets/skill-badges/08-high-serve.png",
+      "original": "assets/skill-badges/originals/08-high-serve.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: brushed polished silver metal rim, rich emerald and teal enamel inner field, bright cyan and ivory illustration accents. Central illustration: a badminton racket and shuttle following a tall high-serve parabolic arc above a small net. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 9,
+      "name": "drive",
+      "path": "assets/skill-badges/09-drive.png",
+      "original": "assets/skill-badges/originals/09-drive.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: polished gold metal rim, rich forest green enamel inner field, bright orange and ivory illustration highlights. Central illustration: two badminton racket faces and a shuttle with strong horizontal flat speed lines. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 10,
+      "name": "overhead",
+      "path": "assets/skill-badges/10-overhead.png",
+      "original": "assets/skill-badges/originals/10-overhead.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: polished gold metal rim, rich forest green enamel inner field, bright orange and ivory illustration highlights. Central illustration: a raised badminton racket with a shuttle and three distinct overhead shot paths: high clear, short drop, steep smash; no numerals. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 11,
+      "name": "shadow",
+      "path": "assets/skill-badges/11-shadow.png",
+      "original": "assets/skill-badges/originals/11-shadow.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: polished gold metal rim, rich forest green enamel inner field, bright orange and ivory illustration highlights. Central illustration: bright sports shoes stepping over an agility ladder with an energetic footwork trail. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 12,
+      "name": "forehand-front-serve",
+      "path": "assets/skill-badges/12-forehand-front-serve.png",
+      "original": "assets/skill-badges/originals/12-forehand-front-serve.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: polished gold metal rim, rich forest green enamel inner field, bright orange and ivory illustration highlights. Central illustration: a forehand badminton racket with three clean diverging low-serve paths ending at service-line target dots. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 13,
+      "name": "netking",
+      "path": "assets/skill-badges/13-netking.png",
+      "original": "assets/skill-badges/originals/13-netking.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: platinum and cobalt metal rim, deep cobalt-blue enamel inner field, gold and white illustration highlights. Central illustration: a detailed small badminton net with a shuttle just above it and a restrained small crown accent. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 14,
+      "name": "rear-court",
+      "path": "assets/skill-badges/14-rear-court.png",
+      "original": "assets/skill-badges/originals/14-rear-court.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: platinum and cobalt metal rim, deep cobalt-blue enamel inner field, gold and white illustration highlights. Central illustration: a miniature rear-court target zone with a shuttle arcing from rear court toward the front court. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 15,
+      "name": "consistency",
+      "path": "assets/skill-badges/15-consistency.png",
+      "original": "assets/skill-badges/originals/15-consistency.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: platinum and cobalt metal rim, deep cobalt-blue enamel inner field, gold and white illustration highlights. Central illustration: a white badminton shuttle and a clean circular rally loop with subtle repetitive orbit dots, suggesting a steady consistent rally. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    },
+    {
+      "skillId": 16,
+      "name": "backhand-flick",
+      "path": "assets/skill-badges/16-backhand-flick.png",
+      "original": "assets/skill-badges/originals/16-backhand-flick.png",
+      "prompt": "Use case: stylized-concept. Asset type: individual badminton skill achievement pin for a sports learning app. Create ONE premium playful collectible ROUND enamel sports achievement pin, front-on orthographic view, perfectly circular silhouette with polished dimensional metal rim and sculpted 3D relief central illustration. Square asset, centered and completely visible, circular pin fills about 85% of the square with generous transparent margins. Shared collectible system: chunky crisp readable icon at 100–150px, premium enamel depth, soft studio highlights, restrained soft contact shadow, bright rich contrast. Palette: platinum and cobalt metal rim, deep cobalt-blue enamel inner field, gold and white illustration highlights. Central illustration: a badminton racket backhand face and a shuttle flashing upward in a sharp flick arc beyond a small net. Keep one strong central scene, simple and legible rather than busy. True transparent alpha background outside the circular pin, no rectangular backdrop. Absolutely no words, numerals, letters, brands, logos, watermarks, ribbon text or academy level marks. Not a hexagon, not a shield. Keep rim perspective frontal and consistent, artwork contained within the round pin."
+    }
+  ]
+}

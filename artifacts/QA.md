@@ -118,3 +118,12 @@ Completed verification: 19 unit tests and syntax checks pass. The recorded brows
 Independent interaction review passed after enlarging mobile point targets and restoring focus to the All levels reset. At 375px, progression targets measure 43px with 51px spacing; fitness targets remain 36px inside a labelled horizontal scroller. No page overflow was found. Final asset version: `20261116-interactive-charts-v2`.
 
 [Chart preview](interactive-dashboard.png) · [Workflow results](interactive-workflows.json) · [Refresh results](interactive-refresh.json) · [Chart checks](interactive-chart-checks.json) · [Role and fitness checks](interactive-role-fitness.json)
+
+
+## VISIST × PSB partnership branding — 17 November 2026
+
+Both official marks are now paired in the persistent sidebar/mobile drawer and in compact rows on Dashboard and Curriculum, including coach role views. The dashboard partnership row remains visible with mobile navigation closed. The original uploaded `PSB .png` is unchanged; its web asset copy `assets/psb-logo.png` is byte-identical. Both logos use their natural aspect ratios with contain sizing and no recolouring or filters.
+
+Parent checks confirmed successful image decoding, full containment and no page overflow on Dashboard, Curriculum and Students at375px. Desktop1440 and mobile375 previews were visually inspected. Module syntax checks and Git whitespace checks pass. No workflow, analytics or stored record behavior was changed. Asset version: `20261117-partnership`.
+
+[Desktop partnership preview](partnership-desktop.png) · [Mobile partnership preview](partnership-mobile.png)

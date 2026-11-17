@@ -71,3 +71,7 @@ The official uploaded VISIST.AI logo is used unchanged. See [the demo readiness 
 ## Interactive analytics
 
 Select a trend point to view its assessment period, or hover/focus for values. Outcome bars open records. Donut segments, level legends and venue rows filter the workspace with reset controls. Student progress bars open profiles. Fitness cards open chronological metric histories. Charts respect assignment scope and workspace filters. `tests/browser-chart-interactions.js` checks these interactions in an isolated browser session.
+
+## Partnership branding
+
+The portal pairs the official VISIST.AI and Padukone School of Badminton logos in the sidebar and mobile drawer, plus compact partnership rows on Dashboard and Curriculum. The uploaded `PSB .png` is preserved unchanged; `assets/psb-logo.png` is a byte-identical copy used by the interface. Both marks retain their original colours and proportions.

@@ -1,0 +1,32 @@
+{
+  "providedArtworks": [
+    {
+      "path": "Spark.png",
+      "source": "User-supplied root-folder PSB collection artwork",
+      "treatment": "Original unchanged; object-fit contain"
+    },
+    {
+      "path": "Scout.png",
+      "source": "User-supplied root-folder PSB collection artwork",
+      "treatment": "Original unchanged; object-fit contain"
+    },
+    {
+      "path": "Star.png",
+      "source": "User-supplied root-folder PSB collection artwork",
+      "treatment": "Original unchanged; object-fit contain"
+    },
+    {
+      "path": "Champ.png",
+      "source": "User-supplied root-folder PSB collection artwork",
+      "treatment": "Original unchanged; object-fit contain"
+    }
+  ],
+  "generatedTraining": {
+    "path": "assets/badminton-training.jpg",
+    "preservedSource": "assets/badminton-training-source.png",
+    "method": "Built-in image_gen tool; JPEG format optimization with macOS sips quality84, no visual edits",
+    "prompt": "Use case: photorealistic-natural. Asset type: wide app-dashboard hero photograph, landscape 16:9. Editorial photograph of a fictional Indian badminton academy training session: a young player practising a controlled forehand with a coach observing on an indoor green badminton court. Dynamic but technically plausible racket and shuttle stance; authentic plain sportswear, natural faces, realistic rackets, net and court. Subjects on right half, soft dark forest-green negative space on the left half for white interface heading. Emerald #026B33 and forest #0D2D17 environment, warm daylight and subtle sports hall lighting. Human, focused, encouraging training mood, candid sports editorial photography. No text, logos, watermarks, medals, UI or badge imagery. Do not imply real academy students or branding.",
+    "uiLabel": "Illustrative training scene",
+    "fictional": true
+  }
+}

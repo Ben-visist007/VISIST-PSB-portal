@@ -1,0 +1,20 @@
+# Local dependencies and generated caches
+node_modules/
+coverage/
+.cache/
+.DS_Store
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editor and temporary files
+.idea/
+.vscode/
+*.swp
+*~
+tmp/

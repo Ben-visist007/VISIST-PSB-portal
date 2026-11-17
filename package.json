@@ -1,0 +1,12 @@
+{
+  "name": "visist-psb-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VISIST PSB academy portal with interactive analytics, student progression and coaching workflows",
+  "scripts": {
+    "start": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "check": "node --check js/app.js && node --check js/data.js && node --check js/state.js && node --check js/domain.js && node --check js/curriculum.js && node --check js/analytics.js",
+    "test": "node --test tests/*.test.js"
+  }
+}

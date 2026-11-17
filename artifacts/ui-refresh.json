@@ -1,0 +1,54 @@
+{
+  "failed": 0,
+  "passed": 12,
+  "results": [
+    {
+      "name": "Profile URL restored after refresh",
+      "passed": true
+    },
+    {
+      "name": "Selected profile tab restored",
+      "passed": true
+    },
+    {
+      "name": "Edited student persists",
+      "passed": true
+    },
+    {
+      "name": "Higher badge and overall level persist",
+      "passed": true
+    },
+    {
+      "name": "Baseline evidence persists separately",
+      "passed": true
+    },
+    {
+      "name": "Cleared attendance remains cleared",
+      "passed": true
+    },
+    {
+      "name": "Curriculum edit persists",
+      "passed": true
+    },
+    {
+      "name": "Historical snapshot persists",
+      "passed": true
+    },
+    {
+      "name": "Fitness records persist",
+      "passed": true
+    },
+    {
+      "name": "Demo date and role persist",
+      "passed": true
+    },
+    {
+      "name": "Assessment history is paginated",
+      "passed": true
+    },
+    {
+      "name": "History next page works",
+      "passed": true
+    }
+  ]
+}

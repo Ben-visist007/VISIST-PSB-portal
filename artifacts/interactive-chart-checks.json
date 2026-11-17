@@ -1,0 +1,78 @@
+{
+  "failed": 0,
+  "passed": 18,
+  "results": [
+    {
+      "name": "Point totals match 7 reporting window",
+      "passed": true
+    },
+    {
+      "name": "Point totals match 30 reporting window",
+      "passed": true
+    },
+    {
+      "name": "Point totals match 90 reporting window",
+      "passed": true
+    },
+    {
+      "name": "Point totals match all reporting window",
+      "passed": true
+    },
+    {
+      "name": "Keyboard focus exposes period readout",
+      "passed": true
+    },
+    {
+      "name": "Keyboard opens real period drilldown",
+      "passed": true
+    },
+    {
+      "name": "Outcome chart has independent pagination",
+      "passed": true
+    },
+    {
+      "name": "Modal advances page without changing route",
+      "passed": true
+    },
+    {
+      "name": "Outcome opens assessment detail",
+      "passed": true
+    },
+    {
+      "name": "Back restores outcome rows",
+      "passed": true
+    },
+    {
+      "name": "Legend applies global level filter",
+      "passed": true
+    },
+    {
+      "name": "Another level remains selectable",
+      "passed": true
+    },
+    {
+      "name": "Donut reset recovers all levels",
+      "passed": true
+    },
+    {
+      "name": "Student drilldown matches scoped count",
+      "passed": true
+    },
+    {
+      "name": "Venue bars apply workspace venue",
+      "passed": true
+    },
+    {
+      "name": "Venue reset recovers all venues",
+      "passed": true
+    },
+    {
+      "name": "Roster progress opens progression",
+      "passed": true
+    },
+    {
+      "name": "Analytics do not mutate stored records",
+      "passed": true
+    }
+  ]
+}

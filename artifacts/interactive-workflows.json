@@ -1,0 +1,251 @@
+{
+  "failed": 0,
+  "passed": 61,
+  "refreshRoute": "#students/VS022/information",
+  "results": [
+    {
+      "name": "Navigation: dashboard",
+      "passed": true
+    },
+    {
+      "name": "Navigation: students",
+      "passed": true
+    },
+    {
+      "name": "Navigation: curriculum",
+      "passed": true
+    },
+    {
+      "name": "Navigation: assessments",
+      "passed": true
+    },
+    {
+      "name": "Navigation: coaches",
+      "passed": true
+    },
+    {
+      "name": "Navigation: attendance",
+      "passed": true
+    },
+    {
+      "name": "Navigation: toolkit",
+      "passed": true
+    },
+    {
+      "name": "Navigation: fitness",
+      "passed": true
+    },
+    {
+      "name": "Navigation: reports",
+      "passed": true
+    },
+    {
+      "name": "Navigation: settings",
+      "passed": true
+    },
+    {
+      "name": "All 16 skill badges render",
+      "passed": true
+    },
+    {
+      "name": "Exactly four badges per level",
+      "passed": true
+    },
+    {
+      "name": "Skill criteria and prerequisites open",
+      "passed": true
+    },
+    {
+      "name": "Profile has a persistent URL",
+      "passed": true
+    },
+    {
+      "name": "Profile badge counts match saved record",
+      "passed": true
+    },
+    {
+      "name": "Unsuccessful skill and repeated attempts are visible",
+      "passed": true
+    },
+    {
+      "name": "Whitespace-only student name rejected",
+      "passed": true
+    },
+    {
+      "name": "Venue selects its matching head coach",
+      "passed": true
+    },
+    {
+      "name": "Student creation saves coherent assignment",
+      "passed": true
+    },
+    {
+      "name": "Editing student updates profile",
+      "passed": true
+    },
+    {
+      "name": "Cycle saves different modules per student",
+      "passed": true
+    },
+    {
+      "name": "Incomplete Yes/No form cannot submit",
+      "passed": true
+    },
+    {
+      "name": "Passing cycle assessment saves membership",
+      "passed": true
+    },
+    {
+      "name": "Higher-level badge does not promote",
+      "passed": true
+    },
+    {
+      "name": "Recorded module appears in its cycle",
+      "passed": true
+    },
+    {
+      "name": "Identical module in another cycle stays pending",
+      "passed": true
+    },
+    {
+      "name": "Passing reassessment clears current attention",
+      "passed": true
+    },
+    {
+      "name": "Sample threshold saves",
+      "passed": true
+    },
+    {
+      "name": "Threshold 5/5 rejects four Yes answers (1)",
+      "passed": true
+    },
+    {
+      "name": "Threshold 5/5 rejects four Yes answers (2)",
+      "passed": true
+    },
+    {
+      "name": "Failed attempts do not award a badge",
+      "passed": true
+    },
+    {
+      "name": "Profile shows unresolved repeated failures",
+      "passed": true
+    },
+    {
+      "name": "Baseline queue locks student and skill",
+      "passed": true
+    },
+    {
+      "name": "Multiple baseline results are separate from badges",
+      "passed": true
+    },
+    {
+      "name": "Historical criteria stay unchanged",
+      "passed": true
+    },
+    {
+      "name": "Toolkit filters and curriculum edit connect",
+      "passed": true
+    },
+    {
+      "name": "Drill instructions and media placeholders open",
+      "passed": true
+    },
+    {
+      "name": "Drill links back to skill",
+      "passed": true
+    },
+    {
+      "name": "Attendance draft survives navigation",
+      "passed": true
+    },
+    {
+      "name": "Attendance and notes persist together",
+      "passed": true
+    },
+    {
+      "name": "Coach dashboard reflects saved attendance",
+      "passed": true
+    },
+    {
+      "name": "Clearing a saved mark updates coach dashboard",
+      "passed": true
+    },
+    {
+      "name": "Entire register can be cleared",
+      "passed": true
+    },
+    {
+      "name": "Assistant navigation changes",
+      "passed": true
+    },
+    {
+      "name": "Assistant actions change",
+      "passed": true
+    },
+    {
+      "name": "Assistant only sees Spark session group",
+      "passed": true
+    },
+    {
+      "name": "Head coach cannot accidentally assign another venue",
+      "passed": true
+    },
+    {
+      "name": "Same-day fitness entry displays the latest result",
+      "passed": true
+    },
+    {
+      "name": "Venue updates dashboard",
+      "passed": true
+    },
+    {
+      "name": "Level filter applies",
+      "passed": true
+    },
+    {
+      "name": "Date filter updates outcomes",
+      "passed": true
+    },
+    {
+      "name": "Search has a useful empty state",
+      "passed": true
+    },
+    {
+      "name": "Student search works",
+      "passed": true
+    },
+    {
+      "name": "Sorting by badge count works",
+      "passed": true
+    },
+    {
+      "name": "Pagination works",
+      "passed": true
+    },
+    {
+      "name": "Coach assignment count uses the actual assistant group",
+      "passed": true
+    },
+    {
+      "name": "Future cycle makes demo date change explicit",
+      "passed": true
+    },
+    {
+      "name": "Future cycle records on its fixed date",
+      "passed": true
+    },
+    {
+      "name": "Future cycle result is included in reporting",
+      "passed": true
+    },
+    {
+      "name": "Demo date control persists",
+      "passed": true
+    },
+    {
+      "name": "Notifications show real saved activity",
+      "passed": true
+    }
+  ]
+}

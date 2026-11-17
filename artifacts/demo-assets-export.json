@@ -1,0 +1,48 @@
+{
+  "csvDataRows": 8,
+  "failed": 0,
+  "filename": "VISIST-demo-report-2026-11-13.csv",
+  "passed": 10,
+  "results": [
+    {
+      "name": "CSV generation uses filtered student count",
+      "passed": true
+    },
+    {
+      "name": "CSV includes only selected venue",
+      "passed": true
+    },
+    {
+      "name": "CSV includes useful headers",
+      "passed": true
+    },
+    {
+      "name": "Export filename reflects demo date",
+      "passed": true
+    },
+    {
+      "name": "Official logo uses uploaded file unchanged",
+      "passed": true
+    },
+    {
+      "name": "Exact VISIST green primary button",
+      "passed": true
+    },
+    {
+      "name": "Generated photo loads locally with disclosure",
+      "passed": true
+    },
+    {
+      "name": "All four supplied level images load intact",
+      "passed": true
+    },
+    {
+      "name": "Sixteen skills remain in four collections",
+      "passed": true
+    },
+    {
+      "name": "Demo limitations accurately describe reference skills",
+      "passed": true
+    }
+  ]
+}

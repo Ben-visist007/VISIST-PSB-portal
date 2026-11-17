@@ -1,0 +1,54 @@
+{
+  "failed": 0,
+  "passed": 12,
+  "results": [
+    {
+      "name": "Head Coach trend totals respect assignments",
+      "passed": true
+    },
+    {
+      "name": "Head Coach drilldown excludes unassigned students",
+      "passed": true
+    },
+    {
+      "name": "Head Coach drilldown total matches chart",
+      "passed": true
+    },
+    {
+      "name": "Assistant Coach trend totals respect assignments",
+      "passed": true
+    },
+    {
+      "name": "Assistant Coach drilldown excludes unassigned students",
+      "passed": true
+    },
+    {
+      "name": "Assistant Coach drilldown total matches chart",
+      "passed": true
+    },
+    {
+      "name": "Report venue rows filter connected reporting",
+      "passed": true
+    },
+    {
+      "name": "Fitness history displays actual record count",
+      "passed": true
+    },
+    {
+      "name": "Fitness keyboard exposes actual date and value",
+      "passed": true
+    },
+    {
+      "name": "Phone fitness targets stay at least32pixels",
+      "passed": true
+    },
+    {
+      "name": "Fitness scrolling stays inside the page",
+      "passed": true
+    },
+    {
+      "name": "Analytics keep assessment and fitness data unchanged",
+      "passed": true
+    }
+  ]
+}

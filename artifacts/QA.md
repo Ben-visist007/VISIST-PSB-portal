@@ -1,0 +1,120 @@
+# VISIST stakeholder demonstration audit
+
+Verified 13 November 2026 in an isolated Chrome session against http://127.0.0.1:4173. The user's browser profile and its saved records were not reset.
+
+**Result: all 12 requested verification areas pass.** The final source passed 61 UI workflow assertions, 12 assertions after a full refresh, 14 domain regression tests, and syntax checks. Additional exploratory checks covered draft refresh, restricted direct links, mobile layout, keyboard navigation, export content, unusual names, storage quota failure and malformed stored data.
+
+## Findings fixed
+
+| Priority | Finding and reproduction | Resulting behavior |
+| --- | --- | --- |
+| High | Complete the same student/skill in one cycle; another cycle could become recorded because matching used only student, skill and date. | Each outcome stores its cycle ID. Other cycles, standalone assessments and Day Zero cannot complete that assignment. |
+| High | Run a future fixed-date cycle: pending work decreased while the dashboard's completed count stayed unchanged. | A labelled preview confirms advancing the simulated demo date before execution. The fixed date and reporting context agree. |
+| High | Change saved Present attendance to Unmarked and save: Present returned. | Saving replaces the visible register, including clearing individual marks or the entire register. Coach dashboard counts update. |
+| High | Change a student's venue while leaving the unrelated coach selected; Head Coach could create a student outside their own view. | Venue and head coach are linked. Head Coach forms restrict assignments to their own venue. A successful save opens the resulting profile. |
+| High | Malformed but versioned saved objects could crash rendering; quota failure could still be followed by a success claim. | Saved structures and references are validated. Malformed data is retained in a recovery copy where possible. Storage failures show a persistent warning and session-only messages. |
+| High | Enter HTML-like names; dialog subtitles rendered user text as markup. Spreadsheet-leading names could be interpreted as formulas in exports. | Dialog text and identities are escaped. CSV cells beginning with spreadsheet formula markers are exported as literal text. |
+| Medium | Open a student from Dashboard and refresh: the URL still referenced the previous page. | Canonical student/profile-tab URLs restore the selected view after refresh and work with browser history. |
+| Medium | A quick action or role switch changed the rendered page without updating the hash; choosing the matching sidebar link could do nothing. | Links, quick actions, role changes and tabs use the same synchronous router, including active links and restricted direct links. |
+| Medium | Edit curriculum criteria after an assessment: historical assessment details changed with the current curriculum. | Each result snapshots its criteria, skill label and sample threshold. Later curriculum edits affect future assessments. |
+| Medium | Mark attendance, write observations, then open another screen: the unsubmitted register was lost. | Role/session/date-specific drafts are persisted and restored across navigation and refresh, with clear unsaved feedback. Drafts do not inflate dashboard attendance. |
+| Medium | Failed badges said Not yet assessed; student profiles lacked clear current coaching actions. | Badge states distinguish Needs Practice. Profiles show repeated unsuccessful attempts, reassessment actions and pending cycle modules. Later success clears current attention while preserving history. |
+| Medium | Seeded assessments predated enrolment; awarded badges lacked passing history. | New fictional seed records are chronological and every badge has recorded evidence. The identifiable original fixture is reconciled once during upgrade, retaining custom records and badges. Imported prior sample learning is labelled. |
+| Medium | Assistant coach cards counted the entire venue while their role view showed only the Spark session group. | Cards and drilldowns use one assignment-scope function, and restricted profile links are not exposed. |
+| Medium | Enter two fitness records on the same date: the earlier entry remained the latest card value. | Same-day fitness results show the most recently entered record first. Assessment history also places newer same-day entries first. |
+| Medium | Global search disappeared on smaller screens; closed navigation remained focusable offscreen. | Mobile search has its own visible control. Closed drawers are inert, open drawers contain keyboard focus, and Escape/close/backdrop/navigation dismiss them. |
+| Medium | Newly saved activity did not reopen notification indicators, and activity could ignore role/venue context. | New activity updates notifications; role scopes and dashboard venue/level filters apply to linked activity. |
+| Low | The academy's entire assessment history rendered as one unbounded table. | History pages contain twelve records with functional previous/next controls. |
+| Low | Adding a Spark student under a Champ filter left the user looking at a list that hid the new student. | Successful creation opens the saved student's information view immediately. |
+
+## Requested workflow coverage
+
+| Requested area | Verified behavior |
+| --- | --- |
+| Navigation | All ten sidebar destinations, active links, quick actions, profile routes, tabs and role changes. |
+| Student creation/editing | Required-field and whitespace validation, venue/coach pairing, saved details and profile opening. |
+| Profile consistency | Badges, current level, unresolved practice, pending modules and assessment history agree with shared state. |
+| Sixteen badges | Four badges each under Spark, Scout, Star and Champ. |
+| Higher-level awards | Passing a Champ individual skill for a Spark student preserves Spark and awards only that skill. |
+| Assessment creation/submission | Fixed-date cycles, different modules by student, all five Yes/No responses, remarks and configurable sample threshold. |
+| Outcome propagation | Badge stock, history, attention, cycle completion and dashboard reporting update; failed attempts remain visible. |
+| Attendance/dashboard | Mark, save, correct and clear both individual/all marks; unique daily coach counts reflect saved records. |
+| Role switching | Management, Head Coach and Assistant Coach scopes change navigation, forms and actions; restricted direct routes fall back correctly. |
+| Search/filters | Student/global search, useful empty states, venue/level/date filters, toolkit skill filters, sorting and pagination. |
+| Refresh persistence | Edited students, awards, baseline evidence, cleared attendance, fitness, curriculum edits, role, demo date, route and selected tab. Draft refresh was also checked. |
+| Major controls | Add/edit/save/cancel, cycle execution/return, drill/skill details, notifications, settings, reset confirmation, export, navigation drawer and demo date. |
+
+## Verification evidence
+
+- [UI workflows: 61 passing assertions](ui-workflows.json)
+- [After-refresh checks: 12 passing assertions](ui-refresh.json)
+- `npm test`: 14 passing tests in `tests/domain.test.js`.
+- `npm run check`: all application modules parse successfully.
+- Actual CSV download inspected: eight Whitefield rows, correct venue filter, and a formula-leading fictional name preserved as literal text.
+- Ten management destinations fit a 390px viewport without document-level horizontal overflow; scrollable data tables retain their own horizontal scrolling.
+- Desktop assessment-history axe WCAG A/AA: zero violations, zero incomplete checks. Mobile assessment-history: zero confirmed violations, one contrast item reviewed manually at **5.37:1**. These are representative checks, not a claim of complete accessibility certification.
+- Mobile Escape returns focus to the navigation opener; the closed sidebar is inert and page interaction is restored.
+- Storage quota simulation produces a visible session-only warning. Malformed JSON retains the original raw value under `visist-demo-v1-recovery` and loads a usable demo.
+- Browser console and page error logs were empty after the final workflow run.
+
+## Rerun
+
+Run `npm start`, then `npm test` and `npm run check` in a second terminal. The app needs no package installation.
+
+The browser suites intentionally reset the current browser's demonstration data. Run them **only in a dedicated isolated session**, never the stakeholder's working browser profile:
+
+```sh
+agent-browser --session visist-regression open http://127.0.0.1:4173
+agent-browser --session visist-regression eval --stdin < tests/browser-workflows.js
+agent-browser --session visist-regression reload
+agent-browser --session visist-regression eval --stdin < tests/browser-after-refresh.js
+agent-browser --session visist-regression close
+```
+
+The session was returned to clean fictional data after QA. Application content remains clearly labelled as illustrative: official academy criteria, approved promotion rules and video assets have not been supplied. No working interaction was replaced with a static placeholder.
+
+
+## Sports visual refresh — 16 November 2026
+
+The student profile now centres on a player card, next skill target, current-level collection and linked four-level journey. Curriculum collections use copper Spark, silver Scout, gold Star and electric blue Champ emblems. The dashboard has a role-aware court illustration and stronger visual hierarchy. New regular skill awards celebrate once; repeated passes, failed attempts and baseline results do not trigger a new-badge celebration. Reduced-motion preferences are supported.
+
+Verification in an isolated browser session: 61 workflow assertions and 12 after-refresh assertions passed; 9 additional checks passed for actual collection counts, enabled unearned skills, journey links and celebration gating. All 15 domain tests and module syntax checks passed. Independent visual evaluation passed on its second round after correcting session-card contrast and tablet-header overflow. Fresh checks found no document overflow at 375, 390, 768 and 820 pixels. This refresh did not rerun the older full accessibility audit described above.
+
+Preview images: [desktop player card](player-desktop.png), [mobile player card](player-mobile.png), [desktop dashboard](sports-dashboard-desktop.png), [desktop curriculum](sports-curriculum-desktop.png). Asset URLs are versioned so refreshes load the new stylesheet and app entry together. No change to promotion rules or saved assessment evidence.
+
+## VISIST website green match — 16 November 2026
+
+Primary branding now matches the live [VISIST website](https://www.visist.ai): emerald `#026B33`, dark forest `#0D2D17`, and secondary neon lime `#A3E635`. These values were read from rendered website styles rather than estimated from an image. Main CTAs, active navigation, links, tabs and chart strokes render in the exact emerald. Dark branded panels use forest green. Four level emblem colours remain semantic progression cues.
+
+Independent visual review passed at 1440, 768 and 375 pixels. The parent also checked 390-pixel layout without page overflow and all sixteen skill cards. White text on emerald has 6.66:1 contrast. Module syntax checks pass. No behavior or data changes were made, so workflow suites were not repeated for this palette-only adjustment.
+
+Current previews: [green dashboard](green-dashboard-desktop.png), [green desktop player card](green-player-desktop.png), [green mobile player card](green-player-mobile.png). Earlier navy screenshots above show the prior iteration. Refresh the local preview to load asset version `20261116-visist-green`.
+
+## Actual artwork and training photo — 16 November 2026
+
+The user-supplied root files `Spark.png`, `Scout.png`, `Star.png` and `Champ.png` are now used directly and unchanged in player collection panels, journey milestones, collection headers and the curriculum hero. Images use `object-fit: contain` so their level titles and PSB branding remain intact. Main level artwork is labelled as collection artwork alongside real progress counts; individual skill awards keep separate emblems.
+
+One fictional training scene was created with the built-in imagegen tool and saved locally as [the display photo](../assets/badminton-training.jpg), with [the source PNG](../assets/badminton-training-source.png) preserved. Its complete prompt, generation method and asset provenance are recorded in [image-assets.json](image-assets.json). The display JPEG is 273KB. The dashboard marks it as an illustrative scene, with a separate mobile photo crop.
+
+Independent visual review passed desktop/tablet/mobile. Actual art loads including lazy images after scrolling; sixteen skill cards remain; 375px and390px pages have no document overflow. The primary button still renders exact VISIST green rgb(2,107,51). Syntax checks pass. No domain rules or saved records changed.
+
+Current previews: [dashboard desktop](images-dashboard-desktop.png), [dashboard mobile](images-dashboard-mobile.png), [player desktop](images-player-desktop.png), [player mobile](images-player-mobile.png). Refresh to load asset version `20261116-real-assets`.
+
+## Final official-logo demo audit — 16 November 2026
+
+**PASS: suitable for a local stakeholder demo; no demo-blocking issues found.** The uploaded `visist-ai-logo.png` is used directly and unchanged in desktop and mobile navigation. The full original1870×404 aspect ratio is preserved. Settings copy was corrected to distinguish fictional records from PSB reference skill targets.
+
+Final build `20261116-demo-ready` passed15domain tests, syntax checks,61workflow assertions,12after-refresh assertions and10CSV/asset assertions. The independent visual reviewer inspected all10routes at1440,768and375pixels (30screenshots), plus mobile navigation and form dialogs: no page overflow, broken image or required visual fix found. Existing wide-table swipe behavior on phones is intentional. Rehearsal ran in an isolated browser and did not reset the user's saved records.
+
+See [the meeting runbook](DEMO-READINESS.md), [workflow results](demo-workflows.json), [refresh results](demo-refresh.json), [export/asset results](demo-assets-export.json), [desktop preview](demo-ready-desktop.png) and [mobile logo preview](demo-ready-mobile-logo.png). Use desktop for the meeting and keep the local server running. Browser-local fictional data, simulated roles, placeholder videos and manual promotion remain the disclosed prototype boundaries.
+
+
+## Interactive analytics — 17 November 2026
+
+Trend charts on Dashboard and Reports now provide hover/focus readouts and period-specific assessment lists with independent pagination, record details and back navigation. Calendar-day buckets match the exact 7/30/90-day or all-time range. Outcome bars open matching assessment events. Donut segments and legends filter by level; venue bars and report rows filter by venue. Clear scope labels and reset controls keep alternate selections available. Student progress bars open their profiles. Fitness metric cards open chronological, interactive histories with actual dates, values and units.
+
+Completed verification: 19 unit tests and syntax checks pass. The recorded browser run passed 61 existing workflow assertions, 12 refresh assertions, 18 focused chart assertions and 12 role/fitness assertions: 103 browser checks in total. Analytics preserve stored assessment and fitness data. Head Coach and Assistant Coach drilldowns exclude unassigned students. All four donut quadrants have distinct pointer targets. Actual hover and Space activation were checked against the matching period records.
+
+Independent interaction review passed after enlarging mobile point targets and restoring focus to the All levels reset. At 375px, progression targets measure 43px with 51px spacing; fitness targets remain 36px inside a labelled horizontal scroller. No page overflow was found. Final asset version: `20261116-interactive-charts-v2`.
+
+[Chart preview](interactive-dashboard.png) · [Workflow results](interactive-workflows.json) · [Refresh results](interactive-refresh.json) · [Chart checks](interactive-chart-checks.json) · [Role and fitness checks](interactive-role-fitness.json)

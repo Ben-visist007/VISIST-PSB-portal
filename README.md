@@ -50,7 +50,7 @@ Open **http://127.0.0.1:4173**. Use a modern browser. A local web server is requ
 
 ## Verification
 
-Run `npm test` for the nineteen rule and data-integrity regression tests; run `npm run check` for module syntax checks. The [QA report](artifacts/QA.md) documents the latest 103 passing browser assertions, additional edge-case checks and isolated browser-suite instructions. Browser suites reset their own demo records and must run in a separate browser session.
+Run `npm test` for the 32 rule and data-integrity regression tests; run `npm run check` for module syntax checks. The [QA report](artifacts/QA.md) documents earlier browser verification and isolated browser-suite instructions. Browser suites reset their own local records and must run in a separate browser session.
 
 ## PSB reference content
 
@@ -79,3 +79,17 @@ The portal pairs the official VISIST.AI and Padukone School of Badminton logos i
 ## Individual skill artwork
 
 All 16 individual skills now have separate generated round enamel-style badge images. Cards, skill details and newly earned individual awards use the same skill-ID mapping. The official Spark, Scout, Star and Champ level artwork and both partner logos are unchanged. Web images are in `assets/skill-badges/`, generated originals are preserved in its `originals/` folder, and the full built-in imagegen prompts and mapping are recorded in [the artwork manifest](artifacts/skill-badge-assets.json).
+
+## Assessment planner and daily preparation
+
+Open **Assessments → Assessment planner** (`#assessments/planner`). Recurring defaults are the first Friday for Spark, second for Scout, third for Star and fourth for Champ. Management can change each occurrence/weekday, a 1–30-day parent reminder window, fifth-Friday catch-up practice, and manual/automatic roster recommendations. Duplicate level dates are rejected; saved plans stay accessible when dates or settings change.
+
+Recommendations use each student's earliest incomplete four-skill column and missing individual badges. Coaches can include stretch candidates, add/remove students, and create an ordinary fixed-date cycle covering all four skills in order. Existing five-response assessments, coach remarks, historical criteria snapshots and manual head-coach progression review remain unchanged. No AI scoring, video capture or automatic level promotion is introduced. Parent notices are copied for manual sharing; there is no connected notification service.
+
+Students can be added or removed after assignments are created until their first result is recorded. Recorded participants stay in the source record. **Defer to next month** transfers a student's unfinished participation to the next scheduled day for that level. Completed source results remain in history. Students marked Absent/Excused in the selected canonical attendance session cannot start planner assessments until attendance is corrected or participation is deferred. Future dates require the existing explicit workspace-date confirmation.
+
+**Day plan** (`#assessments/day-plan`) groups students marked Present in the selected saved attendance session by missing skills and links to current drill instructions. Unmarked students are shown as unmarked and excluded from present counts. Plans, settings, attendance and assessment outcomes persist in this browser; existing saved workspaces upgrade without discarding records.
+
+`tests/planner.test.js` checks scheduling, recommendations, scope, deliberate auto-roster removals, migration, attendance and deferral. `tests/browser-planner.js` exercises the integrated workflow in an isolated browser session and resets only that session's local records.
+
+Planner integration verification: all 32 unit tests and module syntax checks pass. Browser checks passed for existing workflows (61), refresh persistence (12), interactive charts (18), planner workflows (22), and six additional full-reload checks covering settings, roster removals, deferrals, recorded evidence, route restoration and role scope.

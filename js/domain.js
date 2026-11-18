@@ -1,3 +1,4 @@
+import {upgradePlanner} from './planner.js';
 import {applyReferenceCurriculum} from './curriculum.js';
 // Shared rules for the browser demo. These never infer an overall level promotion.
 export const DEMO_DATE = '2026-11-13';
@@ -145,5 +146,5 @@ export function upgradeState(saved) {
     }
   }
   saved.dataRevision = 2;
-  return applyReferenceCurriculum(saved);
+  return upgradePlanner(applyReferenceCurriculum(saved));
 }

@@ -1,21 +1,11 @@
-// Run after browser-workflows.js and a full browser reload in the same isolated session.
-(() => {
-  const $=s=>document.querySelector(s), all=s=>[...document.querySelectorAll(s)];
-  const s=JSON.parse(localStorage.getItem('visist-demo-v1')), results=[];
-  const assert=(name,condition)=>{results.push({name,passed:!!condition});if(!condition)throw Error(name);};
-  assert('Profile URL restored after refresh',location.hash==='#students/VS022/information'&&$('h1').textContent==='QA Journey Player');
-  assert('Selected profile tab restored',$('.tab.active').textContent==='Information');
-  assert('Edited student persists',s.students.find(x=>x.id==='VS021').name==='QA Revised Player');
-  const student=s.students.find(x=>x.id==='VS022');
-  assert('Higher badge and overall level persist',student.badges.includes(16)&&student.level==='Spark');
-  assert('Baseline evidence persists separately',student.baseline.includes(13)&&student.baseline.includes(14)&&!student.badges.includes(13));
-  assert('Cleared attendance remains cleared',!s.attendance.some(a=>a.student==='VS022'&&a.date==='2026-11-13'));
-  assert('Curriculum edit persists',s.skills[15].criteria[0]==='Updated sample criterion for future attempts');
-  assert('Historical snapshot persists',s.assessments.some(a=>a.student==='VS022'&&a.skill===16&&a.criteria[0]==='Uses a backhand high serve'));
-  assert('Fitness records persist',s.fitness.filter(a=>a.student==='VS022').length===2);
-  assert('Demo date and role persist',s.demoDate==='2026-11-13'&&$('#role-switch').value==='Management');
-  $('a[href="#assessments"]').click();$('[data-action="assessment-tab:history"]').click();
-  assert('Assessment history is paginated',all('tbody tr').length===12&&!$('[data-action="history-next"]').disabled);
-  $('[data-action="history-next"]').click();assert('History next page works',!$('[data-action="history-prev"]').disabled);
-  return {passed:results.length,failed:0,results};
-})();
+// Run after browser-workflows.js / browser-planner.js and a full reload in the same isolated session.
+(()=>{const s=JSON.parse(localStorage.getItem('visist-demo-v1')),results=[],assert=(name,ok)=>{results.push({name,passed:!!ok});if(!ok)throw Error(name);};try{
+ assert('Retired attendance data is not required or recreated',!('attendance'in s)&&!('sessionDrafts'in s));
+ const coach=s.coaches.find(c=>c.name==='QA Multi Venue Coach');assert('Multi-venue coach and explicit assignments persist',coach.venues.length===2&&s.students.filter(x=>x.assistantCoaches.includes(coach.id)).length===2);
+ const library=s.library.find(k=>k.name==='QA Controlled Footwork'),curriculum=s.curricula.find(c=>c.name==='QA Foundation Curriculum'),batch=s.batches.find(b=>b.name==='QA Foundation Batch');assert('Library, curriculum and batch survive reload',curriculum.libraryIds.includes(library.id)&&batch.curriculumId===curriculum.id&&batch.studentIds.length===2);
+ const group=s.cycles.find(c=>c.name==='QA Group Assessment');assert('Group assessment and immutable recorded result persist',s.assessments.some(a=>a.cycleId===group.id&&a.student==='VS001'&&a.skill===3&&a.threshold===4&&a.criteria.length===5));
+ assert('Fitness remains linked to the assessment',s.fitness.some(f=>f.cycleId===group.id&&f.student==='VS001'));
+ assert('Rescheduled destination and source history persist',group.rescheduled.VS002.date==='2026-11-20'&&s.cycles.some(c=>c.id===group.rescheduled.VS002.assessmentId));
+ assert('Appearance and four official levels remain',s.settings.appearance==='contrast'&&s.skills.length===16&&s.students[0].level==='Spark');
+ assert('Current route renders after reload',!!document.querySelector('h1')&&!/attendance|absent|excused/i.test(document.querySelector('main').textContent));return {passed:results.length,failed:0,results};
+ }catch(error){return {passed:results.filter(r=>r.passed).length,failed:results.filter(r=>!r.passed),error:error.message,results};}})();

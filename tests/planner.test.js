@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {seed} from '../js/data.js';
 import {upgradeState,recordAssessment,cycleOutcome} from '../js/domain.js';
-import {defaultPlanner,validatePlannerSettings,scheduledDays,nextLevelDay,recommendations,workingLevel,ensureRoster,setRosterStudent,visibleRoster,createPlanCycle,deferStudent,dayPractice,failureStreak} from '../js/planner.js';
+import {defaultPlanner,validatePlannerSettings,scheduledDays,nextLevelDay,recommendations,workingLevel,ensureRoster,setRosterStudent,visibleRoster,createPlanCycle,deferStudent,practiceGroups,upcomingFridays,failureStreak} from '../js/planner.js';
 
 test('recurring schedule crosses month/year boundaries with exact nth weekdays',()=>{
  const s=defaultPlanner().settings;
@@ -40,9 +40,13 @@ test('deferral preserves recorded evidence and removes unfinished source modules
 test('deferral into an existing target cycle assigns the student and rejects outsiders',()=>{
  const s=seed(),[a,b]=s.students,date='2026-11-13';setRosterStudent(s,'2026-12-11','Scout',[a,b],b.id,true);const target=createPlanCycle(s,'2026-12-11','Scout',[a,b]);setRosterStudent(s,date,'Scout',[a,b],a.id,true);assert.throws(()=>deferStudent(s,date,'Scout',[b],a.id));deferStudent(s,date,'Scout',[a,b],a.id);assert(target.assignments.some(x=>x.student===a.id));
 });
-test('day plan uses only canonical Present marks in chosen date and session',()=>{
- const s=seed(),date=s.demoDate,session='Evening';s.attendance=[{student:'VS001',date,session,status:'Present'},{student:'VS002',date,session,status:'Absent'},{student:'VS003',date,session,status:'Excused'},{student:'VS004',date,session:'Morning',status:'Present'}];
- const p=dayPractice(s,s.students.slice(0,4),date,session);assert.deepEqual(p.present.map(s=>s.id),['VS001']);assert.equal(p.unmarked.length,1);assert.equal(p.excluded,2);assert.equal(p.groups[0].focus[0].skill.id,3);assert.equal(p.groups[0].focus[0].attention,1);
+test('practice groups use assigned enrolled pupils without a daily register',()=>{
+ const s=seed(),date=s.demoDate;s.students[3].joined='2027-01-01';
+ const p=practiceGroups(s,s.students.slice(0,4),date);assert.deepEqual(p.students.map(s=>s.id),['VS001','VS002','VS003']);
+ assert.equal(p.groups.length,1);assert(p.groups[0].focus.some(f=>f.skill.id===3&&f.attention===1));assert(p.groups[0].focus.every(f=>f.students.every(k=>k.id!=='VS004')));
+});
+test('upcoming Fridays support simple explicit-date scheduling across year boundaries',()=>{
+ assert.deepEqual(upcomingFridays('2026-12-29',3),['2027-01-01','2027-01-08','2027-01-15']);assert.deepEqual(upcomingFridays('2026-11-13',1),['2026-11-13']);assert.throws(()=>upcomingFridays('2026-02-30'));
 });
 test('migration defaults invalid settings and preserves existing custom records and rosters',()=>{
  const s=seed();delete s.planner;const before=JSON.stringify(s.assessments);upgradeState(s);assert.equal(s.planner.settings.notice,15);assert.equal(JSON.stringify(s.assessments),before);setRosterStudent(s,'2026-12-04','Spark',s.students,'VS001',true);s.planner.settings.notice=100;const loaded=upgradeState(s);assert.equal(loaded.planner.settings.notice,15);assert.deepEqual(loaded.planner.rosters['2026-12-04|Spark'].students,['VS001']);assert.equal(JSON.stringify(upgradeState(loaded)),JSON.stringify(loaded));

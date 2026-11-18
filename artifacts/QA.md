@@ -140,3 +140,26 @@ All 19 unit tests and module syntax checks pass. [59 asset and award assertions]
 Full generated PNGs and 512px web derivatives are saved locally. [Generation method and complete prompts](skill-badge-assets.json) · [Complete collection](skill-badges-collection.png) · [Desktop preview](skill-badges-desktop.png) · [Mobile preview](skill-badges-mobile.png). Asset version: `20261117-skill-art`.
 
 The independent visual review passed: all 16 desktop scenes are distinct and coherent; mobile artwork remains legible at 102px with no page overflow at 375px. Earned checks, needs-practice status, eager detail images and individual award binding remain correct. No required visual fixes were found.
+
+## Assessment-focused revision — 18 November 2026
+
+This revision removes daily attendance from navigation, dashboards, student profiles, assessment guards and practice recommendations. Old attendance links canonicalize to supported screens; legacy register arrays/drafts are no longer required when loading saved workspaces. Student records, badge collections, planned assessments, fitness records and immutable assessment history are retained.
+
+The main assessment flow now uses scheduled groups and Add to assessment actions. Practice groups derive from assigned students and missing skills. Fitness is an assessment step rather than a separate navigation module. Assistant curriculum access uses the same predicates in cards, search, drills, form choices and historical-result details. New persisted coach records support multiple venues and explicit assistant assignments. Custom library skills, curricula and batches remain separate from official badge IDs. Badge charts accumulate unique first-passing awards and retain their opening balance across reporting windows.
+
+Verification completed:
+
+- All 49 unit regressions passed, including migration, role scope, group enrollment, rescheduling, custom mapping consistency, fitness, and cumulative badge reporting.
+- All module syntax and diff whitespace checks passed.
+- The isolated browser workflow suite passed 38 assertions: [results](alignment-workflows.json).
+- Fitness-only completion, rescheduling and retired-route checks passed 15 assertions: [results](alignment-planner.json).
+- Full-reload persistence passed 8 assertions: [results](alignment-refresh.json).
+- Interactive chart, cumulative-count and filter checks passed 22 assertions: [results](alignment-charts.json).
+- An additional role smoke pass checked 39 assertions across Management, Head Coach and Assistant Coach; attendance controls/copy were absent and practice groups needed no register.
+- A separate browser migration pass checked nine properties against a copy of the previous workspace, retaining 20 students, 158 assessment records, 153 earned badges, two existing planned groups, two fitness records and a custom student name.
+
+The browser suites use their own isolated local storage. No user's running server or browser workspace was reset. QA used temporary port 4174 to keep port 4173 available for `npm start`.
+
+Desktop and mobile previews: [desktop](alignment-desktop.png), [mobile](alignment-mobile.png). Original partner logos and level/skill badge assets are unchanged. Real video playback still depends on configured media; no videos were supplied in the repository. Fitness thresholds and a fitness-to-Spark award rule remain undefined, so those rules were not invented.
+
+The independent design review inspected desktop, tablet and mobile layouts and reported no blocking layout issues. Its final report was interrupted by the workspace credit limit. The final previews were recaptured after navigation transitions finished, and all 83 browser-suite checks passed again against the final interface.

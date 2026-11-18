@@ -1,43 +1,12 @@
-// Read-only data checks in an isolated browser. Does not create/reset records.
-(async()=>{
- const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],results=[];
- const assert=(name,condition)=>{results.push({name,passed:!!condition});if(!condition)throw Error(name);};
- const pause=()=>new Promise(resolve=>setTimeout(resolve,30));
- const click=s=>{const el=$(s);if(!el)throw Error('Missing '+s);el.dispatchEvent(new MouseEvent('click',{bubbles:true}));};
- const set=(s,v)=>{const el=$(s);el.value=v;el.dispatchEvent(new Event('change',{bubbles:true}));};
- const close=async()=>{click('dialog [data-action="close-modal"]');await pause();};
- try{
-  if($('dialog').open){$('dialog').close();await pause();}
-  click('a[href="#dashboard"]');if($('[data-action="chart-clear"]'))click('[data-action="chart-clear"]');
-  const saved=JSON.parse(localStorage.getItem('visist-demo-v1'));
-  const scoped=saved.students.filter(s=>saved.role==='Management'||(saved.role==='Head Coach'?s.coach===1:s.venue==='Indiranagar'&&s.level==='Spark'));
-  const ids=new Set(scoped.map(s=>s.id)),today=saved.demoDate;
-  for(const range of ['7','30','90','all']){
-   set('[data-filter="range"]',range);
-   const start=range==='all'?'0000-01-01':new Date(Date.parse(today+'T00:00:00Z')-(+range-1)*86400000).toISOString().slice(0,10);
-   const expected=saved.assessments.filter(a=>ids.has(a.student)&&!a.baseline&&a.outcome==='Passed'&&a.date>=start&&a.date<=today).length;
-   const points=all('.progression-interactive .chart-point');
-   const sum=points.reduce((n,p)=>n+Number(p.querySelector('.point-count').textContent),0);
-   assert('Point totals match '+range+' reporting window',sum===expected);
-  }
-  const point=$('.progression-interactive .chart-point');point.focus();
-  assert('Keyboard focus exposes period readout',$('#progression-readout').textContent.includes('passed assessment'));
-  point.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));
-  assert('Keyboard opens real period drilldown',$('dialog').open&&$('#modal-title').textContent==='Passed assessments');await close();
-  click('[data-action="chart-outcome:Passed"]');
-  assert('Outcome chart has independent pagination',!!$('.analytics-pagination'));
-  if(!$('[data-action="analytics-next"]').disabled){click('[data-action="analytics-next"]');assert('Modal advances page without changing route',$('.analytics-pagination').textContent.includes('Page 2')&&location.hash==='#dashboard');}
-  if($('dialog [data-action^="assessment-detail:"]')){click('dialog [data-action^="assessment-detail:"]');assert('Outcome opens assessment detail',!!$('[data-action="analytics-back"]'));click('[data-action="analytics-back"]');assert('Back restores outcome rows',!!$('.analytics-pagination'));}
-  await close();
-  click('.level-filter[data-action="chart-level:Scout"]');assert('Legend applies global level filter',$('[data-filter="level"]').value==='Scout');
-  click('.level-filter[data-action="chart-level:Star"]');assert('Another level remains selectable',$('[data-filter="level"]').value==='Star');
-  click('[data-action="chart-level:All levels"]');assert('Donut reset recovers all levels',$('[data-filter="level"]').value==='All levels');
-  click('[data-action="chart-students"]');assert('Student drilldown matches scoped count',all('dialog tbody tr').length===scoped.length);await close();
-  click('[data-action="chart-venue:Whitefield"]');assert('Venue bars apply workspace venue',$('[data-filter="venue"]').value==='Whitefield');
-  click('[data-action="chart-venue:All venues"]');assert('Venue reset recovers all venues',$('[data-filter="venue"]').value==='All venues');
-  click('a[href="#students"]');click('.progress-profile');assert('Roster progress opens progression',/^#students\/[^/]+\/progression$/.test(location.hash));
-  click('a[href="#dashboard"]');set('[data-filter="range"]','90');
-  assert('Analytics do not mutate stored records',JSON.stringify(JSON.parse(localStorage.getItem('visist-demo-v1')).assessments)===JSON.stringify(saved.assessments));
-  return {passed:results.length,failed:0,results};
- }catch(error){return {passed:results.filter(r=>r.passed).length,error:error.message,results};}
-})();
+// Run in an isolated browser after the alignment workflow; does not reset saved records.
+(async()=>{const results=[],$=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],read=()=>JSON.parse(localStorage.getItem('visist-demo-v1')),click=s=>{const e=$(s);if(!e)throw Error('Missing '+s);if(typeof e.click==='function')e.click();else e.dispatchEvent(new MouseEvent('click',{bubbles:true}));},set=(s,v)=>{const e=$(s);e.value=v;e.dispatchEvent(new Event('change',{bubbles:true}));},assert=(name,ok)=>{results.push({name,passed:!!ok});if(!ok)throw Error(name);},close=()=>click('dialog [data-action="close-modal"]');try{
+ $('dialog')?.close();set('#role-switch','Management');click('a[href="#dashboard"]');const before=read().assessments.length;
+ for(const range of ['7','30','90','all']){set('[data-filter="range"]',range);const counts=all('.point-count').map(e=>+e.textContent),keys=new Set(read().assessments.filter(a=>!a.baseline&&a.outcome==='Passed'&&a.date<=read().demoDate).map(a=>a.student+':'+a.skill));assert('Cumulative graph never falls for '+range,counts.every((n,i)=>!i||n>=counts[i-1]));assert('Final cumulative point equals distinct badge awards for '+range,counts.at(-1)===keys.size);}
+ $('.chart-point').focus();assert('Keyboard focus exposes cumulative value',$('#progression-readout').textContent.includes('unique skill badge'));$('.chart-point').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));assert('Keyboard activates cumulative records',$('dialog').textContent.includes('Earned skill badges'));const pointValue=+$('.point-count').textContent;assert('Drilldown record count matches cumulative point',$('.modal-head p').textContent.includes(pointValue+' records'));close();
+ click('[data-action="chart-outcome:Passed"]');assert('Outcome bar opens recorded outcomes',$('dialog').textContent.includes('Assessment outcomes'));click('dialog [data-action^="assessment-detail:"]');assert('Outcome record opens saved details',$('dialog').textContent.includes('Recorded threshold'));click('[data-action="analytics-back"]');assert('Back returns to outcome records',$('dialog').textContent.includes('Assessment outcomes'));close();
+ click('[data-action="chart-level:Scout"]');assert('Level legend filters dashboard',$('[data-filter="level"]').value==='Scout');click('[data-action="chart-level:All levels"]');assert('Level filter reset remains interactive',$('[data-filter="level"]').value==='All levels');
+ click('[data-action="chart-venue:Whitefield"]');assert('Venue bar filters dashboard',$('[data-filter="venue"]').value==='Whitefield');click('[data-action="chart-clear"]');
+ const batch=read().batches.find(b=>b.name==='QA Foundation Batch');set('[data-filter="batch"]',batch.id);assert('Batch filter controls student count',+$('.stat-value').textContent===2);const counts=all('.point-count').map(e=>+e.textContent),keys=new Set(read().assessments.filter(a=>batch.studentIds.includes(a.student)&&!a.baseline&&a.outcome==='Passed'&&a.date<=read().demoDate).map(a=>a.student+':'+a.skill));assert('Batch graph uses only its student awards',counts.at(-1)===keys.size);click('[data-action="chart-clear"]');
+ click('a[href="#assessments"]');click('[data-action="assessment-tab:fitness"]');set('#fitness-student','VS001');click('[data-action="fitness-history:0"]');assert('Fitness metric opens interactive chart',!!$('.fitness-interactive .chart-point'));$('.fitness-interactive .chart-point').focus();assert('Fitness focus displays metric readout',$('#fitness-readout').textContent.includes('seconds'));close();
+ assert('Charts do not mutate assessment records',read().assessments.length===before);return {passed:results.length,failed:0,results};
+ }catch(error){return {passed:results.filter(r=>r.passed).length,failed:results.filter(r=>!r.passed),error:error.message,results};}})();

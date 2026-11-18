@@ -34,4 +34,22 @@ export function setRosterStudent(state,date,level,students,id,include){if(!stude
 export function createPlanCycle(state,date,level,students){const r=ensureRoster(state,date,level,students),ids=visibleRoster(state,r,students);if(!ids.length)throw Error('Add at least one student to the roster.');let c=state.cycles.find(c=>c.id===r.cycleId);if(!c){c={id:crypto.randomUUID(),name:level+' assessment · '+date,date,plannerKey:planKey(date,level),assignments:[]};state.cycles.push(c);r.cycleId=c.id;}
  for(const id of ids)if(!c.assignments.some(a=>a.student===id))c.assignments.push({student:id,skills:levelSkills(state,level).map(k=>k.id)});return c;}
 export function deferStudent(state,date,level,students,id){const r=ensureRoster(state,date,level,students);if(!visibleRoster(state,r,students).includes(id))throw Error('Choose a student in the current roster.');const next=nextLevelDay(state.planner.settings,level,date);if(!next)throw Error('No next assessment date is available.');const c=state.cycles.find(c=>c.id===r.cycleId),a=c?.assignments.find(a=>a.student===id);const done=skill=>state.assessments.some(x=>!x.baseline&&x.cycleId===c?.id&&x.student===id&&x.skill===skill);if(a&&a.skills.every(done))throw Error('All assigned skills are already recorded.');if(a)a.skills=a.skills.filter(done);r.deferred[id]=next;const target=ensureRoster(state,next,level,students);if(!target.students.includes(id))target.students.push(id);delete target.deferred[id];if(target.cycleId){const tc=state.cycles.find(x=>x.id===target.cycleId);if(tc&&!tc.assignments.some(x=>x.student===id))tc.assignments.push({student:id,skills:levelSkills(state,level).map(k=>k.id)});}return next;}
-export function dayPractice(state,students,date,session){const enrolled=students.filter(s=>s.joined<=date),records=state.attendance.filter(a=>a.date===date&&a.session===session),present=enrolled.filter(s=>records.some(a=>a.student===s.id&&a.status==='Present')),unmarked=enrolled.filter(s=>!records.some(a=>a.student===s.id));const groups=PLANNER_LEVELS.map(level=>{const kids=present.filter(s=>workingLevel(state,s)===level);const focus=levelSkills(state,level).map(skill=>{const kidsMissing=kids.filter(s=>!s.badges.includes(skill.id));return {skill,students:kidsMissing,attention:kidsMissing.filter(s=>failureStreak(state,s.id,skill.id,date)>=2).length};}).filter(f=>f.students.length).sort((a,b)=>b.students.length-a.students.length||b.attention-a.attention||a.skill.id-b.skill.id);return {level,students:kids,focus};}).filter(g=>g.students.length);return {present,unmarked,groups,excluded:enrolled.length-present.length-unmarked.length};}
+// Practice is based on assigned students and skill gaps, without a daily register.
+export function practiceGroups(state,students,date=state.demoDate){
+ const enrolled=students.filter(s=>s.joined<=date);
+ const groups=PLANNER_LEVELS.map(level=>{
+  const kids=enrolled.filter(s=>workingLevel(state,s)===level);
+  const focus=levelSkills(state,level).map(skill=>{
+   const missing=kids.filter(s=>!s.badges.includes(skill.id));
+   return {skill,students:missing,attention:missing.filter(s=>failureStreak(state,s.id,skill.id,date)>=2).length};
+  }).filter(f=>f.students.length).sort((a,b)=>b.students.length-a.students.length||b.attention-a.attention||a.skill.id-b.skill.id);
+  return {level,students:kids,focus};
+ }).filter(g=>g.students.length);
+ return {students:enrolled,groups,complete:enrolled.filter(s=>!workingLevel(state,s))};
+}
+export const dayPractice=practiceGroups;
+export function upcomingFridays(from,count=8){
+ if(!valid(from)||!Number.isInteger(count)||count<1||count>52)throw Error('Choose a valid start date and number of upcoming Fridays.');
+ let date=from;while(new Date(date+'T00:00:00Z').getUTCDay()!==5)date=addPlanDays(date,1);
+ return Array.from({length:count},(_,i)=>addPlanDays(date,i*7));
+}

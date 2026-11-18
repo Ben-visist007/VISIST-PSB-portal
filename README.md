@@ -1,95 +1,60 @@
 # VISIST-PSB-portal
 
-A local, dependency-free HTML/CSS/JavaScript stakeholder demonstration. People and records are fictional. The 16 skill names and targets follow page 1 of the user-supplied PSB gamified PDF; coach checklists and practice instructions are demo adaptations. Fitness units and pass thresholds remain illustrative. There is no backend, authentication service, database, or connected academy media.
+A browser-based VISIST × Padukone School of Badminton academy portal focused on assessment planning, individual skill badges, practice recommendations and student progression. The official four levels remain Spark, Scout, Star and Champ, with sixteen beginner skill badges based on page 1 of the supplied PSB reference.
 
 ## Run locally
 
-From this directory:
-
 ```sh
-python3 -m http.server 4173 --bind 127.0.0.1
+npm start
 ```
 
-Open **http://127.0.0.1:4173**. Use a modern browser. A local web server is required for JavaScript modules; opening `index.html` directly using `file://` will not work reliably. No package installation or build is needed.
+Open **http://127.0.0.1:4173**. Python 3 and a modern browser are required; no package installation or build is needed. Serve the project over HTTP because the application uses JavaScript modules.
 
-## Suggested demonstration journey
+If startup reports `Address already in use`, another server is already using port 4173. Check whether the portal is already open there before starting another process.
 
-1. Open **Dashboard**. Change venue, level, and date range filters to see connected analytics. The default simulated date is 13 November 2026. Use the visible Demo date control to change it. Upcoming cycles offer an explicit Preview & assess action that confirms using their fixed date before execution, keeping dashboard reporting consistent.
-2. Open **Students**, add a student, search for their name, open the profile, and edit their personal information. New students start at Spark. Profile tabs expose personal details, assessment history, attendance, and the 16-badge map.
-3. Open **Curriculum**. Open any sample skill to see criteria, associated drill, and foundational prerequisites. Edit its sample content and see those changes in Coach Toolkit and assessment forms.
-4. Open **Assessments → Create cycle**. Choose a fixed date, check students, and select different modules for each. The multi-select supports Ctrl/Command to choose multiple modules. Open the cycle and record an outcome for an assigned module.
-5. Submit all five Yes/No responses with coach remarks. The default illustrative pass rule is 4/5; change it in Settings. Passing a regular assessment awards the individual skill badge and updates connected profiles and reporting. An unsuccessful attempt remains in the history and attention views; repeated attempts remain visible.
-6. Open **Day Zero baseline** from Assessments. Select a student and multiple relevant skills, then complete each baseline assessment. Demonstrated abilities are saved separately from curriculum badges. The final screen proposes retaining the current starting point while the head coach reviews the evidence and foundational requirements.
-7. Open **Attendance**, choose venue, date and session, mark students present, open relevant drills, add observations, and save. Reopen the same date/session or view the student's attendance history to see saved records. Unsubmitted session drafts survive navigation and refresh; saved Unmarked values clear previous marks, including an entire register.
-8. Use the top-right role switcher to compare Management, Head Coach (Vikram Rao's assigned students), and Assistant Coach (the Spark session group at Indiranagar). Navigation, actions, search and student views adapt. Roles are simulated views, not security boundaries.
-9. Open **Fitness Assessment** as Management. Intermediate students have separate sample result entry and chronological history across seven categories. No official standards, pass/fail scores, or rankings are invented.
-10. Open **Reports**, apply filters, and export the filtered student summary as CSV. Coach operations show assignment and activity counts, never rankings.
-11. Refresh the page to confirm local persistence. Settings offers a confirmed reset to restore the original fictional dataset.
+## Main workflows
 
-## Structure
+- **Dashboard:** scoped student and badge totals, upcoming assessments, interactive cumulative badge progression and venue/level comparisons.
+- **Students:** profiles, current levels, individual badge collections and assessment history. Use **Add to assessment** to place a player into an upcoming group assessment.
+- **Assessments:** plan a dated assessment, select its students and skill group, optionally include fitness, and record results from the saved assessment. Upcoming Fridays are scheduling suggestions; historical records keep their original dates and assignments.
+- **Practice plan:** group assigned students by incomplete skills and open relevant coaching materials. Recommendations work without a daily register.
+- **Curriculum / Coach Toolkit:** official skill targets and drills, video covers and supporting instructions. Assistant coaches see only content relevant to their assigned students.
+- **Coaches:** create coaches, assign their venues and move students between appropriate coaching assignments. Head coaches oversee their assigned venues; assistant coaches work with explicitly assigned students.
+- **Custom curricula and batches:** select skills from the library, create training curricula and assign student batches. These training structures remain separate from official badge awards.
+- **Fitness:** available inside Assessments, preserving measurement history and comparisons. Linked fitness steps use the scheduled assessment's student and date.
+- **Reports:** filter student progression and badge information, inspect the corresponding records and export a CSV summary.
 
-- `index.html`: application entry point and accessible modal/status containers.
-- `styles.css`: shared design tokens, components, layout, and responsive styles.
-- `js/data.js`: fictional seed records and category definitions.
-- `js/curriculum.js`: PSB page 1 skills, training guidance, demo checklists and safe placeholder upgrades.
-- `js/state.js`: browser persistence and activity log.
-- `js/app.js`: shared rendering helpers, screen renderers, canonical routes, forms, and connected workflows.
-- `js/domain.js`: assessment rules, cycle membership, current practice needs, session replacement and saved-state upgrades.
-- `tests/`: domain regression tests and isolated browser workflow/refresh suites.
-- `artifacts/QA.md`: findings, fixes, verification coverage and test instructions.
+Daily attendance tracking, attendance-based assessment restrictions, standalone student-profile skill assessments, the dedicated reassessment screen and the standalone fitness navigation item have been retired. Unfinished or unsuccessful skills feed the next regular assessment recommendation, with prior outcomes retained in history.
 
-## Deliberate safeguards and limits
+## Roles and persistence
 
-- Four beginner levels (Spark, Scout, Star, Champ), four badges each, sixteen total.
-- Higher-level badges can be earned independently. Individual badges, baseline results, or tournament wins never automatically promote a student.
-- The reference requires all four skills in the same level for a main badge. Completed collections are flagged for head-coach review; the prototype preserves the student's current level until that review.
-- Every newly seeded badge has passing sample evidence after enrolment. Original first-version fixtures are reconciled during saved-state upgrade, retaining custom records and labelling imported prior learning. The dashboard counts assessment events within the reporting period; roster and badge totals represent current students and all-time awards.
-- Video panels are clearly marked placeholders; no unrelated media is linked.
-- Data stays in this browser under `visist-demo-v1`. Clearing browser site data removes changes. If storage is unavailable, the app reports that changes are session-only.
-- The prototype intentionally has no authentication or authorization enforcement beyond role-aware demonstration controls.
+Management sees the academy. Head coaches see students at the venues they oversee, including multiple venues where assigned. Assistant coaches see their explicitly assigned students and relevant curriculum. View switching and UI restrictions support local review; this application has no backend authentication or server-enforced authorization.
 
-## Verification
+Records are saved in this browser under `visist-demo-v1`. Existing workspaces migrate without resetting student records, badge collections, assessment history, planned assessments or fitness measurements. Retired register data and drafts are no longer part of active state. The workspace date controls reporting and assessment entry; future assessment execution requires explicit confirmation before advancing it.
 
-Run `npm test` for the 32 rule and data-integrity regression tests; run `npm run check` for module syntax checks. The [QA report](artifacts/QA.md) documents earlier browser verification and isolated browser-suite instructions. Browser suites reset their own local records and must run in a separate browser session.
+## Assessment and badge rules
 
-## PSB reference content
+Each official skill assessment records five Yes/No criteria, coach remarks and a snapshot of its criteria, name and pass threshold. The default threshold remains four of five. Passing awards the individual skill badge once; repeat passes never inflate earned-badge totals. Baseline evidence remains separate from regular badge awards.
 
-The user selected page 1, retaining Spark, Scout, Star and Champ. Skills are grouped by their visual columns; printed suffixes (for example Grip Scout within Spark) are preserved. Page 2’s alternate Rookie/Ace names, Hawk Eye activity and Balance skill are not used. Numeric targets are retained, including 10 forehand and 10 backhand air tosses, 10 alternating tosses, 10 opposite-hand catches, a 12-stroke Netking rally and a 20-stroke Consistency rally. The PDF does not specify five binary criteria or a 4/5 threshold; those remain explicitly labelled demo adaptations. Existing saved placeholder fields upgrade on refresh without replacing custom edits or historical assessment snapshots.
+Overall level changes remain subject to head-coach review. Fitness measurements do not automatically award Spark or invent a fitness pass standard. The precise fitness prerequisite and skill/module/badge schema must be defined before those business rules change.
 
-## Visual refresh
+The progression chart counts cumulative unique skill badges from the earliest regular passing evidence per student and skill. Selected reporting windows retain the opening badge balance; repeat attempts and baseline results do not add awards. Chart drilldowns show the records supporting the displayed measure.
 
-The sports academy theme adds player cards, a four-level skill journey, collectible level emblems and celebrations for newly earned regular badges. Counts and next targets derive from saved records. Refresh the running local preview and open a student profile or Curriculum to see the new design. Desktop and mobile previews and the latest checks are linked in [the QA report](artifacts/QA.md).
+## Curriculum and media
 
-## Brand palette
+The original sixteen skill records and official badge IDs remain stable. Custom library entries are training skills; curricula group selected library skills and batches connect students to those curricula. Custom content does not create extra official badge IDs or automatically modify academy progression rules.
 
-The green refresh follows the live [VISIST website](https://www.visist.ai), inspected on 16 November 2026: primary emerald `#026B33`, deep green `#0D2D17`, neon lime `#A3E635` and electric lime `#CCFF00`. Emerald drives app actions and reporting; copper, silver, gold and blue remain level-specific badge colours.
+The repository contains coaching photography and badge artwork, but no supplied drill video files. Video covers indicate unavailable content until a real media URL is configured. Text instructions remain available as supporting guidance. The application does not perform AI video scoring or send parent notifications; prepared notices are shared manually.
 
-## Demo meeting
+The official uploaded VISIST.AI and PSB logos retain their original artwork. `assets/psb-logo.png` is a byte-identical copy of `PSB .png`. The primary green matches VISIST's website: `#026B33`, with forest `#0D2D17` and lime `#A3E635`. Original Spark, Scout, Star and Champ artwork remains separate from the generated individual skill pins in `assets/skill-badges/`. The artwork mapping is documented in [the manifest](artifacts/skill-badge-assets.json).
 
-The official uploaded VISIST.AI logo is used unchanged. See [the demo readiness report and meeting walkthrough](artifacts/DEMO-READINESS.md) for verified flows, startup instructions and prototype boundaries.
+## Structure and verification
 
-## Interactive analytics
+- `index.html`, `styles.css`, `js/app.js`: application rendering, routing, forms and visual interactions.
+- `js/data.js`, `js/state.js`, `js/domain.js`: initial records, browser storage, migration and recorded assessment rules.
+- `js/operations.js`: coach assignments, curriculum/library/batch operations, group assessment creation and fitness steps.
+- `js/planner.js`, `js/analytics.js`: practice recommendations, planning helpers and cumulative reporting.
+- `js/curriculum.js`: official sixteen-skill targets and coaching guidance.
+- `tests/`: unit regressions and isolated browser workflow suites.
 
-Select a trend point to view its assessment period, or hover/focus for values. Outcome bars open records. Donut segments, level legends and venue rows filter the workspace with reset controls. Student progress bars open profiles. Fitness cards open chronological metric histories. Charts respect assignment scope and workspace filters. `tests/browser-chart-interactions.js` checks these interactions in an isolated browser session.
-
-## Partnership branding
-
-The portal pairs the official VISIST.AI and Padukone School of Badminton logos in the sidebar and mobile drawer, plus compact partnership rows on Dashboard and Curriculum. The uploaded `PSB .png` is preserved unchanged; `assets/psb-logo.png` is a byte-identical copy used by the interface. Both marks retain their original colours and proportions.
-
-## Individual skill artwork
-
-All 16 individual skills now have separate generated round enamel-style badge images. Cards, skill details and newly earned individual awards use the same skill-ID mapping. The official Spark, Scout, Star and Champ level artwork and both partner logos are unchanged. Web images are in `assets/skill-badges/`, generated originals are preserved in its `originals/` folder, and the full built-in imagegen prompts and mapping are recorded in [the artwork manifest](artifacts/skill-badge-assets.json).
-
-## Assessment planner and daily preparation
-
-Open **Assessments → Assessment planner** (`#assessments/planner`). Recurring defaults are the first Friday for Spark, second for Scout, third for Star and fourth for Champ. Management can change each occurrence/weekday, a 1–30-day parent reminder window, fifth-Friday catch-up practice, and manual/automatic roster recommendations. Duplicate level dates are rejected; saved plans stay accessible when dates or settings change.
-
-Recommendations use each student's earliest incomplete four-skill column and missing individual badges. Coaches can include stretch candidates, add/remove students, and create an ordinary fixed-date cycle covering all four skills in order. Existing five-response assessments, coach remarks, historical criteria snapshots and manual head-coach progression review remain unchanged. No AI scoring, video capture or automatic level promotion is introduced. Parent notices are copied for manual sharing; there is no connected notification service.
-
-Students can be added or removed after assignments are created until their first result is recorded. Recorded participants stay in the source record. **Defer to next month** transfers a student's unfinished participation to the next scheduled day for that level. Completed source results remain in history. Students marked Absent/Excused in the selected canonical attendance session cannot start planner assessments until attendance is corrected or participation is deferred. Future dates require the existing explicit workspace-date confirmation.
-
-**Day plan** (`#assessments/day-plan`) groups students marked Present in the selected saved attendance session by missing skills and links to current drill instructions. Unmarked students are shown as unmarked and excluded from present counts. Plans, settings, attendance and assessment outcomes persist in this browser; existing saved workspaces upgrade without discarding records.
-
-`tests/planner.test.js` checks scheduling, recommendations, scope, deliberate auto-roster removals, migration, attendance and deferral. `tests/browser-planner.js` exercises the integrated workflow in an isolated browser session and resets only that session's local records.
-
-Planner integration verification: all 32 unit tests and module syntax checks pass. Browser checks passed for existing workflows (61), refresh persistence (12), interactive charts (18), planner workflows (22), and six additional full-reload checks covering settings, roster removals, deferrals, recorded evidence, route restoration and role scope.
+Run `npm test` for domain and analytics checks, and `npm run check` for module syntax checks. Browser suites must run in their own isolated browser session because workflow checks may reset that session's local records. Older screenshots and QA documents describe earlier versions and are retained as historical artifacts.

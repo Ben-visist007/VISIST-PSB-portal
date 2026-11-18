@@ -1,0 +1,159 @@
+{
+  "failed": 0,
+  "passed": 38,
+  "refreshRoute": "#dashboard",
+  "results": [
+    {
+      "name": "Retired modules are absent from navigation",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders dashboard",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders students",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders curriculum",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders assessments",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders coaches",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders toolkit",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders reports",
+      "passed": true
+    },
+    {
+      "name": "Navigation renders settings",
+      "passed": true
+    },
+    {
+      "name": "Coach creation persists multiple venues",
+      "passed": true
+    },
+    {
+      "name": "Head coach scope spans assigned venues",
+      "passed": true
+    },
+    {
+      "name": "Assistant assignment persists across venues",
+      "passed": true
+    },
+    {
+      "name": "Assistant sees explicitly assigned multi-venue students",
+      "passed": true
+    },
+    {
+      "name": "Assistant curriculum is limited to relevant collections",
+      "passed": true
+    },
+    {
+      "name": "Assistant toolkit contains relevant drills only",
+      "passed": true
+    },
+    {
+      "name": "Global search does not expose higher curriculum",
+      "passed": true
+    },
+    {
+      "name": "Direct higher skill action is guarded",
+      "passed": true
+    },
+    {
+      "name": "Historical higher award summary hides restricted criteria",
+      "passed": true
+    },
+    {
+      "name": "Custom library is separate from official badges",
+      "passed": true
+    },
+    {
+      "name": "Curriculum maps selected library skills",
+      "passed": true
+    },
+    {
+      "name": "Custom batch persists curriculum and students",
+      "passed": true
+    },
+    {
+      "name": "Practice plan works without a register",
+      "passed": true
+    },
+    {
+      "name": "Custom training content opens from practice plan",
+      "passed": true
+    },
+    {
+      "name": "Profile offers add-to-assessment rather than standalone scoring",
+      "passed": true
+    },
+    {
+      "name": "Add-to-assessment opens a scheduled group chooser",
+      "passed": true
+    },
+    {
+      "name": "Simple assessment creates a shared skill collection and fitness step",
+      "passed": true
+    },
+    {
+      "name": "Scoring is available inside a scheduled group",
+      "passed": true
+    },
+    {
+      "name": "Group result awards individual skill without promoting",
+      "passed": true
+    },
+    {
+      "name": "Fitness result is linked to the scheduled assessment",
+      "passed": true
+    },
+    {
+      "name": "Fitness history chart remains interactive",
+      "passed": true
+    },
+    {
+      "name": "Adding to an existing group preserves the original roster",
+      "passed": true
+    },
+    {
+      "name": "Unfinished steps move to a regular future assessment",
+      "passed": true
+    },
+    {
+      "name": "Future recording requires explicit date confirmation",
+      "passed": true
+    },
+    {
+      "name": "Settings contains appearance without scoring or recurrence controls",
+      "passed": true
+    },
+    {
+      "name": "Appearance selection persists",
+      "passed": true
+    },
+    {
+      "name": "Cumulative badge graph never falls",
+      "passed": true
+    },
+    {
+      "name": "Badge graph point opens cumulative award records",
+      "passed": true
+    },
+    {
+      "name": "Cumulative chart drilldown uses earned badge records",
+      "passed": true
+    }
+  ]
+}

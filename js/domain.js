@@ -1,11 +1,12 @@
+import {upgradeOperations,visibleStudents,canAccessSkill} from './operations.js';
 import {upgradePlanner} from './planner.js';
 import {applyReferenceCurriculum} from './curriculum.js';
 // Shared rules for the browser demo. These never infer an overall level promotion.
 export const DEMO_DATE = '2026-11-13';
 export const roles = ['Management', 'Head Coach', 'Assistant Coach'];
 export const allowedPages = role => role === 'Assistant Coach'
-  ? ['dashboard', 'students', 'curriculum', 'assessments', 'attendance', 'toolkit', 'fitness']
-  : ['dashboard', 'students', 'curriculum', 'assessments', 'coaches', 'attendance', 'toolkit', 'fitness', 'reports', 'settings'];
+  ? ['dashboard', 'students', 'curriculum', 'assessments', 'toolkit']
+  : ['dashboard', 'students', 'curriculum', 'assessments', 'coaches', 'toolkit', 'reports', 'settings'];
 
 export function validDate(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -47,11 +48,15 @@ export function recordAssessment(state, input) {
     || input.answers?.length !== 5 || !input.answers.every(a => typeof a === 'boolean')) {
     throw new Error('Check the student, date, five responses and coach remarks. Results must be between enrolment and the workspace date.');
   }
+  if (!visibleStudents(state).some(s=>s.id===input.student)||!canAccessSkill(state,input.skill)) throw new Error('Choose an assigned student and an available skill.');
+  if (!input.baseline&&!input.cycleId) throw new Error('Add the student to a scheduled assessment before recording a result.');
   if (input.cycleId) {
     const cycle = state.cycles.find(c => c.id === input.cycleId);
     if (!cycle || input.baseline || cycle.date !== input.date
+      || cycle.rescheduled?.[student.id]
+      || (cycle.plannerKey && state.planner.rosters[cycle.plannerKey]?.deferred[student.id])
       || !cycle.assignments.some(a => a.student === student.id && a.skills.includes(skill.id))) {
-      throw new Error('This module is not assigned to that student in this cycle.');
+      throw new Error('This skill is not assigned to that student in this assessment.');
     }
   }
   const outcome = input.answers.filter(Boolean).length >= threshold ? 'Passed' : 'Needs Practice';
@@ -65,25 +70,9 @@ export function recordAssessment(state, input) {
   return record;
 }
 
-export function saveSession(state, { students, date, session, notes, statuses }) {
-  if (!validDate(date) || date > state.demoDate) throw new Error('Choose a session date on or before the workspace date.');
-  for (const student of students) {
-    const status = statuses[student.id] || 'Unmarked';
-    if (!['Unmarked', 'Present', 'Absent', 'Excused'].includes(status)) throw new Error('Choose a valid attendance status.');
-    if (status !== 'Unmarked' && date < student.joined) throw new Error('Attendance cannot predate student enrolment.');
-  }
-  // The register is a replacement for this visible group, including cleared marks.
-  const ids = new Set(students.map(s => s.id));
-  state.attendance = state.attendance.filter(a => !(ids.has(a.student) && a.date === date && a.session === session));
-  for (const student of students) {
-    const status = statuses[student.id];
-    if (status && status !== 'Unmarked') state.attendance.push({student: student.id, date, session, notes: notes.trim(), status});
-  }
-}
-
 // Upgrade old browser data without discarding created students or records.
 export function upgradeState(saved) {
-  if (!saved || saved.version !== 1 || !['students','skills','assessments','cycles','attendance','fitness','activities'].every(k => Array.isArray(saved[k]))) {
+  if (!saved || saved.version !== 1 || !['students','skills','assessments','cycles','fitness','activities'].every(k => Array.isArray(saved[k]))) {
     throw new Error('Unsupported or incomplete saved workspace data');
   }
   if (saved.skills.length !== 16 || saved.students.some(s => !Array.isArray(s.badges) || !s.id || !s.name)
@@ -99,7 +88,6 @@ export function upgradeState(saved) {
     || saved.students.some(s => typeof s.name !== 'string' || !levels.includes(s.level) || !validDate(s.joined)
       || s.badges.some(id => !skillIds.has(id)) || new Set(s.badges).size !== s.badges.length)
     || saved.cycles.some(c => !validDate(c.date) || c.assignments.some(a => !studentIds.has(a.student) || a.skills.some(id => !skillIds.has(id))))
-    || saved.attendance.some(a => !studentIds.has(a.student) || !validDate(a.date) || !['Present','Absent','Excused'].includes(a.status))
     || saved.fitness.some(f => !studentIds.has(f.student) || !validDate(f.date) || !Array.isArray(f.values) || f.values.length !== 7 || f.values.some(v => !Number.isFinite(v)))) {
     throw new Error('Inconsistent saved workspace records');
   }
@@ -107,10 +95,6 @@ export function upgradeState(saved) {
   saved.role = roles.includes(saved.role) ? saved.role : 'Management';
   saved.settings = { threshold: 4, ...saved.settings };
   if (![1,2,3,4,5].includes(saved.settings.threshold)) saved.settings.threshold = 4;
-  if (!saved.sessionDrafts || typeof saved.sessionDrafts !== 'object' || Array.isArray(saved.sessionDrafts)) saved.sessionDrafts = {};
-  for (const [key, draft] of Object.entries(saved.sessionDrafts)) {
-    if (!draft || typeof draft.statuses !== 'object' || !draft.statuses || typeof draft.notes !== 'string') delete saved.sessionDrafts[key];
-  }
   for (const a of saved.assessments) {
     const skill = saved.skills.find(k => k.id === a.skill);
     if (!skill || !saved.students.some(s => s.id === a.student) || !validDate(a.date) || !Array.isArray(a.answers)
@@ -146,5 +130,5 @@ export function upgradeState(saved) {
     }
   }
   saved.dataRevision = 2;
-  return upgradePlanner(applyReferenceCurriculum(saved));
+  return upgradeOperations(upgradePlanner(applyReferenceCurriculum(saved)));
 }

@@ -19,3 +19,19 @@ export function assessmentBuckets(records,today,range,maxBuckets=6) {
   return {start:from,end:through,count:records.filter(r=>r.date>=from&&r.date<=through).length};
  });
 }
+
+// Each individual badge has one earning event, even if its skill is assessed again.
+export function uniqueBadgeAwards(records,through='9999-12-31'){
+ const earned=new Map();
+ for(const a of records){
+  if(a.baseline||a.outcome!=='Passed'||a.date>through)continue;
+  const key=a.student+':'+a.skill;
+  if(!earned.has(key)||a.date<earned.get(key).date)earned.set(key,a);
+ }
+ return [...earned.values()].sort((a,b)=>a.date.localeCompare(b.date)||String(a.student).localeCompare(String(b.student))||a.skill-b.skill);
+}
+export function cumulativeBadgeBuckets(records,today,range,maxBuckets=6){
+ const awards=uniqueBadgeAwards(records,today),buckets=assessmentBuckets(awards,today,range,maxBuckets);
+ const opening=awards.filter(a=>a.date<buckets[0].start).length;
+ return buckets.map(b=>({...b,newCount:b.count,opening,count:awards.filter(a=>a.date<=b.end).length}));
+}

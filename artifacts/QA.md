@@ -163,3 +163,26 @@ The browser suites use their own isolated local storage. No user's running serve
 Desktop and mobile previews: [desktop](alignment-desktop.png), [mobile](alignment-mobile.png). Original partner logos and level/skill badge assets are unchanged. Real video playback still depends on configured media; no videos were supplied in the repository. Fitness thresholds and a fitness-to-Spark award rule remain undefined, so those rules were not invented.
 
 The independent design review inspected desktop, tablet and mobile layouts and reported no blocking layout issues. Its final report was interrupted by the workspace credit limit. The final previews were recaptured after navigation transitions finished, and all 83 browser-suite checks passed again against the final interface.
+
+## Assessment clearance and automatic rewards — 18 November 2026
+
+New results now use one participant assessment clearance outcome. **Cleared** automatically awards exactly the linked badges, records the source reference and badge snapshot, and updates the ordered level path. **Not cleared** awards nothing. Upload, processing and report-generation states are kept separate from athletic clearance. Questionnaire entry, pass-threshold configuration, required coach remarks and separate badge/level approval have been retired for new results. Historical questionnaire evidence remains read-only.
+
+The shared `recordAssessmentClearance` adapter rejects invalid participants, dates, rescheduled assignments, mismatched badge IDs and conflicting source-result references before mutation. Duplicate delivery is idempotent, including after an assistant's permitted curriculum changes following promotion. Repeated clearances cannot duplicate badges; later unsuccessful results do not revoke prior awards. Cumulative badge graphs use award evidence; result history and counters group award rows into one participant clearance event.
+
+The sixteen official badge IDs and all existing artwork remain unchanged. Assessments retain a versioned local badge mapping and participant badge IDs. Local `PSB_LOCAL_*` identifiers are explicitly separate from the assessment portal's deployed API catalog. The local result form records an already-issued outcome; no external evaluator, API call, media processing or report generation is simulated.
+
+Validation:
+
+- 58 unit tests passed, including legacy/new migration, immutable and rescheduled badge snapshots, idempotency, invalid-result atomicity, source-ID collisions, scoping, foundation gaps, sequential Scout/Star/Champ unlocks, no demotion, all-sixteen completion, explicit fitness badge mapping and duplicate-safe analytics.
+- 41 end-to-end workflow checks passed: [results](clearance-workflows.json).
+- 16 planner/fitness/redirect checks passed: [results](clearance-planner.json).
+- 9 full-reload persistence checks passed: [results](clearance-refresh.json).
+- 22 interactive chart and filter checks passed: [results](clearance-charts.json).
+- Eight additional root-agent smoke assertions verified explicit badge links, no questionnaire, optional references/notes, automatic badge awards and level unlock, source reference retention and result presentation.
+- A copy of the previous workspace migrated without losing students, old assessment results, earned badges, planned assignments, fitness records or a custom student name.
+- Module syntax and whitespace checks passed.
+
+Previews: [desktop](clearance-desktop.png), [mobile](clearance-mobile.png), [automatic badge result](clearance-result.png).
+
+Independent design evaluation: PASS at desktop 1440px, tablet 768px and mobile 375px. No horizontal overflow or blocking issues; creation and clearance-result dialogs remain usable on phones.

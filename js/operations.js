@@ -121,12 +121,13 @@ export function saveBatch(state,input){
 }
 
 export function createAssessment(state,input){
- const name=text(input.name,80),studentIds=unique(input.studentIds||[]),visible=new Set(visibleStudents(state).map(s=>s.id)),skillIds=unique(input.skillIds||levelSkills(state,input.level).map(k=>k.id));
+ const name=text(input.name,80),studentIds=unique(input.studentIds||[]),visible=new Set(visibleStudents(state).map(s=>s.id)),skillIds=unique(input.badgeIds??input.skillIds??levelSkills(state,input.level).map(k=>k.id));
  if(name.length<2||!validDate(input.date)||input.date<state.demoDate||!studentIds.length||studentIds.some(id=>!visible.has(id)))throw Error('Choose a name, upcoming date and assigned students.');
  if(state.cycles.some(c=>c.date===input.date&&c.name.toLowerCase()===name.toLowerCase()))throw Error('An assessment with that name is already scheduled on this date.');
  if((!skillIds.length&&!input.includeFitness)||skillIds.some(id=>!canAccessSkill(state,id)))throw Error('Choose available skills or include the fitness step.');
  if(studentIds.some(id=>state.students.find(s=>s.id===id).joined>input.date))throw Error('Assessment dates must be on or after student enrolment.');
- const cycle={id:crypto.randomUUID(),name,date:input.date,level:LEVELS.includes(input.level)?input.level:null,includeFitness:!!input.includeFitness,assignments:studentIds.map(student=>({student,skills:[...skillIds]}))};state.cycles.push(cycle);return cycle;
+ const assessmentType=input.moduleId||'PSB_LOCAL_'+(LEVELS.includes(input.level)?input.level:'FITNESS');
+ const cycle={id:crypto.randomUUID(),name,date:input.date,level:LEVELS.includes(input.level)?input.level:null,includeFitness:!!input.includeFitness,badgeIds:[...skillIds],assessmentType,moduleSnapshot:{moduleId:assessmentType,name:input.moduleName||name,version:1,source:'local-psb-mapping',badgeIds:[...skillIds],badges:skillIds.map(id=>{const k=state.skills.find(k=>k.id===id);return {id,name:k.name,level:k.level};})},assignments:studentIds.map(student=>({student,skills:[...skillIds],badgeIds:[...skillIds]}))};state.cycles.push(cycle);return cycle;
 }
 export function addToAssessment(state,cycleId,studentId,requestedSkills){
  const cycle=state.cycles.find(c=>c.id===cycleId),student=visibleStudents(state).find(s=>s.id===studentId);
@@ -137,7 +138,7 @@ export function addToAssessment(state,cycleId,studentId,requestedSkills){
  if(!skills.length&&!cycle.includeFitness)throw Error('This assessment has no active skills or fitness step. Choose another assessment.');
  if(skills.some(id=>!groupSkills.includes(id)||!canAccessSkill(state,id)))throw Error('Choose skills included in this assessment and available to your role.');
  let assignment=cycle.assignments.find(a=>a.student===studentId);
- if(assignment)assignment.skills=unique([...assignment.skills,...skills]);else{assignment={student:studentId,skills};cycle.assignments.push(assignment);}
+ if(assignment){assignment.skills=unique([...assignment.skills,...skills]);assignment.badgeIds=unique([...(assignment.badgeIds||[]),...skills]);}else{assignment={student:studentId,skills,badgeIds:[...skills]};cycle.assignments.push(assignment);}
  if(cycle.plannerKey){const roster=state.planner.rosters[cycle.plannerKey];if(roster){if(!roster.students.includes(studentId))roster.students.push(studentId);delete roster.deferred[studentId];}}
  return cycle;
 }
@@ -159,7 +160,11 @@ export function rescheduleStudent(state,cycleId,studentId,date){
  let target=state.cycles.find(c=>c.id!==source.id&&c.date===date&&c.level===level&&!c.rescheduled?.[studentId]&&(!fitnessPending||c.includeFitness)&&pending.every(id=>c.assignments.some(a=>a.skills.includes(id))));
  if(!target){target={id:crypto.randomUUID(),name:source.name+' · '+date,date,level,includeFitness:!!fitnessPending,assignments:[]};state.cycles.push(target);}
  let to=target.assignments.find(a=>a.student===studentId);if(to)to.skills=unique([...to.skills,...pending]);else target.assignments.push({student:studentId,skills:[...pending]});
- assignment.skills=assignment.skills.filter(recorded);
+ assignment.skills=assignment.skills.filter(recorded);assignment.badgeIds=[...assignment.skills];
+ if(to)to.badgeIds=[...to.skills];else target.assignments.at(-1).badgeIds=[...pending];
+ target.badgeIds=unique(target.assignments.flatMap(a=>a.badgeIds||a.skills));
+ target.assessmentType??=source.assessmentType||'PSB_LOCAL_'+(level||'FITNESS');
+ target.moduleSnapshot??={moduleId:target.assessmentType,name:target.name,version:1,source:'local-psb-mapping',badgeIds:[...target.badgeIds],badges:target.badgeIds.map(id=>{const k=source.moduleSnapshot?.badges?.find(k=>k.id===id)||state.skills.find(k=>k.id===id);return {id,name:k.name,level:k.level};})};
  // A per-student marker keeps the original evidence accessible without another live queue.
  source.rescheduled={...source.rescheduled,[studentId]:{date,assessmentId:target.id}};
  if(source.plannerKey&&state.planner.rosters[source.plannerKey])state.planner.rosters[source.plannerKey].deferred[studentId]=date;

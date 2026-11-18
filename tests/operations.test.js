@@ -1,11 +1,13 @@
+import {recordAssessmentClearance} from '../js/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {seed} from '../js/data.js';
-import {upgradeState,recordAssessment} from '../js/domain.js';
+import {upgradeState} from '../js/domain.js';
 import {activeCoach,visibleStudents,coachStudents,allowedSkills,canAccessSkill,addCoach,assignStudent,librarySkills,saveLibrarySkill,saveCurriculum,saveBatch,createAssessment,addToAssessment,recordFitness,rescheduleStudent} from '../js/operations.js';
 
 const assessment=(s,extra={})=>createAssessment(s,{name:'Friday group',date:s.demoDate,level:'Spark',studentIds:['VS001'],...extra});
-const score=(s,c,skill=3)=>recordAssessment(s,{student:'VS001',skill,date:c.date,answers:[true,true,true,true,false],remarks:'Controlled stroke and recovery',cycleId:c.id,baseline:false,coach:1});
+// Historical fixture, not a supported new-result entry point.
+const score=(s,c,skill=3)=>{if(!c.assignments.some(a=>a.student==='VS001'&&a.skills.includes(skill))||c.rescheduled?.VS001)throw Error('not assigned');const k=s.skills.find(k=>k.id===skill),r={id:crypto.randomUUID(),student:'VS001',skill,date:c.date,answers:[true,true,true,true,false],criteria:[...k.criteria],skillName:k.name,threshold:4,outcome:'Passed',remarks:'Historical evidence',cycleId:c.id,baseline:false,coach:1};s.assessments.push(r);if(!s.students[0].badges.includes(skill))s.students[0].badges.push(skill);return r;};
 
 test('legacy migration preserves progression while retiring optional or malformed register records',()=>{
  const s=seed(),before={students:structuredClone(s.students),assessments:structuredClone(s.assessments),cycles:structuredClone(s.cycles),fitness:structuredClone(s.fitness)};
@@ -27,7 +29,7 @@ test('head coaches see their venues and assistants see explicit assignments acro
 test('assistant privacy predicates and recording reject unrelated curriculum even in a group',()=>{
  const s=seed(),c=assessment(s,{level:'Champ'});s.role='Assistant Coach';
  assert.deepEqual(new Set(allowedSkills(s).map(k=>k.level)),new Set(['Spark']));assert(!canAccessSkill(s,16));
- const count=s.assessments.length;assert.throws(()=>score(s,c,16),/available skill/);assert.equal(s.assessments.length,count);
+ const count=s.assessments.length;assert.throws(()=>recordAssessmentClearance(s,{assessmentId:c.id,student:'VS002',date:c.date,status:'CLEARED'}),/participant/);assert.equal(s.assessments.length,count);
  assert.throws(()=>addCoach(s,{name:'New coach',role:'Assistant Coach',venues:['Indiranagar']}),/Only management/);
 });
 
@@ -88,7 +90,7 @@ test('optional custom record migration skips malformed rows and preserves usable
 test('assessment creation validates scope, dates and group skills without partial changes',()=>{
  const s=seed();s.role='Assistant Coach';const before=s.cycles.length;
  for(const overrides of [{studentIds:['VS002']},{date:'2026-02-30'},{date:'2026-11-12'},{level:'Champ'},{studentIds:[]}])assert.throws(()=>assessment(s,overrides));
- assert.equal(s.cycles.length,before);const c=assessment(s);assert.deepEqual(c.assignments,[{student:'VS001',skills:[1,2,3,4]}]);
+ assert.equal(s.cycles.length,before);const c=assessment(s);assert.deepEqual(c.assignments,[{student:'VS001',skills:[1,2,3,4],badgeIds:[1,2,3,4]}]);
  assert.throws(()=>assessment(s),/already scheduled/);
 });
 

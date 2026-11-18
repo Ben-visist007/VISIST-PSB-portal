@@ -24,7 +24,7 @@ export function assessmentBuckets(records,today,range,maxBuckets=6) {
 export function uniqueBadgeAwards(records,through='9999-12-31'){
  const earned=new Map();
  for(const a of records){
-  if(a.baseline||a.outcome!=='Passed'||a.date>through)continue;
+  if(a.baseline||a.outcome!=='Passed'||!Number.isInteger(a.skill)||a.date>through)continue;
   const key=a.student+':'+a.skill;
   if(!earned.has(key)||a.date<earned.get(key).date)earned.set(key,a);
  }

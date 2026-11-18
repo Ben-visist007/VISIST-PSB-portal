@@ -22,51 +22,7 @@ test('seed records are chronological and every award has passing evidence', () =
   }
 });
 
-const prepared=()=>{const s=seed();s.cycles.push({id:'qa-assessment',name:'QA group',date:s.demoDate,assignments:[{student:'VS001',skills:Array.from({length:16},(_,i)=>i+1)}]});return s;};
-
-test('higher individual awards never promote and cannot be duplicated', () => {
-  const s=prepared();recordAssessment(s,input());recordAssessment(s,input());
-  assert.equal(s.students[0].level,'Spark');
-  assert.equal(s.students[0].badges.filter(x=>x===16).length,1);
-});
-
-test('baseline evidence never awards a curriculum badge or completes a normal cycle', () => {
-  const s=seed(),c={id:'qa-cycle',date:s.demoDate,assignments:[{student:'VS001',skills:[16]}]};s.cycles.push(c);
-  recordAssessment(s,input({baseline:true,cycleId:null}));
-  assert(s.students[0].baseline.includes(16));assert(!s.students[0].badges.includes(16));
-  assert(!cycleOutcome(s,c,'VS001',16));assert(pendingModules(s,s.students[0]).some(x=>x.cycle.id===c.id));
-});
-
-test('same-day cycles and standalone assessments do not complete each other', () => {
-  const s=seed(),a={id:'qa-a',date:s.demoDate,assignments:[{student:'VS001',skills:[16]}]},b={...a,id:'qa-b'};
-  s.cycles.push(a,b);assert.throws(()=>recordAssessment(s,input({cycleId:null})),/scheduled assessment/);assert(!cycleOutcome(s,a,'VS001',16));
-  recordAssessment(s,input({cycleId:a.id}));assert(cycleOutcome(s,a,'VS001',16));assert(!cycleOutcome(s,b,'VS001',16));
-});
-
-test('invalid dates, pre-enrolment dates and unassigned modules do not mutate records', () => {
-  const s=seed(),count=s.assessments.length;
-  for (const overrides of [{date:'2026-11-14'},{date:'2020-01-01'},{date:'2026-02-30'},{cycleId:'unknown'},{answers:[true]}]) {
-    assert.throws(()=>recordAssessment(s,input(overrides)));
-    assert.equal(s.assessments.length,count);
-  }
-});
-
-test('threshold changes affect new outcomes, not historical snapshots', () => {
-  const s=prepared();const passed=recordAssessment(s,input());s.settings.threshold=5;
-  const failed=recordAssessment(s,input());assert.equal(passed.outcome,'Passed');assert.equal(passed.threshold,4);
-  assert.equal(failed.outcome,'Needs Practice');assert.equal(failed.threshold,5);assert(s.students[0].badges.includes(16));
-});
-
-test('later success clears current practice needs while retaining unsuccessful history', () => {
-  const s=prepared();assert.equal(needsPractice(s,{student:'VS001'}).filter(a=>a.skill===3).length,1);
-  recordAssessment(s,input({skill:3}));assert(!needsPractice(s,{student:'VS001'}).some(a=>a.skill===3));
-  assert.equal(s.assessments.filter(a=>a.student==='VS001'&&a.skill===3&&a.outcome==='Needs Practice').length,2);
-});
-
-test('editing curriculum cannot rewrite an assessment that was already recorded', () => {
-  const s=prepared(),a=recordAssessment(s,input());const original=a.criteria[0];s.skills[15].criteria[0]='New sample criterion';
-  assert.equal(a.criteria[0],original);assert.notEqual(a.criteria[0],s.skills[15].criteria[0]);
-});
+test('question-based scoring cannot be used for new results',()=>{assert.throws(()=>recordAssessment(seed(),input()),/retired/);assert.throws(()=>recordAssessment(seed(),input({baseline:true})),/retired/);});
 
 test('saved workspaces ignore retired register data without losing assessment history', () => {
  const s=seed(),before=JSON.stringify(s.assessments);s.attendance='malformed legacy register';s.sessionDrafts={old:{notes:'Old notes'}};

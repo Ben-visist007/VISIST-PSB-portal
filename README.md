@@ -16,7 +16,7 @@ If startup reports `Address already in use`, another server is already using por
 
 - **Dashboard:** scoped student and badge totals, upcoming assessments, interactive cumulative badge progression and venue/level comparisons.
 - **Students:** profiles, current levels, individual badge collections and assessment history. Use **Add to assessment** to place a player into an upcoming group assessment.
-- **Assessments:** plan a dated assessment, select its students and skill group, optionally include fitness, and record results from the saved assessment. Upcoming Fridays are scheduling suggestions; historical records keep their original dates and assignments.
+- **Assessments:** plan a dated assessment, select its students and skill group, optionally include fitness, and record the received participant clearance result from the saved assessment. Upcoming Fridays are scheduling suggestions; historical records keep their original dates and assignments.
 - **Practice plan:** group assigned students by incomplete skills and open relevant coaching materials. Recommendations work without a daily register.
 - **Curriculum / Coach Toolkit:** official skill targets and drills, video covers and supporting instructions. Assistant coaches see only content relevant to their assigned students.
 - **Coaches:** create coaches, assign their venues and move students between appropriate coaching assignments. Head coaches oversee their assigned venues; assistant coaches work with explicitly assigned students.
@@ -32,13 +32,19 @@ Management sees the academy. Head coaches see students at the venues they overse
 
 Records are saved in this browser under `visist-demo-v1`. Existing workspaces migrate without resetting student records, badge collections, assessment history, planned assessments or fitness measurements. Retired register data and drafts are no longer part of active state. The workspace date controls reporting and assessment entry; future assessment execution requires explicit confirmation before advancing it.
 
-## Assessment and badge rules
+## Assessment clearance, badges and levels
 
-Each official skill assessment records five Yes/No criteria, coach remarks and a snapshot of its criteria, name and pass threshold. The default threshold remains four of five. Passing awards the individual skill badge once; repeat passes never inflate earned-badge totals. Baseline evidence remains separate from regular badge awards.
+The assessment portal supplies each participant's assessment result. **Cleared** automatically awards all badges linked to that participant's assessment and updates level progress. **Not cleared** awards no badges. There are no new questionnaire responses, numeric pass thresholds, required coach comments or separate badge approvals.
 
-Overall level changes remain subject to head-coach review. Fitness measurements do not automatically award Spark or invent a fitness pass standard. The precise fitness prerequisite and skill/module/badge schema must be defined before those business rules change.
+Creation displays the linked badge collection explicitly. The sixteen collectible badge IDs remain stable. Each assessment retains its module identifier and versioned local badge-mapping snapshot; each received result retains its source result/report reference and the linked badge names. These local `PSB_LOCAL_*` mappings are not represented as the deployed assessment portal's API catalog.
 
-The progression chart counts cumulative unique skill badges from the earliest regular passing evidence per student and skill. Selected reporting windows retain the opening badge balance; repeat attempts and baseline results do not add awards. Chart drilldowns show the records supporting the displayed measure.
+`recordAssessmentClearance` in `js/progression.js` is the shared integration adapter. It accepts the explicit participant clearance outcome, validates the scheduled assessment, participant, date and linked IDs, records evidence, and awards badges in one local transaction. Source result references make duplicate delivery idempotent. Source upload, processing, report-generation or `ASSESSMENTS_COMPLETE` states are operational progress and never imply athletic clearance. The local interface records an already-issued result; no external assessment API or evaluator is connected or simulated.
+
+Badges unlock the ordered four-level path automatically: badges 1–4 unlock Scout; 1–8 unlock Star; 1–12 unlock Champ. Spark is the starting level, and collecting all sixteen completes the Champ collection without inventing a fifth level. Foundation gaps prevent level skipping. Previously saved levels are retained and never demoted. Later unsuccessful results do not silently revoke earned badges.
+
+Historical five-response assessments and baseline evidence remain read-only as originally recorded. New regular or baseline questionnaire scoring is retired. Onboarding uses the assessment roster. Fitness measurements remain supporting evidence; an explicitly received clearance result awards only the badges actually linked to that fitness assessment.
+
+The progression chart counts cumulative unique badge awards, combining preserved historical passing evidence with new clearance award evidence. Duplicate result delivery and repeated clearances do not inflate badge totals. Assessment-result lists and counters show one participant clearance event even when that event awards several badges. Selected reporting windows retain the opening badge balance.
 
 ## Curriculum and media
 
@@ -53,8 +59,11 @@ The official uploaded VISIST.AI and PSB logos retain their original artwork. `as
 - `index.html`, `styles.css`, `js/app.js`: application rendering, routing, forms and visual interactions.
 - `js/data.js`, `js/state.js`, `js/domain.js`: initial records, browser storage, migration and recorded assessment rules.
 - `js/operations.js`: coach assignments, curriculum/library/batch operations, group assessment creation and fitness steps.
+- `js/progression.js`: assessment-clearance receipts, automatic linked-badge awards and ordered level unlocks.
 - `js/planner.js`, `js/analytics.js`: practice recommendations, planning helpers and cumulative reporting.
 - `js/curriculum.js`: official sixteen-skill targets and coaching guidance.
 - `tests/`: unit regressions and isolated browser workflow suites.
 
 Run `npm test` for domain and analytics checks, and `npm run check` for module syntax checks. Browser suites must run in their own isolated browser session because workflow checks may reset that session's local records. Older screenshots and QA documents describe earlier versions and are retained as historical artifacts.
+
+The clearance revision passed **58 unit checks** and **88 browser assertions** (41 workflows, 16 planner/fitness, 9 persistence and 22 chart checks). See [the clearance QA record](artifacts/QA.md) and [automatic badge result preview](artifacts/clearance-result.png).

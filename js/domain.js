@@ -1,7 +1,8 @@
+import {upgradeProgression} from './progression.js';
 import {upgradeOperations,visibleStudents,canAccessSkill} from './operations.js';
 import {upgradePlanner} from './planner.js';
 import {applyReferenceCurriculum} from './curriculum.js';
-// Shared rules for the browser demo. These never infer an overall level promotion.
+// Assessment operations and safe saved-workspace migration.
 export const DEMO_DATE = '2026-11-13';
 export const roles = ['Management', 'Head Coach', 'Assistant Coach'];
 export const allowedPages = role => role === 'Assistant Coach'
@@ -39,36 +40,7 @@ export function needsPractice(state, options) {
   return latestAttempts(state.assessments, options).filter(a => a.outcome === 'Needs Practice');
 }
 
-export function recordAssessment(state, input) {
-  const student = state.students.find(s => s.id === input.student);
-  const skill = state.skills.find(s => s.id === input.skill);
-  const threshold = state.settings.threshold;
-  if (!student || !skill || !validDate(input.date) || input.date > state.demoDate
-    || input.date < student.joined || !input.remarks?.trim()
-    || input.answers?.length !== 5 || !input.answers.every(a => typeof a === 'boolean')) {
-    throw new Error('Check the student, date, five responses and coach remarks. Results must be between enrolment and the workspace date.');
-  }
-  if (!visibleStudents(state).some(s=>s.id===input.student)||!canAccessSkill(state,input.skill)) throw new Error('Choose an assigned student and an available skill.');
-  if (!input.baseline&&!input.cycleId) throw new Error('Add the student to a scheduled assessment before recording a result.');
-  if (input.cycleId) {
-    const cycle = state.cycles.find(c => c.id === input.cycleId);
-    if (!cycle || input.baseline || cycle.date !== input.date
-      || cycle.rescheduled?.[student.id]
-      || (cycle.plannerKey && state.planner.rosters[cycle.plannerKey]?.deferred[student.id])
-      || !cycle.assignments.some(a => a.student === student.id && a.skills.includes(skill.id))) {
-      throw new Error('This skill is not assigned to that student in this assessment.');
-    }
-  }
-  const outcome = input.answers.filter(Boolean).length >= threshold ? 'Passed' : 'Needs Practice';
-  const record = { ...input, id: crypto.randomUUID(), outcome, threshold,
-    remarks: input.remarks.trim(), criteria: [...skill.criteria], skillName: skill.name };
-  state.assessments.push(record);
-  if (outcome === 'Passed') {
-    const collection = input.baseline ? (student.baseline ??= []) : student.badges;
-    if (!collection.includes(skill.id)) collection.push(skill.id);
-  }
-  return record;
-}
+export function recordAssessment(){throw new Error('Question-based scoring is retired. Record the participant’s assessment clearance result.');}
 
 // Upgrade old browser data without discarding created students or records.
 export function upgradeState(saved) {
@@ -97,6 +69,10 @@ export function upgradeState(saved) {
   if (![1,2,3,4,5].includes(saved.settings.threshold)) saved.settings.threshold = 4;
   for (const a of saved.assessments) {
     const skill = saved.skills.find(k => k.id === a.skill);
+    if (a.type==='clearance') {
+      if ((!skill&&a.skill!==null)||!saved.students.some(s=>s.id===a.student)||!validDate(a.date)||!['CLEARED','NOT_CLEARED'].includes(a.status))throw new Error('Invalid clearance evidence');
+      continue;
+    }
     if (!skill || !saved.students.some(s => s.id === a.student) || !validDate(a.date) || !Array.isArray(a.answers)
       || a.answers.length !== 5 || !a.answers.every(v => typeof v === 'boolean')) throw new Error('Invalid assessment reference');
     a.criteria ??= [...skill.criteria];
@@ -130,5 +106,5 @@ export function upgradeState(saved) {
     }
   }
   saved.dataRevision = 2;
-  return upgradeOperations(upgradePlanner(applyReferenceCurriculum(saved)));
+  return upgradeProgression(upgradeOperations(upgradePlanner(applyReferenceCurriculum(saved))));
 }

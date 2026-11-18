@@ -1,7 +1,9 @@
+// Preserve partial historical fixtures when testing legacy-plan migration.
+const recordAssessment=(s,input)=>{const k=s.skills.find(k=>k.id===input.skill),r={...input,id:crypto.randomUUID(),outcome:'Passed',threshold:4,criteria:[...k.criteria],skillName:k.name};s.assessments.push(r);return r;};
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {seed} from '../js/data.js';
-import {upgradeState,recordAssessment,cycleOutcome} from '../js/domain.js';
+import {upgradeState,cycleOutcome} from '../js/domain.js';
 import {defaultPlanner,validatePlannerSettings,scheduledDays,nextLevelDay,recommendations,workingLevel,ensureRoster,setRosterStudent,visibleRoster,createPlanCycle,deferStudent,practiceGroups,upcomingFridays,failureStreak} from '../js/planner.js';
 
 test('recurring schedule crosses month/year boundaries with exact nth weekdays',()=>{

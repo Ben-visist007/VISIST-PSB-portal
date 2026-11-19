@@ -452,29 +452,32 @@ function vPlanner(){
       <ol class="seq">${videosOf(L.id).map(v=>`<li>${v.label}<span class="subtle" style="margin-left:auto;font-size:11px">${portalEscape(SK[v.id.split('.')[0]].name)}</span></li>`).join('')}</ol></div>
     </div></div></div></div>`}
 
+// Day-plan exception to the reference: group by the next unearned badge, never by level.
+function dayBadgeGroups(students){
+ const badges=[...SKILLS].sort((a,b)=>a.order-b.order),byBadge=new Map(),complete=[],seen=new Set();
+ for(const student of students){
+  if(seen.has(student.id))continue;seen.add(student.id);
+  const progress=ev(student),badge=badges.find(sk=>!progress.sk[sk.id]?.earned);
+  if(!badge){complete.push(student);continue;}
+  if(!byBadge.has(badge.id))byBadge.set(badge.id,{badge,kids:[],failed:[]});
+  const group=byBadge.get(badge.id),record=progress.sk[badge.id];group.kids.push(student);
+  if(record?.history.length&&!record.lastPass)group.failed.push(student);
+ }
+ const groups=[...byBadge.values()].sort((a,b)=>b.kids.length-a.kids.length||b.failed.length-a.failed.length||a.badge.order-b.badge.order);
+ for(const group of groups)group.kids.sort((a,b)=>a.name.localeCompare(b.name));
+ return {groups,complete};
+}
 function vDayPlan(){
-  const me=CO[ui.role],mine=visible(),present=mine.filter(s=>!ui.absent.has(s.id));
-  const groups=[];LEVELS.forEach(L=>{const kids=present.filter(s=>ev(s).working===L.idx);if(!kids.length)return;
-    const focus=skillsOf(L.id).map(sk=>{const ks=kids.filter(s=>!ev(s).sk[sk.id].earned);const failed=ks.filter(s=>ev(s).sk[sk.id].history.length&&!ev(s).sk[sk.id].lastPass);return {sk,ks,failed}}).filter(f=>f.ks.length)
-      .sort((a,b)=>b.ks.length-a.ks.length||b.failed.length-a.failed.length||a.sk.order-b.sk.order);
-    groups.push({L,kids,focus})});
-  const done=present.filter(s=>ev(s).working<0),next=assessmentDays(state.today,1)[0],nl=levelForDate(next),due=recommend(next).rec.length;
-  return `<div class="wrap">
-  <div class="head"><div class="grow"><div class="eyebrow">${portalEscape(me.name)} · ${portalEscape(me.batch)}</div><h1>Day plan</h1>
-  <p>Groups today's kids by the badges they are still missing at their level, so kids with the same gap train together. This is a recommendation, not a timetable. Drills for each skill come from the PSB curriculum.</p></div></div>
-  <div class="card"><div class="ch"><h3 class="grow">Who's here today?</h3><span class="muted">${present.length} of ${mine.length} present · tap to mark absent</span></div>
-   <div class="att">${mine.map(s=>`<button class="${ui.absent.has(s.id)?'off':''}" data-act="absent" data-id="${s.id}" aria-pressed="${!ui.absent.has(s.id)}"><span class="av">${initials(s.name)}</span>${portalEscape(s.name.split(' ')[0])}</button>`).join('')}</div></div>
-  ${due?`<div class="banner info"><b>${fmt(next)} is ${nl.name} day.</b>&nbsp;${due} of your students are recommended.<span style="flex:1"></span><button class="btn sm" data-act="plan" data-d="${next}">Open planner</button></div>`:''}
-  ${groups.length?`<div class="groups">${groups.map(g=>`<div class="card gcard" style="--c:var(--t-${g.L.id});--cs:var(--t-${g.L.id}-soft)">
-    <div class="ch"><span class="lvl ${g.L.id}"><i></i>${g.L.name} group</span><span class="muted" style="font-size:12px">working toward ${awardTxt(g.L)}</span><span class="grow"></span><b class="num">${g.kids.length} kids</b></div>
-    <div class="focus">${g.focus.map((f,i)=>`<div class="fs ${i===0?'top':''}"><div class="fh"><svg width="26" height="26" viewBox="0 0 100 100"><polygon points="${HEX}" fill="var(--t-${g.L.id})"/><text x="50" y="60" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="30" fill="#fff">${f.sk.abbr}</text></svg><b>${portalEscape(f.sk.name)}</b>${i===0?'<span class="pill ok">Suggested focus</span>':''}<span class="muted num">${f.ks.length}/${g.kids.length}</span></div>
-      <div class="kids">${f.ks.map(s=>`<span class="kid ${f.failed.includes(s)?'f':''}" title="${f.failed.includes(s)?'Failed this at the last assessment':''}">${portalEscape(s.name.split(' ')[0])}</span>`).join('')}</div>
-      <small class="muted">Standard: ${f.sk.std}${f.failed.length?` · <span style="color:var(--danger)">${f.failed.length} failed it last time</span>`:''}</small></div>`).join('')}</div>
-    ${g.kids.some(s=>!s.attempts.length)?`<p class="note" style="margin-top:10px">${portalEscape(g.kids.filter(s=>!s.attempts.length).map(s=>s.name.split(' ')[0]).join(', '))}: no assessment yet, so they get the default ${g.L.name} plan.</p>`:''}
-   </div>`).join('')}</div>`:''}
-  ${done.length?`<div class="card"><b>${portalEscape(done.map(s=>s.name.split(' ')[0]).join(', '))}</b> <span class="muted">have all 16 skill badges.</span></div>`:''}
-  ${!present.length?`<div class="empty">Nobody marked present.</div>`:''}
-  </div>`}
+ const me=CO[ui.role],mine=visible(),present=mine.filter(s=>!ui.absent.has(s.id)),{groups,complete}=dayBadgeGroups(present),next=assessmentDays(state.today,1)[0],nl=levelForDate(next),due=recommend(next).rec.length;
+ return `<div class="wrap">
+ <div class="head"><div class="grow"><div class="eyebrow">${portalEscape(me.name)} · ${portalEscape(me.batch)}</div><h1>Day plan</h1><p>Groups today's players by their next unearned skill badge. Players with the same badge gap train together, regardless of their current level. Each player has one suggested focus. Drills come from the PSB curriculum.</p></div></div>
+ <div class="card"><div class="ch"><h3 class="grow">Who's here today?</h3><span class="muted">${present.length} of ${mine.length} present · tap to mark absent</span></div><div class="att">${mine.map(s=>`<button class="${ui.absent.has(s.id)?'off':''}" data-act="absent" data-id="${s.id}" aria-pressed="${!ui.absent.has(s.id)}"><span class="av">${initials(s.name)}</span>${portalEscape(s.name.split(' ')[0])}</button>`).join('')}</div></div>
+ ${due?`<div class="banner info"><b>${fmt(next)} is ${nl.name} day.</b>&nbsp;${due} of your students are recommended.<span style="flex:1"></span><button class="btn sm" data-act="plan" data-d="${next}">Open planner</button></div>`:''}
+ ${groups.length?`<div class="groups day-badge-groups">${groups.map((g,i)=>`<section class="card gcard day-badge-group" data-day-badge="${g.badge.id}" style="--c:var(--t-${g.badge.tier});--cs:var(--t-${g.badge.tier}-soft)"><div class="ch"><div class="day-badge-art">${badgeSVG(g.badge,null)}</div><div class="grow"><div class="eyebrow">Skill badge focus</div><h2>${portalEscape(g.badge.name)}</h2></div><span class="pill">${g.kids.length} ${g.kids.length===1?'player':'players'}</span></div><div class="fs ${i===0?'top':''}">${i===0?'<span class="pill ok">Suggested focus</span>':''}<p class="day-badge-standard"><strong>Standard:</strong> ${portalEscape(g.badge.std)}</p><div class="kids">${g.kids.map(s=>`<button class="kid ${g.failed.includes(s)?'f':''}" data-act="prof" data-id="${s.id}" data-day-student="${s.id}" title="Open ${portalEscape(s.name)} profile"><strong>${portalEscape(s.name)}</strong><small>${stageOf(ev(s).level).name}${g.failed.includes(s)?' · needs support':''}</small></button>`).join('')}</div>${g.failed.length?`<p class="muted day-badge-note">${g.failed.length} ${g.failed.length===1?'player needs':'players need'} extra practice after the last assessment.</p>`:''}${g.kids.some(s=>!s.attempts.length)?'<p class="note">New players start with their first unearned badge.</p>':''}</div></section>`).join('')}</div>`:''}
+ ${complete.length?`<div class="card day-badge-complete"><b>${portalEscape(complete.map(s=>s.name).join(', '))}</b> <span class="muted">${complete.length===1?'has':'have'} all ${SKILLS.length} skill badges. Continue practice using the curriculum.</span></div>`:''}
+ ${!present.length?'<div class="empty">Nobody marked present.</div>':''}
+ </div>`;
+}
 
 const QUESTIONS=[
   ['Coach-awarded skill badges','The sheet says a coach can award a skill badge when they see a kid perform it (“prodigy” badge). The workshop said only AI-scored videos change badges. Which wins?'],

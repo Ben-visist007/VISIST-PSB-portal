@@ -17,7 +17,7 @@ Open **http://127.0.0.1:4173/**. Python 3 and a modern browser are required. No 
 - **Coach:** My players, Day plan and Assessment planner; works with assigned players and can add a player within their own scope.
 - **Player intake:** the reference’s simple form with optional parent WhatsApp. New players start at Spark with zero skill badges.
 - **Profiles:** Badge board, History and Family view (phase 2), including per-video scores, best scores, attempt history, direct booking and simulated family sharing.
-- **Day plan:** the reference’s present/absent selection and overlapping coaching groups based on missing skills.
+- **Day plan:** retains the present/absent selection, but groups players by their next unearned skill badge, irrespective of current level. Each present player has one primary badge focus; completed collections remain visible for continued practice. This is the approved exception to the HTML’s level-based grouping.
 - **Planner:** fixed monthly level days, Recommended, Stretch / fast-track, Add all, automatic or manual booking and the fixed recording sequence. **Record & score** immediately scores the booked group, advances the workspace clock if needed, locks the recorded day and opens the complete **AI scoring complete** result view.
 - **Awards:** follow the reference’s per-video scores and best-score accumulation. The default ordered-column rule and alternative count rule behave exactly as in the HTML.
 - **Settings:** ordinal weekday per level, fifth-week policy, roster mode and notice period apply immediately.
@@ -56,6 +56,6 @@ npm test
 
 `tests/workspace-parity.test.js` compares the active core functions, seeded state, role scopes, view wording, calendar, scoring, rule replay and family-sharing ledger against the supplied HTML. It also checks that legacy browser storage is unused and user-authored names render safely. The earlier domain tests remain as compatibility checks for inactive code.
 
-The active browser suites are `tests/browser-workspace.js`, `tests/browser-workspace-after-refresh.js` and `tests/browser-workspace-responsive.js`. Run them only in an isolated browser session. The other browser scripts describe the retired controller and are not acceptance tests for this workspace.
+The active browser suites are `tests/browser-workspace.js`, `tests/browser-workspace-after-refresh.js`, `tests/browser-workspace-responsive.js` and `tests/browser-day-badges.js`. Run them only in an isolated browser session. The other browser scripts describe the retired controller and are not acceptance tests for this workspace.
 
-Latest verification: **105 unit/compatibility checks** (including 12 active source-parity checks) and **227 active browser assertions** passed. The browser checks cover the full workflow, reload/storage behaviour and every role destination, profile/family view and simulator tab at 1440, 900 and 390 pixels.
+Latest verification: **110 unit/compatibility checks** (12 source-parity checks, 5 badge-grouping checks and 93 retained compatibility checks) and **239 active browser assertions** passed. The browser checks cover the full workflow, reload/storage behaviour and every role destination, profile/family view and simulator tab at 1440, 900 and 390 pixels.

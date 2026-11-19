@@ -434,7 +434,7 @@ function vPlanner(){
   const plan=state.plans[d]||[];
   const pickRow=({s,missing},kind)=>{const e=ev(s),on=plan.includes(s.id);return `<label class="pick"><input type="checkbox" data-pick="${s.id}" ${on?'checked':''} ${done?'disabled':''}><div class="av">${initials(s.name)}</div><div class="grow"><b>${portalEscape(s.name)}</b><small>${kind==='rec'?`Missing ${missing.length} of 4: ${portalEscape(missing.map(m=>m.name).join(', '))}`:`Working on ${LEVELS[e.working].name}. Earns any ${L.name} skill badge they pass; ${awardTxt(L)} waits until every earlier column is done.`}</small></div>${e.sk[missing[0].id].streak>=2||missing.some(m=>e.sk[m.id].streak>=2)?'<span class="pill danger">attention</span>':''}${lvlChip(e.level)}</label>`};
   const notifyDate=addDays(d,-PLAN.notice);
-  return `<div class="wrap">
+  return `<div class="wrap portal-planner">
   <div class="head"><div class="grow"><div class="eyebrow">Fixed calendar</div><h1>Assessment planner</h1>
   <p>${LEVELS.map(L=>`${L.name}: ${dayLabel(L.id)}`).join(' · ')}. ${PLAN.mode==='auto'?'Recommended students are added automatically; the coach removes anyone who shouldn\'t go.':'The system recommends who to add; the coach adds or removes students.'}</p></div>${roleKind()==='admin'?`<button class="btn" data-act="view" data-v="settings">${ic('cal',14)}Planner settings</button>`:''}</div>
   <div class="split" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)">

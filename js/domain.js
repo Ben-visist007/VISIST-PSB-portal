@@ -1,5 +1,5 @@
 import {upgradeProgression} from './progression.js';
-import {upgradeOperations,visibleStudents,canAccessSkill} from './operations.js';
+import {upgradeOperations} from './operations.js';
 import {upgradePlanner} from './planner.js';
 import {applyReferenceCurriculum} from './curriculum.js';
 // Assessment operations and safe saved-workspace migration.

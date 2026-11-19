@@ -91,3 +91,16 @@ Refreshing the portal adds 36 example learners once, without resetting existing 
 The data includes shared gaps, different gaps within a level, repeated not-cleared results, complete collections, explicit coach assignments, and upcoming group assessments. Collected badges have clearance evidence; fitness rules and badge definitions are unchanged. Mixed batches share an optional foundations practice curriculum; their dashboard teaching groups are calculated from each learner's actual remaining collection.
 
 `js/grouping-data.js` extends the base fixture during browser-state loading and reset. Its revision marker prevents duplicate imports and preserves later edits to added records. No live academy API is called. Example guardian addresses use `example.invalid`, and phone values are non-routable placeholders.
+
+## Focused product and technical review — 19 November 2026
+
+This pass reviewed route/render/action structure and assessment, progression, grouping and settings logic, with automated browser checks of working interactions. It was not an exhaustive visual or accessibility audit of every screen and device.
+
+- **Keep:** dashboard teaching groups, roster/profile, assessment planning and results, automatic badges and four levels, coach assignments, interactive reporting, curriculum and drill guidance. These directly support teaching and progression. Dashboard shortcuts and full assessment views serve different depths of the same workflow.
+- **Remove:** unused planner/domain imports, three uncalled rendering/query helpers, unused fitness-cycle state, and the obsolete baseline queue/next action. Historical evidence and legacy route redirects remain supported.
+- **Simplify:** Clear filters now also clears the student search and restores the roster; it previously left a hidden restriction active. Appearance migration now validates the actual standard/contrast setting and removes the unused light/forest setting.
+- **Rethink:** dashboard hero height can delay access to teaching groups; curriculum versus batch setup needs clearer explanations; the large app module and accumulated CSS make further changes harder to maintain. These warrant focused follow-up, rather than removing working features.
+- **Business clarification:** confirm which deployed assessment service owns final clearance and its field mapping; clarify whether custom curricula are reusable training templates or mandatory batch requirements. Current custom training does not award official badges.
+- **Client readiness:** live assessment synchronization, server persistence and authenticated authorization are not implemented. Role switching is local workspace behavior, records are browser-local, and some drills lack real videos. These are the most visible gaps between a working portal walkthrough and a deployed product; calling it production-ready would overstate its status.
+
+Validation for this cleanup: syntax checks; 75 unit tests; 41 browser workflow assertions; 22 interactive-chart assertions; direct browser verification that clearing an unmatched student search restores roster rows. Branding, official level artwork and the assessment-to-badge rules are unchanged.

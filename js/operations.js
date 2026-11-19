@@ -44,7 +44,8 @@ export function upgradeOperations(state){
   return {...b,name:text(b.name,80),studentIds:unique(b.studentIds.filter(id=>studentIds.has(id))),libraryIds:unique((Array.isArray(b.libraryIds)?b.libraryIds:curriculum.libraryIds).filter(id=>curriculum.libraryIds.includes(id)))};
  }).filter(b=>b.studentIds.length&&b.libraryIds.length);
  state.batches=uniqueRecords(state.batches);
- state.settings.theme=['light','forest'].includes(state.settings.theme)?state.settings.theme:'light';
+ state.settings.appearance=['standard','contrast'].includes(state.settings.appearance)?state.settings.appearance:'standard';
+ delete state.settings.theme;
  // Retired records are not consulted, validated or exposed by live workflows.
  delete state.attendance;
  delete state.sessionDrafts;

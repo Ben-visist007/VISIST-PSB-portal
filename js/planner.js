@@ -1,20 +1,20 @@
-// Recurring assessment planning. Scoring remains in domain.js.
+// Recurring assessment planning. Real clearance stays in progression.js; simulated scoring is separate.
 export const PLANNER_LEVELS=['Spark','Scout','Star','Champ'];
 export const WEEKDAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const valid=d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&!Number.isNaN(Date.parse(d))&&new Date(d).toISOString().slice(0,10)===d;
 export const addPlanDays=(date,n)=>{const d=new Date(date+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
 export const planKey=(date,level)=>date+'|'+level;
 export function defaultPlanner(){return {settings:{days:Object.fromEntries(PLANNER_LEVELS.map((l,i)=>[l,{week:i+1,dow:5}])),fifth:'makeup',notice:15,mode:'recommend'},rosters:{}};}
-export function validatePlannerSettings(s){
+export function validatePlannerSettings(s,allowClashes=false){
  if(!s||!['makeup','off'].includes(s.fifth)||!['recommend','auto'].includes(s.mode)||!Number.isInteger(s.notice)||s.notice<1||s.notice>30)throw Error('Check the reminder window and roster mode.');
- const seen=new Set();for(const l of PLANNER_LEVELS){const d=s.days?.[l];if(!d||!Number.isInteger(d.week)||d.week<1||d.week>4||!Number.isInteger(d.dow)||d.dow<0||d.dow>6)throw Error('Choose an occurrence and weekday for every level.');const k=d.week+'|'+d.dow;if(seen.has(k))throw Error('Two levels share a day. Choose a different occurrence or weekday.');seen.add(k);}return s;
+ const seen=new Set();for(const l of PLANNER_LEVELS){const d=s.days?.[l];if(!d||!Number.isInteger(d.week)||d.week<1||d.week>4||!Number.isInteger(d.dow)||d.dow<0||d.dow>6)throw Error('Choose an occurrence and weekday for every level.');const k=d.week+'|'+d.dow;if(seen.has(k)&&!allowClashes)throw Error('Two levels share a day. Choose a different occurrence or weekday.');seen.add(k);}return s;
 }
 export function upgradePlanner(state){
  const base=defaultPlanner();const old=state.planner;
- try{base.settings=validatePlannerSettings(old?.settings);}catch{}
+ try{base.settings=validatePlannerSettings(old?.settings,true);}catch{}
  if(old?.rosters&&typeof old.rosters==='object'&&!Array.isArray(old.rosters))for(const [key,r]of Object.entries(old.rosters)){
   const [date,level]=key.split('|');if(!valid(date)||!PLANNER_LEVELS.includes(level)||!r||!Array.isArray(r.students))continue;
-  base.rosters[key]={students:[...new Set(r.students.filter(id=>state.students.some(s=>s.id===id)))],deferred:Object.fromEntries(Object.entries(r.deferred||{}).filter(([id,d])=>state.students.some(s=>s.id===id)&&valid(d))),initialized:[...new Set((Array.isArray(r.initialized)?r.initialized:r.students).filter(id=>state.students.some(s=>s.id===id)))],cycleId:state.cycles.some(c=>c.id===r.cycleId)?r.cycleId:null};
+  base.rosters[key]={students:[...new Set(r.students.filter(id=>state.students.some(s=>s.id===id)))],deferred:Object.fromEntries(Object.entries(r.deferred||{}).filter(([id,d])=>state.students.some(s=>s.id===id)&&valid(d))),...(r.includeFitness?{includeFitness:true}:{}),initialized:[...new Set((Array.isArray(r.initialized)?r.initialized:r.students).filter(id=>state.students.some(s=>s.id===id)))],cycleId:state.cycles.some(c=>c.id===r.cycleId)?r.cycleId:null};
  }state.planner=base;return state;
 }
 export function scheduleLabel(settings,level){const d=settings.days[level];return ['First','Second','Third','Fourth'][d.week-1]+' '+WEEKDAYS[d.dow];}

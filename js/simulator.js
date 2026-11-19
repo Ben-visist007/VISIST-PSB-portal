@@ -1,3 +1,4 @@
+import {initializeScoreSimulation} from './reference-simulator.js';
 import {visibleStudents,allowedSkills,createAssessment,activeCoach} from './operations.js';
 import {recordAssessmentClearance} from './progression.js';
 
@@ -8,12 +9,12 @@ export function createSimulation(source,scenario='academy'){
  copy.simulationEvents=[];
  if(scenario==='dry'){
   const ids=new Set(visibleStudents(source).slice(0,4).map(s=>s.id));
-  copy.students=copy.students.filter(s=>ids.has(s.id)).map(s=>({...s,level:'Spark',badges:[],baseline:[]}));
+  copy.students=copy.students.filter(s=>ids.has(s.id)).map(s=>({...s,level:'Spark',badges:[],baseline:[],joined:copy.demoDate}));
   copy.assessments=[];copy.clearanceResults=[];copy.levelEvents=[];copy.cycles=[];copy.fitness=[];copy.activities=[];
   copy.batches=copy.batches.map(b=>({...b,studentIds:b.studentIds.filter(id=>ids.has(id))})).filter(b=>b.studentIds.length);
   copy.planner={...copy.planner,rosters:{}};
  }
- return copy;
+ return initializeScoreSimulation(copy);
 }
 
 export function simulateClearance(workspace,input){

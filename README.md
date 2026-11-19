@@ -112,3 +112,11 @@ The three approved increments are implemented: consistent participant-result cou
 Results-period controls are labelled explicitly, with the dashboard control beside reporting. Fitness history remains clearly all-time. Custom curricula are reusable training plans; batches connect students to those plans. Training track and official badge-content editing remain available pending business clarification. Official IDs, four levels, clearance awards, historical records and role/venue boundaries are unchanged.
 
 Validation: 75 unit tests, syntax/whitespace checks, and 280 browser assertions across workflows, planner/fitness, persistence, charts, teaching groups, expanded fixtures, new simplification regressions and three-role layouts at 1440, 900 and 390 pixels. Browser suites use isolated storage; `browser-grouping-data.js` requires the untouched starting fixture, while workflow suites create their own records. `browser-responsive.js` is run separately at each viewport width.
+
+## Event simulator
+
+Use **Event simulator** in the top bar to open the right-hand drawer. It starts a detached simulation workspace: submit Cleared/Not cleared events for selected badges, onboard learners with the existing student form, inspect the fixed progression rules and review the event log. The Rules tab offers a fresh academy copy or a four-student dry run from the current coach scope. Closing the drawer keeps the simulation available throughout the portal; **Exit simulation** restores the original academy. Reloading also discards the simulation. Nothing in this workspace is written to saved academy storage.
+
+The simulator adapts the supplied `psb-skill-badges.html` interaction without importing AI-score thresholds, alternative level rules, automatic placement or messaging claims. It uses the existing clearance adapter and preserves role boundaries, official IDs and ordered level unlocks. Future event dates affect only the simulation.
+
+Simulator validation: **82 unit tests and 314 browser assertions** passed, including storage isolation, repeated and unsuccessful clearances, ordered level unlocks, onboarding, role scope, existing portal workflows, and desktop/tablet/mobile drawer layout and focus behaviour.

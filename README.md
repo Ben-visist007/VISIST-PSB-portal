@@ -14,11 +14,11 @@ If startup reports `Address already in use`, another server is already using por
 
 ## Main workflows
 
-- **Dashboard:** scoped student and badge totals, upcoming assessments, interactive cumulative badge progression and venue/level comparisons.
+- **Dashboard:** scoped student and badge totals, suggested teaching groups, upcoming assessments and interactive badge/level charts. Detailed outcome and venue comparisons live in Reports.
 - **Students:** profiles, current levels, individual badge collections and assessment history. Use **Add to assessment** to place a player into an upcoming group assessment.
 - **Assessments:** plan a dated assessment, select its students and skill group, optionally include fitness, and record the received participant clearance result from the saved assessment. Upcoming Fridays are scheduling suggestions; historical records keep their original dates and assignments.
-- **Practice plan:** group assigned students by incomplete skills and open relevant coaching materials. Recommendations work without a daily register.
-- **Curriculum / Coach Toolkit:** official skill targets and drills, video covers and supporting instructions. Assistant coaches see only content relevant to their assigned students.
+- **Training groups:** inside Assessments, show one primary teaching focus per student and venue. An expandable additional-gaps view preserves overlapping practice needs. Recommendations work without a daily register.
+- **Curriculum:** three views—Official badges, Drills & guidance, and Custom training. Skill and drill links open one shared detail view. Assistant coaches retain their relevant-content restrictions; the former Toolkit route redirects to drills.
 - **Coaches:** create coaches, assign their venues and move students between appropriate coaching assignments. Head coaches oversee their assigned venues; assistant coaches work with explicitly assigned students.
 - **Custom curricula and batches:** select skills from the library, create training curricula and assign student batches. These training structures remain separate from official badge awards.
 - **Fitness:** available inside Assessments, preserving measurement history and comparisons. Linked fitness steps use the scheduled assessment's student and date.
@@ -40,7 +40,7 @@ Within each venue and working collection, the planner chooses the missing skill 
 
 The compact preview includes one priority focus from each available collection, then fills spare slots. **Show all groups** reveals the full set, and **View group** exposes every student and their profile. Targets and teaching guidance come from the existing curriculum; **Open drill** opens its actual coaching content. Reporting date-range filters do not remove students from teaching suggestions.
 
-Students with all sixteen badges stay visible under **Continued practice**, with access to their selected batch training or Coach Toolkit. These suggestions do not prescribe session durations, court assignments or badge awards.
+Students with all sixteen badges stay visible under **Continued practice**, with access to their selected batch training or Drills & guidance. These suggestions do not prescribe session durations, court assignments or badge awards.
 
 Verified with 66 unit tests and 114 browser assertions, including 26 dedicated teaching-group checks. [Desktop preview](artifacts/teaching-desktop.png) · [Mobile preview](artifacts/teaching-mobile.png) · [Group details](artifacts/teaching-group.png).
 
@@ -92,7 +92,7 @@ The data includes shared gaps, different gaps within a level, repeated not-clear
 
 `js/grouping-data.js` extends the base fixture during browser-state loading and reset. Its revision marker prevents duplicate imports and preserves later edits to added records. No live academy API is called. Example guardian addresses use `example.invalid`, and phone values are non-routable placeholders.
 
-## Focused product and technical review — 19 November 2026
+## Earlier focused review — 19 November 2026
 
 This pass reviewed route/render/action structure and assessment, progression, grouping and settings logic, with automated browser checks of working interactions. It was not an exhaustive visual or accessibility audit of every screen and device.
 
@@ -104,3 +104,11 @@ This pass reviewed route/render/action structure and assessment, progression, gr
 - **Client readiness:** live assessment synchronization, server persistence and authenticated authorization are not implemented. Role switching is local workspace behavior, records are browser-local, and some drills lack real videos. These are the most visible gaps between a working portal walkthrough and a deployed product; calling it production-ready would overstate its status.
 
 Validation for this cleanup: syntax checks; 75 unit tests; 41 browser workflow assertions; 22 interactive-chart assertions; direct browser verification that clearing an unmatched student search restores roster rows. Branding, official level artwork and the assessment-to-badge rules are unchanged.
+
+## Approved simplification implementation
+
+The three approved increments are implemented: consistent participant-result counts, retained assessment selections and recommendation context; consolidated curriculum/drill and planner views; and a compact dashboard with detailed comparisons kept in Reports. The planner’s **All assessments** mode retains every saved date. Settings, role preview and workspace date now share the workspace menu. Old Toolkit and Scheduled routes redirect to their consolidated destinations.
+
+Results-period controls are labelled explicitly, with the dashboard control beside reporting. Fitness history remains clearly all-time. Custom curricula are reusable training plans; batches connect students to those plans. Training track and official badge-content editing remain available pending business clarification. Official IDs, four levels, clearance awards, historical records and role/venue boundaries are unchanged.
+
+Validation: 75 unit tests, syntax/whitespace checks, and 280 browser assertions across workflows, planner/fitness, persistence, charts, teaching groups, expanded fixtures, new simplification regressions and three-role layouts at 1440, 900 and 390 pixels. Browser suites use isolated storage; `browser-grouping-data.js` requires the untouched starting fixture, while workflow suites create their own records. `browser-responsive.js` is run separately at each viewport width.

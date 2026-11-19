@@ -6,8 +6,8 @@ import {applyReferenceCurriculum} from './curriculum.js';
 export const DEMO_DATE = '2026-11-13';
 export const roles = ['Management', 'Head Coach', 'Assistant Coach'];
 export const allowedPages = role => role === 'Assistant Coach'
-  ? ['dashboard', 'students', 'curriculum', 'assessments', 'toolkit']
-  : ['dashboard', 'students', 'curriculum', 'assessments', 'coaches', 'toolkit', 'reports', 'settings'];
+  ? ['dashboard', 'students', 'curriculum', 'assessments']
+  : ['dashboard', 'students', 'curriculum', 'assessments', 'coaches', 'reports', 'settings'];
 
 export function validDate(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)

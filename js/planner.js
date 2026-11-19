@@ -48,6 +48,42 @@ export function practiceGroups(state,students,date=state.demoDate){
  return {students:enrolled,groups,complete:enrolled.filter(s=>!workingLevel(state,s))};
 }
 export const dayPractice=practiceGroups;
+
+// Assign each student once to a shared missing skill within their earliest
+// incomplete collection. Venue boundaries keep groups usable for a real session.
+export function teachingGroups(state,students,date=state.demoDate){
+ const enrolled=[...new Map(students.filter(s=>s.joined<=date).map(s=>[s.id,s])).values()];
+ const buckets=new Map(),groups=[],complete=[];
+ for(const student of enrolled){
+  const level=workingLevel(state,student);
+  if(!level){complete.push(student);continue;}
+  const key=level+'@'+encodeURIComponent(student.venue);
+  if(!buckets.has(key))buckets.set(key,{venue:student.venue,level,students:[]});
+  buckets.get(key).students.push(student);
+ }
+ const nameOrder=(a,b)=>a.name.localeCompare(b.name)||a.id.localeCompare(b.id);
+ for(const bucket of buckets.values()){
+  let remaining=[...bucket.students];
+  while(remaining.length){
+   const focus=levelSkills(state,bucket.level).map(skill=>{
+    const missing=remaining.filter(s=>!s.badges.includes(skill.id));
+    return {skill,students:missing,attention:missing.filter(s=>failureStreak(state,s.id,skill.id,date)>=2).length};
+   }).filter(g=>g.students.length).sort((a,b)=>b.students.length-a.students.length||b.attention-a.attention||a.skill.id-b.skill.id)[0];
+   groups.push({...focus,id:focus.skill.id+'@'+encodeURIComponent(bucket.venue),venue:bucket.venue,level:bucket.level,students:focus.students.sort(nameOrder)});
+   const assigned=new Set(focus.students.map(s=>s.id));remaining=remaining.filter(s=>!assigned.has(s.id));
+  }
+ }
+ const ordered=groups.sort((a,b)=>b.students.length-a.students.length||b.attention-a.attention||a.skill.id-b.skill.id||a.venue.localeCompare(b.venue));
+ return {students:enrolled,groups:ordered,complete:complete.sort(nameOrder)};
+}
+
+export function teachingGroupPreview(groups,limit=4){
+ const selected=[],levels=new Set();
+ for(const group of groups){if(!levels.has(group.level)&&selected.length<limit){selected.push(group);levels.add(group.level);}}
+ for(const group of groups){if(selected.length>=limit)break;if(!selected.includes(group))selected.push(group);}
+ return selected.sort((a,b)=>groups.indexOf(a)-groups.indexOf(b));
+}
+
 export function upcomingFridays(from,count=8){
  if(!valid(from)||!Number.isInteger(count)||count<1||count>52)throw Error('Choose a valid start date and number of upcoming Fridays.');
  let date=from;while(new Date(date+'T00:00:00Z').getUTCDay()!==5)date=addPlanDays(date,1);

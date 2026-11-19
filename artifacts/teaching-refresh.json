@@ -1,0 +1,42 @@
+{
+  "failed": 0,
+  "passed": 9,
+  "results": [
+    {
+      "name": "Retired attendance data is not required or recreated",
+      "passed": true
+    },
+    {
+      "name": "Multi-venue coach and explicit assignments persist",
+      "passed": true
+    },
+    {
+      "name": "Library, curriculum and batch survive reload",
+      "passed": true
+    },
+    {
+      "name": "Assessment clearance, references and badge snapshots persist",
+      "passed": true
+    },
+    {
+      "name": "Automatic badge collection and unlocked level persist",
+      "passed": true
+    },
+    {
+      "name": "Fitness remains linked to the assessment",
+      "passed": true
+    },
+    {
+      "name": "Rescheduled destination and source history persist",
+      "passed": true
+    },
+    {
+      "name": "Appearance and four official levels remain",
+      "passed": true
+    },
+    {
+      "name": "Current route renders after reload",
+      "passed": true
+    }
+  ]
+}

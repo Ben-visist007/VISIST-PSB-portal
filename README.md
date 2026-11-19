@@ -32,6 +32,18 @@ Management sees the academy. Head coaches see students at the venues they overse
 
 Records are saved in this browser under `visist-demo-v1`. Existing workspaces migrate without resetting student records, badge collections, assessment history, planned assessments or fitness measurements. Retired register data and drafts are no longer part of active state. The workspace date controls reporting and assessment entry; future assessment execution requires explicit confirmation before advancing it.
 
+## Dashboard teaching suggestions
+
+**Suggested teaching groups** appears on Dashboard before the reporting cards. Select a coach, venue or mixed training batch to see which students can practise together and what to teach. Recommendations use assigned, enrolled students and their earliest incomplete badge collection, without a daily register.
+
+Within each venue and working collection, the planner chooses the missing skill shared by the most remaining students, assigns those students to one primary teaching group, then repeats. Support needs break ties before curriculum order. A student's current overall level is preserved; the shared practice focus can address foundation gaps. Different physical venues never become one recommended teaching group.
+
+The compact preview includes one priority focus from each available collection, then fills spare slots. **Show all groups** reveals the full set, and **View group** exposes every student and their profile. Targets and teaching guidance come from the existing curriculum; **Open drill** opens its actual coaching content. Reporting date-range filters do not remove students from teaching suggestions.
+
+Students with all sixteen badges stay visible under **Continued practice**, with access to their selected batch training or Coach Toolkit. These suggestions do not prescribe session durations, court assignments or badge awards.
+
+Verified with 66 unit tests and 114 browser assertions, including 26 dedicated teaching-group checks. [Desktop preview](artifacts/teaching-desktop.png) · [Mobile preview](artifacts/teaching-mobile.png) · [Group details](artifacts/teaching-group.png).
+
 ## Assessment clearance, badges and levels
 
 The assessment portal supplies each participant's assessment result. **Cleared** automatically awards all badges linked to that participant's assessment and updates level progress. **Not cleared** awards no badges. There are no new questionnaire responses, numeric pass thresholds, required coach comments or separate badge approvals.

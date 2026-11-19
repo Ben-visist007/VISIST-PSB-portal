@@ -1,0 +1,70 @@
+{
+  "failed": 0,
+  "passed": 16,
+  "results": [
+    {
+      "name": "Fitness-only group has no artificial badge skills",
+      "passed": true
+    },
+    {
+      "name": "Fitness-only assessment remains upcoming before results",
+      "passed": true
+    },
+    {
+      "name": "Fitness measures alone do not clear an assessment",
+      "passed": true
+    },
+    {
+      "name": "Fitness-only result creates no badge or level award",
+      "passed": true
+    },
+    {
+      "name": "An explicit fitness clearance is recorded without inventing a badge",
+      "passed": true
+    },
+    {
+      "name": "Fitness-only group offers rescheduling",
+      "passed": true
+    },
+    {
+      "name": "Fitness-only unfinished step transfers to regular assessment",
+      "passed": true
+    },
+    {
+      "name": "Rescheduled source exposes destination and no live fitness entry",
+      "passed": true
+    },
+    {
+      "name": "Future fitness requires date confirmation",
+      "passed": true
+    },
+    {
+      "name": "Cancelling future fitness preserves date",
+      "passed": true
+    },
+    {
+      "name": "No recurrence settings or reassessment tab",
+      "passed": true
+    },
+    {
+      "name": "Retired route redirects #attendance",
+      "passed": true
+    },
+    {
+      "name": "Retired route redirects #fitness",
+      "passed": true
+    },
+    {
+      "name": "Retired route redirects #assessments/day-plan",
+      "passed": true
+    },
+    {
+      "name": "Retired route redirects #assessments/practice",
+      "passed": true
+    },
+    {
+      "name": "Retired route redirects #students/VS001/attendance",
+      "passed": true
+    }
+  ]
+}

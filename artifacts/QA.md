@@ -186,3 +186,15 @@ Validation:
 Previews: [desktop](clearance-desktop.png), [mobile](clearance-mobile.png), [automatic badge result](clearance-result.png).
 
 Independent design evaluation: PASS at desktop 1440px, tablet 768px and mobile 375px. No horizontal overflow or blocking issues; creation and clearance-result dialogs remain usable on phones.
+
+## Mixed-batch dashboard teaching groups — 19 November 2026
+
+Dashboard now presents suggested teaching groups before analytics. Recommendations group students by a shared missing skill within their earliest incomplete collection and physical venue. The most common remaining gap is selected first; support needs and curriculum order resolve ties, and assigned students are removed before selecting the next focus. Each student belongs to one primary teaching group. The preview represents available mixed collections, while Show all groups and View group retain access to every group and roster member.
+
+The existing Indiranagar head-coach roster now forms four useful focus groups for seven players: Arjun and Ananya practise low serves together; Aditya and Meera practise opposite-hand throw/catch; Aditi and Ishaan practise backhand flick serves; Dev practises drives. These derive from saved badge gaps, without changing student records or inventing a schedule. Coach, venue, batch and level filters update recommendations; reporting ranges do not gate teaching. Completed badge collections remain visible for continued batch/toolkit practice.
+
+All 66 unit tests pass (eight new grouping regressions), plus module syntax and diff whitespace checks. Browser verification passed 114 assertions: 26 new teaching-group checks, 41 existing workflows, 16 planner checks, nine refresh checks and 22 interactive-chart checks. `tests/browser-teaching-groups.js` verifies mixed previews, disjoint rosters, role privacy, shared-skill grouping, full roster access, drills/profile actions, coach/venue/batch filters, completed cohorts and empty states.
+
+Independent responsive design evaluation passed desktop, tablet and mobile. The tablet refinement uses a single teaching-card column through 1000px so instructions and rosters remain readable beside the sidebar; wider desktop layouts retain two columns. No assessment-clearance rules, badge awards, saved records or official artwork changed.
+
+Final previews: [desktop](teaching-desktop.png), [mobile](teaching-mobile.png), [group details](teaching-group.png).

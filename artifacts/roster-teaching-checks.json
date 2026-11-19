@@ -1,0 +1,110 @@
+{
+  "failed": 0,
+  "passed": 26,
+  "results": [
+    {
+      "name": "Teaching suggestions appear before dashboard statistics",
+      "passed": true
+    },
+    {
+      "name": "Mixed collection preview is representative",
+      "passed": true
+    },
+    {
+      "name": "Preview explains partial group coverage",
+      "passed": true
+    },
+    {
+      "name": "Teaching instructions are visible without opening a drill",
+      "passed": true
+    },
+    {
+      "name": "All primary groups can be expanded",
+      "passed": true
+    },
+    {
+      "name": "Each pending student has exactly one primary group",
+      "passed": true
+    },
+    {
+      "name": "Physical venue boundaries are visible on each group",
+      "passed": true
+    },
+    {
+      "name": "Report period does not remove training groups",
+      "passed": true
+    },
+    {
+      "name": "Head Coach sees assigned student rosters only",
+      "passed": true
+    },
+    {
+      "name": "Assistant Coach sees assigned student rosters only",
+      "passed": true
+    },
+    {
+      "name": "Assistant recommendations expose only relevant drills",
+      "passed": true
+    },
+    {
+      "name": "Open drill shows the current curriculum instructions",
+      "passed": true
+    },
+    {
+      "name": "Group details show student profiles and actual instruction",
+      "passed": true
+    },
+    {
+      "name": "Group roster links open real student profiles",
+      "passed": true
+    },
+    {
+      "name": "New learners with a shared gap join the same teaching group",
+      "passed": true
+    },
+    {
+      "name": "Expanded group roster includes every member",
+      "passed": true
+    },
+    {
+      "name": "Batch filter recalculates mixed teaching groups",
+      "passed": true
+    },
+    {
+      "name": "Batch teaching rosters omit other students",
+      "passed": true
+    },
+    {
+      "name": "Empty venue and batch intersection has a useful state",
+      "passed": true
+    },
+    {
+      "name": "Coach filter updates teaching counts and empty state",
+      "passed": true
+    },
+    {
+      "name": "All-badge players remain visible for continued practice",
+      "passed": true
+    },
+    {
+      "name": "Continued-practice roster opens the completed student",
+      "passed": true
+    },
+    {
+      "name": "All-complete cohort does not receive invented missing-skill groups",
+      "passed": true
+    },
+    {
+      "name": "Completed students can open their configured batch training",
+      "passed": true
+    },
+    {
+      "name": "Teaching section does not reintroduce a daily register",
+      "passed": true
+    },
+    {
+      "name": "No horizontal document overflow",
+      "passed": true
+    }
+  ]
+}

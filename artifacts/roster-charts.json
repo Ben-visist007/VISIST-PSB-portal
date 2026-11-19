@@ -1,0 +1,94 @@
+{
+  "failed": 0,
+  "passed": 22,
+  "results": [
+    {
+      "name": "Cumulative graph never falls for 7",
+      "passed": true
+    },
+    {
+      "name": "Final cumulative point equals distinct badge awards for 7",
+      "passed": true
+    },
+    {
+      "name": "Cumulative graph never falls for 30",
+      "passed": true
+    },
+    {
+      "name": "Final cumulative point equals distinct badge awards for 30",
+      "passed": true
+    },
+    {
+      "name": "Cumulative graph never falls for 90",
+      "passed": true
+    },
+    {
+      "name": "Final cumulative point equals distinct badge awards for 90",
+      "passed": true
+    },
+    {
+      "name": "Cumulative graph never falls for all",
+      "passed": true
+    },
+    {
+      "name": "Final cumulative point equals distinct badge awards for all",
+      "passed": true
+    },
+    {
+      "name": "Keyboard focus exposes cumulative value",
+      "passed": true
+    },
+    {
+      "name": "Keyboard activates cumulative records",
+      "passed": true
+    },
+    {
+      "name": "Drilldown record count matches cumulative point",
+      "passed": true
+    },
+    {
+      "name": "Outcome bar opens recorded outcomes",
+      "passed": true
+    },
+    {
+      "name": "Outcome record opens saved details",
+      "passed": true
+    },
+    {
+      "name": "Back returns to outcome records",
+      "passed": true
+    },
+    {
+      "name": "Level legend filters dashboard",
+      "passed": true
+    },
+    {
+      "name": "Level filter reset remains interactive",
+      "passed": true
+    },
+    {
+      "name": "Venue bar filters dashboard",
+      "passed": true
+    },
+    {
+      "name": "Batch filter controls student count",
+      "passed": true
+    },
+    {
+      "name": "Batch graph uses only its student awards",
+      "passed": true
+    },
+    {
+      "name": "Fitness metric opens interactive chart",
+      "passed": true
+    },
+    {
+      "name": "Fitness focus displays metric readout",
+      "passed": true
+    },
+    {
+      "name": "Charts do not mutate assessment records",
+      "passed": true
+    }
+  ]
+}

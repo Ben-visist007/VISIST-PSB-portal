@@ -79,3 +79,15 @@ The official uploaded VISIST.AI and PSB logos retain their original artwork. `as
 Run `npm test` for domain and analytics checks, and `npm run check` for module syntax checks. Browser suites must run in their own isolated browser session because workflow checks may reset that session's local records. Older screenshots and QA documents describe earlier versions and are retained as historical artifacts.
 
 The clearance revision passed **58 unit checks** and **88 browser assertions** (41 workflows, 16 planner/fitness, 9 persistence and 22 chart checks). See [the clearance QA record](artifacts/QA.md) and [automatic badge result preview](artifacts/clearance-result.png).
+
+## Larger grouping dataset
+
+Refreshing the portal adds 36 example learners once, without resetting existing people, edits or results. The default workspace therefore contains 56 students. Five new batch filters make the grouping cases easy to inspect:
+
+- **Indiranagar Mixed Coaching**, **Whitefield Mixed Coaching**, **JP Nagar Mixed Coaching**: each has 12 learners across all four levels, six primary teaching groups and one learner in continued practice.
+- **Academy Mixed Coaching**: 36 learners, 18 venue-separated teaching groups and three completed learners.
+- **Continued Practice**: three learners with all sixteen badges and no invented missing-skill groups.
+
+The data includes shared gaps, different gaps within a level, repeated not-cleared results, complete collections, explicit coach assignments, and upcoming group assessments. Collected badges have clearance evidence; fitness rules and badge definitions are unchanged. Mixed batches share an optional foundations practice curriculum; their dashboard teaching groups are calculated from each learner's actual remaining collection.
+
+`js/grouping-data.js` extends the base fixture during browser-state loading and reset. Its revision marker prevents duplicate imports and preserves later edits to added records. No live academy API is called. Example guardian addresses use `example.invalid`, and phone values are non-routable placeholders.

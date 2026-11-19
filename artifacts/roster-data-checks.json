@@ -1,0 +1,82 @@
+{
+  "failed": 0,
+  "passed": 19,
+  "results": [
+    {
+      "name": "Expanded data is available without resetting the workspace",
+      "passed": true
+    },
+    {
+      "name": "Existing records remain alongside the new clearance evidence",
+      "passed": true
+    },
+    {
+      "name": "Each example batch is available in the dashboard filter",
+      "passed": true
+    },
+    {
+      "name": "Indiranagar batch shows 12 learners and six teaching groups",
+      "passed": true
+    },
+    {
+      "name": "Indiranagar preview covers all four working collections",
+      "passed": true
+    },
+    {
+      "name": "Indiranagar full rosters contain 11 unique learners in their own venue",
+      "passed": true
+    },
+    {
+      "name": "Indiranagar completed learner remains in continued practice",
+      "passed": true
+    },
+    {
+      "name": "Whitefield batch shows 12 learners and six teaching groups",
+      "passed": true
+    },
+    {
+      "name": "Whitefield preview covers all four working collections",
+      "passed": true
+    },
+    {
+      "name": "Whitefield full rosters contain 11 unique learners in their own venue",
+      "passed": true
+    },
+    {
+      "name": "Whitefield completed learner remains in continued practice",
+      "passed": true
+    },
+    {
+      "name": "JP Nagar batch shows 12 learners and six teaching groups",
+      "passed": true
+    },
+    {
+      "name": "JP Nagar preview covers all four working collections",
+      "passed": true
+    },
+    {
+      "name": "JP Nagar full rosters contain 11 unique learners in their own venue",
+      "passed": true
+    },
+    {
+      "name": "JP Nagar completed learner remains in continued practice",
+      "passed": true
+    },
+    {
+      "name": "Continued-practice batch shows three graduates and no missing-skill groups",
+      "passed": true
+    },
+    {
+      "name": "Academy batch offers a larger 36-player grouping check",
+      "passed": true
+    },
+    {
+      "name": "Assistant has mixed assigned learners without crossing venue scope",
+      "passed": true
+    },
+    {
+      "name": "Larger datasets do not overflow the page",
+      "passed": true
+    }
+  ]
+}

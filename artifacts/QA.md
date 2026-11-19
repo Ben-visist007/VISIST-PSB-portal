@@ -198,3 +198,23 @@ All 66 unit tests pass (eight new grouping regressions), plus module syntax and 
 Independent responsive design evaluation passed desktop, tablet and mobile. The tablet refinement uses a single teaching-card column through 1000px so instructions and rosters remain readable beside the sidebar; wider desktop layouts retain two columns. No assessment-clearance rules, badge awards, saved records or official artwork changed.
 
 Final previews: [desktop](teaching-desktop.png), [mobile](teaching-mobile.png), [group details](teaching-group.png).
+
+## Expanded grouping data — 19 November 2026
+
+Added 36 example learners to the existing 20-person base fixture through an additive, one-time browser-state extension. Existing people, histories, badges, local edits, selected roles and planned assessments are retained. The default workspace now has 56 learners, five named grouping batches, 48 additional participant clearance results and corresponding award evidence. Reserved-ID/name collisions allocate new identifiers instead of replacing user records.
+
+Each venue's Mixed Coaching batch has 12 learners: 11 in six primary teaching groups and one in continued practice. Academy Mixed Coaching contains all 36 new learners in 18 venue-separated groups plus three completed learners. Continued Practice contains only those three completed learners. The added badge stock has 303 unique passing award records. Two not-cleared results for selected gaps make support indicators visible. Upcoming assessments use explicit future Fridays relative to the preserved workspace date.
+
+Verification: all 75 unit tests passed, including nine data-expansion cases for preservation, one-time loading, collisions, coach scope, badge evidence, group counts, completed cohorts and historical workspace dates. Syntax and whitespace checks passed. Browser results total 141 passing assertions:
+
+- 19 dataset/filter checks: [results](roster-data-checks.json).
+- Eight old-workspace migration and duplicate-refresh checks: [results](roster-migration-checks.json).
+- 26 teaching workflow checks with full modal rosters, including groups larger than the three-name preview: [results](roster-teaching-checks.json).
+- 41 assessment/coaching workflows: [results](roster-workflows.json).
+- 16 planner/fitness checks: [results](roster-planner.json).
+- Nine persistence checks: [results](roster-refresh.json).
+- 22 chart interactions and aggregation checks: [results](roster-charts.json).
+
+The old workspace's custom player name and extra field survived two browser reloads, original legacy assessment and fitness records remained, and added clearance IDs stayed identical across refresh. All testing used isolated local storage on temporary QA port 4174. No attendance or extra assessment questions were introduced.
+
+Preview: [expanded Indiranagar mixed batch](roster-mixed-batch.png). The expanded six-card batch also rendered at 375px with no horizontal overflow and the same 12-learner / six-group summary.

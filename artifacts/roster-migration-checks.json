@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "clearancesNotDuplicated": true,
+    "expandedWithoutReset": true,
+    "fitnessPreserved": true,
+    "legacyResults": true,
+    "noRecoveryWarning": true,
+    "originalCustomField": true,
+    "originalName": true,
+    "studentIdsStable": true
+  },
+  "passed": 8,
+  "total": 8
+}

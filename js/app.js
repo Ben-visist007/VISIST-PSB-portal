@@ -3,7 +3,7 @@ import {planKey,addPlanDays,levelSkills,recommendations,ensureRoster,visibleRost
 import {withinWindow,cumulativeBadgeBuckets,uniqueBadgeAwards} from './analytics.js';
 import {levelGuidance} from './curriculum.js';
 import {levels,venues,fitnessCategories} from './data.js';
-import {state,persist,activity,reset,storageError} from './state.js';
+import {state,persist,activity,reset,storageError} from './state.js?v=20261119-grouping-data';
 import {allowedPages,validDate,cycleOutcome,pendingModules,needsPractice,latestAttempts} from './domain.js';
 import {visibleStudents,coachStudents as assignedStudents,activeCoach,allowedSkills,canAccessSkill,addCoach,assignStudent,librarySkills,saveLibrarySkill,saveCurriculum,saveBatch,createAssessment,addToAssessment,recordFitness,rescheduleStudent,manageableVenues} from './operations.js';
 const $=s=>document.querySelector(s),app=$('#app'),modal=$('#modal');

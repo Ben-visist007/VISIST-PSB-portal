@@ -1,3 +1,4 @@
+// Retired compatibility code. index.html loads js/workspace.js for the source-based workspace.
 import {assessmentReference} from './assessment-reference.js';
 import {visibleStudents,activeCoach,createAssessment,manageableVenues} from './operations.js';
 import {recordAssessmentClearance,LEVELS} from './progression.js';

@@ -1,3 +1,4 @@
+// Retired compatibility code. index.html loads js/workspace.js for the source-based workspace.
 import {PLANNER_LEVELS,levelSkills,scheduledDays,ensureRoster,visibleRoster,setRosterStudent,createPlanCycle,recommendations,validatePlannerSettings,addPlanDays} from './planner.js';
 import {visibleStudents,canAccessSkill} from './operations.js';
 import {upgradeProgression,latestClearance} from './progression.js';

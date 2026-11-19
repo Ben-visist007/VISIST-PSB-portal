@@ -6,7 +6,7 @@
   "description": "VISIST PSB academy portal with interactive analytics, student progression and coaching workflows",
   "scripts": {
     "start": "python3 -m http.server 4173 --bind 127.0.0.1",
-    "check": "node --check js/app.js && node --check js/data.js && node --check js/state.js && node --check js/domain.js && node --check js/curriculum.js && node --check js/analytics.js && node --check js/planner.js && node --check js/operations.js && node --check js/progression.js && node --check js/grouping-data.js && node --check js/simulator.js && node --check js/assessment-calendar.js && node --check js/assessment-reference.js && node --check js/reference-simulator.js",
+    "check": "node --check js/workspace.js && node --check js/app.js && node --check js/data.js && node --check js/state.js && node --check js/domain.js && node --check js/curriculum.js && node --check js/analytics.js && node --check js/planner.js && node --check js/operations.js && node --check js/progression.js && node --check js/grouping-data.js && node --check js/simulator.js && node --check js/assessment-calendar.js && node --check js/assessment-reference.js && node --check js/reference-simulator.js",
     "test": "node --test tests/*.test.js"
   }
 }

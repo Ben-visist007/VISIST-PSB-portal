@@ -1,3 +1,4 @@
+// Retired compatibility code. index.html loads js/workspace.js for the source-based workspace.
 import {calendarDays,collectionOnDate,nextCollectionDay,calendarDayLabel,bookCalendarStudent,initializeCalendarDay,saveCalendarSettings,setCalendarFitness} from './assessment-calendar.js';
 import {assessmentReference,recordingTasks} from './assessment-reference.js';
 import {generatedScores,submitScoreSimulation,changeSimulationRules,onboardSimulationStudent} from './reference-simulator.js';

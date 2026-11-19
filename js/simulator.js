@@ -1,3 +1,4 @@
+// Retired compatibility code. index.html loads js/workspace.js for the source-based workspace.
 import {initializeScoreSimulation} from './reference-simulator.js';
 import {visibleStudents,allowedSkills,createAssessment,activeCoach} from './operations.js';
 import {recordAssessmentClearance} from './progression.js';

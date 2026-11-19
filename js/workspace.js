@@ -280,20 +280,21 @@ function vOverview(){
   <div class="head"><div class="grow"><div class="eyebrow">PSB Academy · ${VENUES.length} venues</div><h1>Academy overview</h1>
   <p>Badges are awarded automatically from AI-scored assessment videos. Coaches can't award or remove a badge; this view shows how fast kids are moving and where they get stuck.</p></div>
 </div>
+  <div class="overview-next"><div class="overview-next-icon">${ic('cal',23)}</div><div class="grow"><span class="eyebrow">Next on the calendar</span><h2>${fmt(upcoming[0],{weekday:'long',day:'numeric',month:'long'})} · ${levelForDate(upcoming[0]).name} day</h2><p>${recommend(upcoming[0]).rec.length} recommended · ${(state.plans[upcoming[0]]||[]).length} booked</p></div><button class="btn primary" data-act="plan" data-d="${upcoming[0]}">Open assessment planner ${ic('chev')}</button></div>
   <div class="grid g4">
-   <div class="card kpi"><div class="v num">${list.length}</div><div class="l">Active students</div></div>
-   <div class="card kpi"><div class="v num">${monthSkill}</div><div class="l">Skill badges earned in ${fmt(state.today+'',{month:'long'})}</div></div>
-   <div class="card kpi"><div class="v num">${monthLevel}</div><div class="l">Level-ups in ${fmt(state.today,{month:'long'})}</div></div>
-   <div class="card kpi"><div class="v num" style="color:${att.length?'var(--danger)':'inherit'}">${att.length}</div><div class="l">Need attention (failed a skill 2+ times in a row)</div></div>
+   <button class="card kpi kpi-action" data-act="overviewPlayers" data-f="all"><span class="metric-label">Academy roster</span><div class="v num">${list.length}</div><div class="l">Active students <span aria-hidden="true">↗</span></div></button>
+   <button class="card kpi kpi-action" data-act="insight" data-kind="skill"><span class="metric-label">This month</span><div class="v num">${monthSkill}</div><div class="l">Skill badges earned in ${fmt(state.today+'',{month:'long'})} <span aria-hidden="true">↗</span></div></button>
+   <button class="card kpi kpi-action" data-act="insight" data-kind="level"><span class="metric-label">This month</span><div class="v num">${monthLevel}</div><div class="l">Level-ups in ${fmt(state.today,{month:'long'})} <span aria-hidden="true">↗</span></div></button>
+   <button class="card kpi kpi-action" data-act="overviewPlayers" data-f="attention"><span class="metric-label">Coaching priority</span><div class="v num" style="color:${att.length?'var(--danger)':'inherit'}">${att.length}</div><div class="l">Need attention (failed a skill 2+ times in a row) <span aria-hidden="true">↗</span></div></button>
   </div>
   <div class="card"><div class="ch"><div class="grow"><h2>Where students stand</h2><div class="muted" style="font-size:12px;margin-top:2px">Everyone starts at Spark and moves up one badge per finished column</div></div><span class="pill num">${list.length} students</span></div>
    ${(()=>{const idx=[0,1,2,3].concat(dist[4]?[4]:[]),tot=Math.max(1,list.length);
-    return `<div class="dstats" style="grid-template-columns:repeat(${idx.length},minmax(0,1fr))">${idx.map(i=>{const g=STAGES[i],p=Math.round(dist[i]/tot*100);return `<div class="dcard ${dist[i]?'':'zero'}" style="--c:var(--t-${g.id})">
+    return `<div class="dstats" style="grid-template-columns:repeat(${idx.length},minmax(0,1fr))">${idx.map(i=>{const g=STAGES[i],p=Math.round(dist[i]/tot*100);return `<button class="dcard ${dist[i]?'':'zero'}" data-act="overviewPlayers" data-f="${i-1}" style="--c:var(--t-${g.id})" aria-label="View ${dist[i]} ${g.name} players">
       <div class="dtop">${emblem(g,dist[i]>0)}<svg class="ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--sunk)" stroke-width="3.5"/><circle cx="18" cy="18" r="15" fill="none" stroke="var(--c)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${(p/100*94.2).toFixed(1)} 94.2" transform="rotate(-90 18 18)"/><text x="18" y="21.5" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--fg)" font-family="system-ui,sans-serif">${p}%</text></svg></div>
-      <b class="num">${dist[i]}</b><span>${portalEscape(g.name)}</span></div>`}).join('')}</div>`})()}</div>
+      <b class="num">${dist[i]}</b><span>${portalEscape(g.name)} <span aria-hidden="true">↗</span></span></button>`}).join('')}</div>`})()}</div>
   <div class="grid g32">
    <div class="card"><div class="ch"><h2 class="grow">Skill badges earned by coach</h2><span class="muted">per month</span></div>
-    <div class="cols">${per.map(p=>`<div class="grp"><div class="bars">${p.m.map((v,i)=>`<div class="bar" style="height:${Math.max(3,v/maxPer*110)}px;background:var(--brand);opacity:${.4+.6*(i+1)/p.m.length}" title="${fmt(months[i]+'-01',{month:'short'})}: ${v}"><span class="num">${v}</span></div>`).join('')}</div><small><b>${portalEscape(p.c.name.split(' ')[0])}</b> · ${p.n} kids</small></div>`).join('')}</div>
+    <div class="cols">${per.map(p=>`<div class="grp"><div class="bars">${p.m.map((v,i)=>`<button class="bar" data-act="insight" data-kind="skill" data-coach="${p.c.id}" data-month="${months[i]}" aria-label="${portalEscape(p.c.name)}, ${fmt(months[i]+'-01',{month:'short'})}: ${v} skill badges" style="height:${Math.max(3,v/maxPer*110)}px;background:var(--brand);opacity:${.4+.6*(i+1)/p.m.length}" title="${fmt(months[i]+'-01',{month:'short'})}: ${v}"><span class="num">${v}</span></button>`).join('')}</div><small><b>${portalEscape(p.c.name.split(' ')[0])}</b> · ${p.n} kids</small></div>`).join('')}</div>
     <div class="legend">${months.map((m,i)=>`<span><i style="background:var(--brand);opacity:${.4+.6*(i+1)/months.length}"></i>${fmt(m+'-01',{month:'short'})}</span>`).join('')}<span>Fixed assessment days stop end-of-month cramming, so this is a fair comparison.</span></div></div>
    <div class="card"><h2>Next assessment days</h2><div class="list">${upcoming.map(d=>{const L=levelForDate(d),n=(state.plans[d]||[]).length,rec=recommend(d).rec.length;
      return `<div class="li"><span class="lvl ${L.id}"><i></i>${L.name}</span><div class="grow"><b>${fmt(d)}</b><small>${n?n+' booked':'Nothing booked'} · ${rec} recommended</small></div><button class="btn sm" data-act="plan" data-d="${d}">Plan</button></div>`}).join('')}</div></div>
@@ -301,7 +302,7 @@ function vOverview(){
   <div class="grid g2">
    <div class="card"><div class="ch"><h2 class="grow">Where kids get stuck</h2><span class="muted">% of students holding each badge</span></div>
     <div class="hbars">${LEVELS.map(L=>`<div class="t" style="color:var(--t-${L.id})">${L.name}</div>`+skillsOf(L.id).map(s=>{const n=evs.filter(e=>e.sk[s.id].earned).length,p=list.length?Math.round(n/list.length*100):0;
-      return `<span>${portalEscape(s.name)}</span><div class="track"><div style="width:${p}%;background:var(--t-${L.id})"></div></div><b class="num" style="text-align:right">${p}%</b>`}).join('')).join('')}</div></div>
+      return `<button class="hbar-name" data-act="insight" data-kind="badge" data-s="${s.id}">${portalEscape(s.name)}</button><button class="track hbar-track" data-act="insight" data-kind="badge" data-s="${s.id}" aria-label="${portalEscape(s.name)}: ${n} of ${list.length} players"><span style="width:${p}%;background:var(--t-${L.id})"></span></button><b class="num" style="text-align:right">${p}%</b>`}).join('')).join('')}</div></div>
    <div class="card"><h2>Needs attention</h2>${att.length?`<div class="list">${att.map(s=>{const e=ev(s);return `<div class="li"><div class="av">${initials(s.name)}</div><div class="grow"><b>${portalEscape(s.name)}</b><small>${e.attention.map(x=>`${portalEscape(x.name)} · failed ${e.sk[x.id].streak}× in a row`).join(', ')} · ${portalEscape(CO[s.coachId].name)}</small></div><button class="btn sm" data-act="prof" data-id="${s.id}">Open</button></div>`}).join('')}</div>
     <p class="note" style="margin-top:10px">These kids have already been through the drills and failed the same skill twice. The coach gets an alert, and the central team can send a coaching note.</p>`:`<div class="empty">No one is stuck right now.</div>`}</div>
   </div></div>`}
@@ -369,6 +370,7 @@ function vStudents(){
    <label class="sel"><select id="pSort" aria-label="Sort"><option value="progress" ${ui.sort==='progress'?'selected':''}>Most badges</option><option value="name" ${ui.sort==='name'?'selected':''}>Name A–Z</option><option value="next" ${ui.sort==='next'?'selected':''}>Next assessment</option></select></label>
    <div class="seg" role="group" aria-label="Layout"><button class="${ui.layout==='list'?'on':''}" data-act="layout" data-l="list" aria-label="List">${ic('rows')}</button><button class="${ui.layout==='cards'?'on':''}" data-act="layout" data-l="cards" aria-label="Cards">${ic('cards')}</button></div>
   </div>
+  <div class="roster-feedback"><span><b>${list.length}</b> of ${all.length} players${f==='attention'?' · needs attention':f!=='all'?' · '+stageOf(Number(f)).name:''}</span><span class="muted">Select a player to open their journey</span>${ui.q||ui.venueF!=='all'||ui.coachF!=='all'||f!=='all'?'<button class="text-action" data-act="resetFilters">Clear filters '+ic('close',12)+'</button>':''}</div>
   ${groups.length?groups.map(g=>`${g.title?`<div class="grp-h"><span class="grp-ic">${ic(g.icon,15)}</span><div><h2>${portalEscape(g.title)}</h2><div class="muted" style="font-size:12px">${portalEscape(g.sub)}${portalEscape(g.meta?' · '+g.meta:'')}</div></div><span class="ln"></span><span class="pill num">${g.items.length} ${g.items.length>1?'players':'player'}</span></div>`:''}${body(g.items)}`).join('')
    :`<div class="empty">No players match these filters.</div>`}
   </div>`}
@@ -437,18 +439,20 @@ function vPlanner(){
   return `<div class="wrap portal-planner">
   <div class="head"><div class="grow"><div class="eyebrow">Fixed calendar</div><h1>Assessment planner</h1>
   <p>${LEVELS.map(L=>`${L.name}: ${dayLabel(L.id)}`).join(' · ')}. ${PLAN.mode==='auto'?'Recommended students are added automatically; the coach removes anyone who shouldn\'t go.':'The system recommends who to add; the coach adds or removes students.'}</p></div>${roleKind()==='admin'?`<button class="btn" data-act="view" data-v="settings">${ic('cal',14)}Planner settings</button>`:''}</div>
+  <ol class="planner-steps" aria-label="Assessment workflow"><li class="is-done"><span>1</span>Choose a date</li><li class="${done?'is-done':'is-current'}"><span>2</span>Select players</li><li class="${done?'is-done':''}"><span>3</span>Record & score</li></ol>
   <div class="split" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)">
-   <div class="days">${days.map(x=>{const l=levelForDate(x),n=(state.plans[x]||[]).length;return `<button class="day ${x===d?'on':''}" data-act="plan" data-d="${x}"><div class="date"><small>${fmt(x,{month:'short'})}</small><b class="num">${D(x).getUTCDate()}</b></div><div class="grow"><span class="lvl ${l.id}"><i></i>${l.name} day</span><div class="muted" style="font-size:12px;margin-top:3px">${state.done[x]?'Recorded':n?n+' students booked':'Not planned yet'}</div></div></button>`}).join('')}</div>
+   <div class="days" aria-label="Assessment dates">${days.map(x=>{const l=levelForDate(x),n=(state.plans[x]||[]).length;return `<button class="day ${x===d?'on':''}" data-act="plan" data-d="${x}" aria-pressed="${x===d}"><div class="date"><small>${fmt(x,{month:'short'})}</small><b class="num">${D(x).getUTCDate()}</b></div><div class="grow"><span class="lvl ${l.id}"><i></i>${l.name} day</span><div class="muted" style="font-size:12px;margin-top:3px">${state.done[x]?'Recorded':n?n+' students booked':'Not planned yet'}</div></div></button>`}).join('')}</div>
    <div class="grid" style="gap:16px">
     <div class="card"><div class="ch"><div class="grow"><h2>${fmt(d,{weekday:'long',day:'numeric',month:'long'})} · ${L.name} assessment</h2><div class="muted" style="font-size:12px">Tests the 4 ${L.name} column skills</div><div class="muted" style="margin-top:3px">${dayLabel(L.id)} · ${skillsOf(L.id).length} skills · ${videosOf(L.id).length} videos per student</div></div>
      ${done?'<span class="pill ok">Recorded</span>':`<button class="btn primary" data-act="runPlan" ${plan.length?'':'disabled'}>Record & score ${plan.length||''} ${plan.length===1?'student':'students'}</button>`}</div>
      <div class="banner info">Parents are notified ${PLAN.notice} days ahead${notifyDate<state.today?' (window passed)':' — on '+fmt(notifyDate)}. A child absent on the day waits for next month's ${L.name} day.</div></div>
-    <div class="grid g2">
+    <div class="planner-roster-status"><div><b>${plan.length}</b><span>${done?'players assessed':'players selected'}</span></div><p>${done?'This assessment is complete. Scores and badge awards are available in each player’s history.':plan.length?'Ready for recording. Review the roster below before scoring.':'Choose recommended players below to build this assessment roster.'}</p>${plan.length?`<div class="selected-avatars" aria-label="Selected players">${plan.slice(0,5).map(id=>S(id)?`<span class="av" title="${portalEscape(S(id).name)}">${initials(S(id).name)}</span>`:'').join('')}${plan.length>5?`<span class="av">+${plan.length-5}</span>`:''}</div>`:''}</div>
+    <div class="grid g2 planner-workarea">
      <div class="card"><div class="ch"><h3 class="grow">Recommended (${rec.length})</h3>${rec.length&&!done?`<button class="btn sm" data-act="addAll">Add all</button>`:''}</div>
       <p class="muted" style="margin:-6px 0 6px;font-size:12px">In the ${L.name} column and still missing skills for ${awardTxt(L)}.</p>
       ${rec.length?rec.map(r=>pickRow(r,'rec')).join(''):`<div class="empty">No one is due for ${L.name} right now.</div>`}
       ${stretch.length?`<h3 style="margin-top:14px">Stretch / fast-track (${stretch.length})</h3><p class="muted" style="margin:4px 0;font-size:12px">Coach's call. Useful for transfers and kids who are bored at their level.</p>${stretch.map(r=>pickRow(r,'str')).join('')}`:''}</div>
-     <div class="card"><h3>Recording sequence</h3><p class="muted" style="margin:4px 0 10px;font-size:12px">Same fixed order for every child. Nothing is skipped, even badges a child already has — the best score per video counts.</p>
+     <div class="card recording-guide"><h3>Recording sequence</h3><p class="muted" style="margin:4px 0 10px;font-size:12px">Same fixed order for every child. Nothing is skipped, even badges a child already has — the best score per video counts.</p>
       <ol class="seq">${videosOf(L.id).map(v=>`<li>${v.label}<span class="subtle" style="margin-left:auto;font-size:11px">${portalEscape(SK[v.id.split('.')[0]].name)}</span></li>`).join('')}</ol></div>
     </div></div></div></div>`}
 
@@ -473,7 +477,7 @@ function vDayPlan(){
  <div class="head"><div class="grow"><div class="eyebrow">${portalEscape(me.name)} · ${portalEscape(me.batch)}</div><h1>Day plan</h1><p>Groups today's players by their next unearned skill badge. Players with the same badge gap train together, regardless of their current level. Each player has one suggested focus. Drills come from the PSB curriculum.</p></div></div>
  <div class="card"><div class="ch"><h3 class="grow">Who's here today?</h3><span class="muted">${present.length} of ${mine.length} present · tap to mark absent</span></div><div class="att">${mine.map(s=>`<button class="${ui.absent.has(s.id)?'off':''}" data-act="absent" data-id="${s.id}" aria-pressed="${!ui.absent.has(s.id)}"><span class="av">${initials(s.name)}</span>${portalEscape(s.name.split(' ')[0])}</button>`).join('')}</div></div>
  ${due?`<div class="banner info"><b>${fmt(next)} is ${nl.name} day.</b>&nbsp;${due} of your students are recommended.<span style="flex:1"></span><button class="btn sm" data-act="plan" data-d="${next}">Open planner</button></div>`:''}
- ${groups.length?`<div class="groups day-badge-groups">${groups.map((g,i)=>`<section class="card day-badge-group ${i===0?'day-badge-group-priority':''}" data-day-badge="${g.badge.id}"><header class="day-badge-header"><div class="day-badge-art">${badgeSVG(g.badge,null)}</div><div class="day-badge-heading"><div class="day-badge-kicker">Badge group ${String(i+1).padStart(2,'0')}${i===0?'<span class="day-badge-priority">Suggested focus</span>':''}</div><h2>${portalEscape(g.badge.name)}</h2></div><span class="day-badge-count"><strong>${g.kids.length}</strong><span>${g.kids.length===1?'player':'players'}</span></span></header><div class="day-badge-target"><span class="day-badge-label">Teaching target</span><p class="day-badge-standard">${portalEscape(g.badge.std)}</p></div><div class="day-badge-roster-header"><span class="day-badge-label">Players</span>${g.failed.length?`<span class="day-badge-support">${g.failed.length} ${g.failed.length===1?'needs':'need'} support</span>`:''}</div><div class="day-badge-roster">${g.kids.map(s=>`<button class="kid ${g.failed.includes(s)?'f':''}" data-act="prof" data-id="${s.id}" data-day-student="${s.id}" title="Open ${portalEscape(s.name)} profile"><span class="day-player-avatar" aria-hidden="true">${initials(s.name)}</span><span class="day-player-details"><strong>${portalEscape(s.name)}</strong><small>${stageOf(ev(s).level).name}${g.failed.includes(s)?' · needs support':''}</small></span><span class="day-player-arrow" aria-hidden="true">›</span></button>`).join('')}</div>${g.kids.some(s=>!s.attempts.length)?'<p class="day-badge-new">New players start with their first unearned badge.</p>':''}</section>`).join('')}</div>`:''}
+ ${groups.length?`<div class="groups day-badge-groups">${groups.map((g,i)=>`<section class="card day-badge-group ${i===0?'day-badge-group-priority':''}" data-day-badge="${g.badge.id}"><header class="day-badge-header"><button class="day-badge-art" data-act="badgeDetail" data-s="${g.badge.id}" aria-label="View ${portalEscape(g.badge.name)} skill">${badgeSVG(g.badge,null)}</button><div class="day-badge-heading"><div class="day-badge-kicker">Badge group ${String(i+1).padStart(2,'0')}${i===0?'<span class="day-badge-priority">Suggested focus</span>':''}</div><h2><button class="badge-title-link" data-act="badgeDetail" data-s="${g.badge.id}">${portalEscape(g.badge.name)} <span aria-hidden="true">↗</span></button></h2></div><span class="day-badge-count"><strong>${g.kids.length}</strong><span>${g.kids.length===1?'player':'players'}</span></span></header><div class="day-badge-target"><span class="day-badge-label">Teaching target</span><p class="day-badge-standard">${portalEscape(g.badge.std)}</p></div><div class="day-badge-roster-header"><span class="day-badge-label">Players</span>${g.failed.length?`<span class="day-badge-support">${g.failed.length} ${g.failed.length===1?'needs':'need'} support</span>`:''}</div><div class="day-badge-roster">${g.kids.map(s=>`<button class="kid ${g.failed.includes(s)?'f':''}" data-act="prof" data-id="${s.id}" data-day-student="${s.id}" title="Open ${portalEscape(s.name)} profile"><span class="day-player-avatar" aria-hidden="true">${initials(s.name)}</span><span class="day-player-details"><strong>${portalEscape(s.name)}</strong><small>${stageOf(ev(s).level).name}${g.failed.includes(s)?' · needs support':''}</small></span><span class="day-player-arrow" aria-hidden="true">›</span></button>`).join('')}</div>${g.kids.some(s=>!s.attempts.length)?'<p class="day-badge-new">New players start with their first unearned badge.</p>':''}</section>`).join('')}</div>`:''}
  ${complete.length?`<div class="card day-badge-complete"><b>${portalEscape(complete.map(s=>s.name).join(', '))}</b> <span class="muted">${complete.length===1?'has':'have'} all ${SKILLS.length} skill badges. Continue practice using the curriculum.</span></div>`:''}
  ${!present.length?'<div class="empty">Nobody marked present.</div>':''}
  </div>`;
@@ -491,28 +495,13 @@ const QUESTIONS=[
 const more=(id,label)=>`<button class="more" data-act="more" data-id="${id}" aria-expanded="${ui.more.has(id)}">${ui.more.has(id)?'Show less':label||'Show more'}${ic('chev',12)}</button>`;
 function vCurriculum(){
   const full={sk:Object.fromEntries(SKILLS.map(s=>[s.id,{earned:1}])),best:{}};
-  return `<div class="wrap">
-  <div class="head"><div class="grow"><div class="eyebrow">Academy account only</div><h1>Curriculum & rules</h1>
-  <p>Everyone starts at Spark. Pass the 4 skills in a column to earn the next badge.</p></div></div>
-  <div class="card ctab-wrap"><div class="ctab" role="table" aria-label="Curriculum: 4 columns of 4 skills">
-   ${LEVELS.map(L=>`<div class="cth" role="columnheader" style="--c:var(--t-${L.id})"><b>${L.name}</b></div>`).join('')}
-   ${[0,1,2,3].map(r=>LEVELS.map(L=>{const sk=skillsOf(L.id)[r],on=ui.curSel===sk.id;return `<button class="ctd ${on?'on':''}" role="cell" style="--c:var(--t-${L.id})" data-act="curSel" data-s="${sk.id}" aria-pressed="${on}">${badgeSVG(sk,full)}<span>${portalEscape(sk.name)}</span></button>`}).join('')).join('')}
-  </div>
-  ${ui.curSel?(()=>{const sk=SK[ui.curSel],L=LV[sk.tier];return `<div class="cdetail" style="--c:var(--t-${L.id})"><div style="width:46px;flex:none">${badgeSVG(sk,full)}</div><div class="grow"><b>${portalEscape(sk.name)}</b><small>${L.name} column · ${sk.std}</small><small class="subtle">${sk.videos.length} ${sk.videos.length>1?'videos':'video'}: ${sk.videos.map(v=>v.label).join(' · ')}</small></div><button class="x" data-act="curSel" data-s="${sk.id}" aria-label="Close">${ic('close')}</button></div>`})():'<p class="muted" style="margin:12px 0 0;font-size:12px">Tap a skill to see its standard and videos.</p>'}
-  ${ui.more.has('cols')?`<div class="cmore cols4">${LEVELS.map(L=>`<div style="--c:var(--t-${L.id})"><b style="color:var(--c)">${L.name} column</b><p>${L.who}</p><div class="vchips">${L.focus.map(f=>`<span class="pill">${f}</span>`).join('')}</div></div>`).join('')}</div>`:''}
-  ${more('cols','Show more about each column')}</div>
-  <div class="grid">
-   <div class="card"><h2>Rules</h2><div class="rules">
-    <div>${ic('check')}<span>Skill badge: every video scores <b class="num">${rules.threshold}</b>+</span></div>
-    <div>${ic('check')}<span>Next badge: all 4 skills of the column</span></div>
-    <div>${ic('check')}<span>Only AI results change badges</span></div></div>
-    ${ui.more.has('rules')?`<div class="cmore"><p><b>Skill badge.</b> The best AI score per video counts, across attempts.</p>
-     <p><b>Level badge.</b> ${rules.levelRule==='tier'?'All 4 skill badges of a column, plus every earlier column (PSB sheet: “main badge only after they get all 4 sub stickers”).':'Any 4 / 8 / 12 / 16 skill badges, from any column.'}</p>
-     <p><b>Coaches</b> share badges with families; they can't award or remove one.</p>
-     <p><b>Needs attention:</b> failed the same skill at 2 assessments in a row.</p>
-     <p class="subtle">Try other rules from the Event simulator in the top bar.</p></div>`:''}
-    ${more('rules')}</div>
-  </div></div>`}
+  return `<div class="wrap portal-curriculum">
+   <div class="head"><div class="grow"><div class="eyebrow">The PSB learning pathway</div><h1>Curriculum & rules</h1><p>Four levels. ${SKILLS.length} skill badges. Explore what to teach and what each assessment measures.</p></div><span class="curriculum-count">${SKILLS.length}<small>skill badges</small></span></div>
+   <div class="curriculum-journey" aria-label="Four official levels">${LEVELS.map((L,i)=>`<a href="#collection-${L.id}" class="journey-stop" style="--c:var(--t-${L.id})"><span class="journey-number">0${i+1}</span>${emblem(STAGES[i],true)}<span><b>${L.name}</b><small>${skillsOf(L.id).length} skill badges</small></span><span class="journey-arrow" aria-hidden="true">↗</span></a>`).join('')}</div>
+   <div class="curriculum-collections">${LEVELS.map((L,i)=>`<section class="curriculum-collection" id="collection-${L.id}" style="--c:var(--t-${L.id});--cs:var(--t-${L.id}-soft)"><header class="collection-head"><div class="collection-title"><span class="collection-index">0${i+1}</span><div><div class="eyebrow">${i===3?'Complete the pathway':'Build toward '+L.award}</div><h2>${L.name} collection</h2></div></div><p>${L.who}</p></header><div class="curriculum-skills">${skillsOf(L.id).map(sk=>`<button class="curriculum-skill" data-act="curSel" data-s="${sk.id}" aria-haspopup="dialog"><div class="curriculum-art">${badgeSVG(sk,full)}<span class="skill-number">${String(sk.order+1).padStart(2,'0')}</span></div><div class="curriculum-skill-copy"><h3>${portalEscape(sk.name)}</h3><p>${portalEscape(sk.std)}</p><span class="skill-open">View skill <span>${sk.videos.length} ${sk.videos.length===1?'video':'videos'} ↗</span></span></div></button>`).join('')||'<p class="empty">No skill sets in this collection.</p>'}</div></section>`).join('')}</div>
+   <details class="card curriculum-rules"><summary><span>${ic('check',19)}<b>How progression works</b></span><span>Assessment and badge rules ${ic('chev')}</span></summary><div class="curriculum-rule-grid"><div><span class="rule-no">01</span><h3>Start at Spark</h3><p>Everyone starts at Spark. Pass the skills in a column to earn the next badge.</p></div><div><span class="rule-no">02</span><h3>Clear every video</h3><p>Skill badge: every video scores <b>${rules.threshold}+</b>. The best AI score per video counts, across attempts.</p></div><div><span class="rule-no">03</span><h3>Progress automatically</h3><p>${rules.levelRule==='tier'?'All skill badges of a column, plus every earlier column, unlock the next level badge.':'Any 4 / 8 / 12 / 16 skill badges, from any column.'} Coaches share badges with families; they cannot award or remove one.</p></div></div><p class="note">Needs attention: failed the same skill at 2 assessments in a row. Try other rules from the Event simulator.</p></details>
+  </div>`;
+}
 
 
 function vMapping(){
@@ -585,8 +574,10 @@ function vSettings(){
 
 /* ---------------- profile modal ---------------- */
 function openProfile(id,tab='badges',sel=null){ui.prof={id,tab,sel};renderModal()}
-function renderModal(){
+function renderModalContent(){
   const m=document.getElementById('modal');
+  if(ui.skill){m.innerHTML=portalSkillHTML();m.hidden=false;return}
+  if(ui.insight){m.innerHTML=portalInsightHTML();m.hidden=false;return}
   if(ui.results){m.innerHTML=resultsHTML();m.hidden=false;return}
   if(ui.form){m.innerHTML=formHTML();m.hidden=false;return}
   if(!ui.prof){m.hidden=true;m.innerHTML='';return}
@@ -764,16 +755,16 @@ function setSim(open){const el=document.getElementById('sim');el.hidden=!open;do
 
 document.addEventListener('click',e=>{
   if(!e.target.closest('.acct'))setAcctMenu(false);
-  if(e.target.id==='modal'){ui.prof=null;ui.results=null;ui.form=null;renderModal();return}
+  if(e.target.id==='modal'){portalCloseModal();return}
   const a=e.target.closest('[data-act]');if(!a)return;const d=a.dataset;
   switch(d.act){
     case 'view':ui.view=d.v;render();scrollTo(0,0);break;
     case 'filter':ui.filter=d.f;render();break;
-    case 'prof':if(e.target.closest('select'))return;openProfile(d.id);break;
+    case 'prof':if(e.target.closest('select'))return;ui.insight=null;openProfile(d.id);break;
     case 'close':ui.prof=null;renderModal();break;
     case 'ptab':ui.prof.tab=d.t;renderModal();break;
     case 'attOpen':ui.prof.att=ui.prof.att===d.k?null:d.k;renderModal();break;
-    case 'selSkill':ui.prof.sel=ui.prof.sel===d.s?null:d.s;renderModal();break;
+    case 'selSkill':ui.prof.sel=d.s;portalOpenSkill(d.s,ui.prof.id);break;
     case 'book':{(state.plans[d.d]=state.plans[d.d]||[]).push(d.id);toast(`Added to ${levelForDate(d.d).name} day, ${fmt(d.d)}`);render();break}
     case 'notify':{const n=notify(S(d.id));toast(`Shared ${n} ${n>1?'badges':'badge'} with the family`);render();break}
     case 'notifyAll':{let n=0;visible().forEach(s=>n+=notify(s));toast(`Shared ${n} badges with families`);render();break}
@@ -786,10 +777,16 @@ document.addEventListener('click',e=>{
     case 'openSim':setSim(document.getElementById('sim').hidden);break;
     case 'closeSim':setSim(false);break;
     case 'acctMenu':setAcctMenu(document.getElementById('acctMenu').hidden);break;
-    case 'asRole':ui.role=d.id;ui.filter='all';ui.coachF='all';ui.venueF='all';ui.absent=new Set();ui.prof=null;ui.form=null;sim.student=null;sim.scores=null;setAcctMenu(false);
+    case 'asRole':ui.skill=null;ui.insight=null;ui.role=d.id;ui.filter='all';ui.coachF='all';ui.venueF='all';ui.absent=new Set();ui.prof=null;ui.form=null;sim.student=null;sim.scores=null;setAcctMenu(false);
       if(roleKind()==='assistant'&&ui.group==='coach')ui.group='venue';render();toast('Now viewing as '+me().name);break;
     case 'group':ui.group=d.g;render();break;
-    case 'curSel':ui.curSel=ui.curSel===d.s?null:d.s;render();break;
+    case 'curSel':portalOpenSkill(d.s);break;
+    case 'badgeDetail':portalOpenSkill(d.s);break;
+    case 'closeSkill':ui.skill=null;renderModal();break;
+    case 'closeInsight':ui.insight=null;renderModal();break;
+    case 'insight':ui.insight={kind:d.kind,coach:d.coach,month:d.month||monthKey(state.today),skill:d.s};renderModal();break;
+    case 'overviewPlayers':ui.view='students';ui.filter=d.f||'all';ui.q='';ui.venueF='all';ui.coachF='all';render();scrollTo(0,0);break;
+    case 'resetFilters':ui.filter='all';ui.q='';ui.venueF='all';ui.coachF='all';render();break;
     case 'playVid':toast(`Sample clip · ${d.l} (the real recording plays here)`);break;
     case 'mapSel':ui.mapSel=d.s;render();break;
     case 'map':{const m=MAP[ui.mapSel]||(MAP[ui.mapSel]=[]);if(!m.includes(d.k))m.push(d.k);render();toast(`${LK[d.k].name} → ${SK[ui.mapSel].name}`);break}
@@ -860,7 +857,7 @@ document.addEventListener('input',e=>{const t=e.target;
   if(t.id==='thr'){document.getElementById('thrV').textContent=t.value}});
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.target.matches&&e.target.matches('[role=button][data-act=prof]')){openProfile(e.target.dataset.id);return}
-  if(e.key==='Escape'){setAcctMenu(false);if(ui.results||ui.prof||ui.form){ui.results=null;ui.prof=null;ui.form=null;renderModal()}else setSim(false)}});
+  if(e.key==='Escape'){setAcctMenu(false);if(ui.skill||ui.insight||ui.results||ui.prof||ui.form){portalCloseModal()}else setSim(false)}});
 
 
 function moveSet(id,col){const st=SK[id];if(!st||st.tier===col)return;st.tier=col;invalidate();render();toast(`${st.name} moved to the ${LV[col].name} badge · badges replayed`)}
@@ -884,6 +881,48 @@ function confetti(){
   let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.45*devicePixelRatio;p.x+=p.vx;p.y+=p.vy;p.a+=.15;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2*devicePixelRatio/1.4,p.r*devicePixelRatio/1.4);x.restore()});
     if(++f<110)requestAnimationFrame(tick);else{x.clearRect(0,0,c.width,c.height);c.hidden=true}})()}
 
+
+/* Presentation interactions: official skill detail, scoped analytics and accessible overlays. */
+let portalModalFocus=null,portalModalKey=null;
+function portalOpenSkill(id,student=null){if(!SK[id])return;ui.skill={id,student};renderModal()}
+function portalSkillHTML(){
+ const sk=SK[ui.skill.id],L=LV[sk.tier],st=ui.skill.student?S(ui.skill.student):null,e=st?ev(st):null,o=e?.sk[sk.id],full={sk:{[sk.id]:{earned:1}},best:{}};
+ return `<div class="dialog skill-dialog" role="dialog" aria-modal="true" aria-labelledby="skill-dialog-title"><button class="x skill-dialog-close" data-act="closeSkill" aria-label="${st?'Back to player profile':'Close skill details'}">${ic(st?'chev':'close',18)}</button><div class="skill-detail-hero" style="--c:var(--t-${L.id});--cs:var(--t-${L.id}-soft)"><div class="skill-detail-art">${badgeSVG(sk,e||full)}</div><div class="skill-detail-heading"><div class="eyebrow">Skill badge ${String(sk.order+1).padStart(2,'0')} · ${L.name} collection</div><h2 id="skill-dialog-title">${portalEscape(sk.name)}</h2><p>${st?portalEscape(st.name)+' · ':''}${o?.earned?'Badge earned':st?'In progress':L.idx===3?'Complete the pathway':'Build toward '+L.award}</p><span class="pill">${sk.videos.length} ${sk.videos.length===1?'assessment video':'assessment videos'}</span></div></div><div class="skill-detail-content"><section class="skill-standard"><div class="eyebrow">The teaching standard</div><h3>${portalEscape(sk.std)}</h3></section><section><div class="ch"><div class="grow"><h3>${st?'Best AI score per video':'Assessment checklist'}</h3><p class="muted">${st?'Your strongest score from every attempt counts.':'Record these activities in the fixed assessment sequence.'}</p></div><span class="threshold-pill">${rules.threshold}+<small>per video</small></span></div><ol class="skill-video-list">${sk.videos.map((v,i)=>{const score=e?.best[v.id];return `<li><span class="video-index">${i+1}</span><div class="grow"><b>${portalEscape(v.label)}</b><small>${!st?'Required for this badge':score==null?'Not recorded':score>=rules.threshold?'Pass mark reached':'Below pass mark'}</small>${st?`<div class="meter"><div style="width:${score||0}%;background:${score>=rules.threshold?'var(--brand)':'var(--danger)'}"></div><span class="th" style="left:${rules.threshold}%"></span></div>`:''}</div><span class="${score!=null?(score>=rules.threshold?'score-pass':'score-fail'):'video-required'}">${score??(st?'—':'Required')}</span></li>`}).join('')}</ol></section>${st&&o?.history.length?`<section><h3>Assessment attempts</h3><div class="list">${o.history.slice().reverse().map(h=>`<div class="li"><b class="grow">${fmt(h.date)}</b><span class="num">${h.scores.join(' · ')}</span><span class="pill ${h.passNow?'ok':'danger'}">${h.passNow?'Passed':'Not yet'}</span></div>`).join('')}</div></section>`:''}<div class="skill-award-note">${ic('check',20)}<div><b>Clear the assessment. Earn the badge.</b><p>Every video must reach ${rules.threshold}+. The best score per video counts across attempts. ${rules.levelRule==='tier'?'Complete this collection and every earlier collection to progress.':'Level badges follow the current count rule.'} Badges are awarded automatically.</p></div></div></div><footer class="dialog-footer"><span class="muted">${L.name} · official skill standard</span><button class="btn primary" data-act="closeSkill">${st?'Back to player profile':'Done'}</button></footer></div>`;
+}
+function portalInsightHTML(){
+ const q=ui.insight,list=visible().filter(s=>!q.coach||s.coachId===q.coach),rows=[];
+ if(q.kind==='badge'){for(const st of list){const e=ev(st),o=e.sk[q.skill];rows.push({st,label:o.earned?'Badge earned':o.history.length?'Still practising':'Not assessed yet',date:o.earned?e.timeline.find(t=>t.kind==='skill'&&t.id===q.skill)?.date:null,earned:o.earned})}}
+ else for(const st of list)for(const t of ev(st).timeline.filter(t=>t.kind===q.kind&&monthKey(t.date)===q.month))rows.push({st,label:t.kind==='skill'?SK[t.id].name:LV[t.id].idx===3?'All 16 skills complete':LV[t.id].award+' badge',date:t.date});
+ rows.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||a.st.name.localeCompare(b.st.name));
+ const title=q.kind==='badge'?SK[q.skill].name:q.kind==='level'?'Level-ups':'Skill badges earned';
+ return `<div class="dialog insight-dialog" role="dialog" aria-modal="true" aria-labelledby="insight-title"><div class="dh"><div class="grow"><div class="eyebrow">${q.kind==='badge'?'Badge progression':fmt(q.month+'-01',{month:'long',year:'numeric'})}${q.coach?' · '+portalEscape(CO[q.coach].name):''}</div><h2 id="insight-title">${portalEscape(title)}</h2><p class="muted">${q.kind==='badge'?rows.filter(r=>r.earned).length+' of '+list.length+' players have earned this badge.':rows.length+' awards across '+new Set(rows.map(r=>r.st.id)).size+' players.'}</p></div><button class="x" data-act="closeInsight" aria-label="Close records">${ic('close')}</button></div><div class="db"><div class="insight-list">${rows.length?rows.map(r=>`<button class="insight-row" data-act="prof" data-id="${r.st.id}"><span class="av">${initials(r.st.name)}</span><span class="grow"><b>${portalEscape(r.st.name)}</b><small>${portalEscape(r.label)}</small></span><span class="insight-date">${r.date?fmt(r.date,{day:'numeric',month:'short'}):''}</span><span aria-hidden="true">›</span></button>`).join(''):'<div class="empty">No awards in this period.</div>'}</div></div><footer class="dialog-footer"><span class="muted">Select a player to view their history.</span><button class="btn" data-act="closeInsight">Close</button></footer></div>`;
+}
+function portalCloseModal(){
+ if(ui.skill)ui.skill=null;
+ else if(ui.insight)ui.insight=null;
+ else{ui.results=null;ui.prof=null;ui.form=null;}
+ renderModal();
+}
+function renderModal(){
+ const m=document.getElementById('modal'),wasOpen=!m.hidden,active=document.activeElement;
+ if(!wasOpen&&active){portalModalFocus={node:active,id:active.id,act:active.dataset?.act,data:{...active.dataset}};}
+ renderModalContent();
+ const open=!m.hidden,shell=document.querySelector('.portal-shell'),simEl=document.getElementById('sim');
+ if(shell)shell.inert=open;if(simEl)simEl.inert=open;
+ document.body.classList.toggle('portal-modal-open',open);
+ if(open){const key=ui.skill?'skill:'+ui.skill.id:ui.insight?'insight:'+ui.insight.kind:ui.results?'results':ui.form?'form:'+ui.form.type:'profile:'+ui.prof?.id;
+  if(key!==portalModalKey||!m.contains(document.activeElement)){const returning=portalModalKey?.startsWith('skill:')&&key.startsWith('profile:');const target=returning?[...m.querySelectorAll('[data-act=selSkill]')].find(el=>el.dataset.s===ui.prof?.sel):m.querySelector('.x,button,input,select,[tabindex="0"]');if(target)target.focus({preventScroll:true});}portalModalKey=key;
+ }else if(wasOpen){portalModalKey=null;let target=portalModalFocus?.node;
+  if(!target?.isConnected&&portalModalFocus?.id)target=document.getElementById(portalModalFocus.id);
+  if(!target?.isConnected&&portalModalFocus?.act)target=[...document.querySelectorAll('[data-act]')].find(el=>Object.entries(portalModalFocus.data).every(([k,v])=>el.dataset[k]===v));
+  if(target?.isConnected)target.focus({preventScroll:true});portalModalFocus=null;
+ }
+}
+document.addEventListener('keydown',event=>{
+ const m=document.getElementById('modal');if(m.hidden||event.key!=='Tab')return;
+ const items=[...m.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),a[href],[tabindex="0"]')].filter(el=>el.getClientRects().length),first=items[0],last=items.at(-1);
+ if(!first)return;if(event.shiftKey&&(document.activeElement===first||!m.contains(document.activeElement))){event.preventDefault();last.focus()}else if(!event.shiftKey&&(document.activeElement===last||!m.contains(document.activeElement))){event.preventDefault();first.focus()}
+});
 
 /* VISIST visual adapter only. Workspace behaviour above follows the supplied HTML. */
 function portalEscape(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}

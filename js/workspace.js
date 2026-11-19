@@ -258,8 +258,7 @@ function renderNav(){
   const items=navItems();if(!items.some(i=>i[0]===ui.view))ui.view=items[0][0];
   const att=visible().filter(s=>ev(s).attention.length).length;
   document.getElementById('nav').innerHTML=`<div class="eyebrow">${roleKind()==='assistant'?'Coach':roleKind()==='head'?'Head coach':'Academy account'}</div>`+
-   items.map(([id,l])=>`<button class="nav ${ui.view===id?'on':''}" data-act="view" data-v="${id}"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">${ICON[id]}</svg>${l}${id==='students'&&att?`<span class="pill danger num">${att}</span>`:''}</button>`).join('')+
-   `<div class="foot">Interactive mockup · sample data. Badges change only when assessment results arrive — use the Event simulator.</div>`;
+   items.map(([id,l])=>`<button class="nav ${ui.view===id?'on':''}" data-act="view" data-v="${id}"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">${ICON[id]}</svg>${l}${id==='students'&&att?`<span class="pill danger num">${att}</span>`:''}</button>`).join('');
   document.getElementById('clock').textContent='Today · '+fmt(state.today,{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 }
 

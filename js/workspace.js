@@ -275,17 +275,18 @@ function vOverview(){
   const maxPer=Math.max(1,...per.flatMap(p=>p.m));
   const segC=STAGES.map(g=>`var(--t-${g.id})`),segL=STAGES.map(g=>g.name);
   const upcoming=assessmentDays(state.today,4);
-  return `<div class="wrap">
+  return `<div class="wrap overview-workspace">
   <div class="head"><div class="grow"><div class="eyebrow">PSB Academy · ${VENUES.length} venues</div><h1>Academy overview</h1>
-  <p>Badges are awarded automatically from AI-scored assessment videos. Coaches can't award or remove a badge; this view shows how fast kids are moving and where they get stuck.</p></div>
 </div>
-  <div class="overview-next"><div class="overview-next-icon">${ic('cal',23)}</div><div class="grow"><span class="eyebrow">Next on the calendar</span><h2>${fmt(upcoming[0],{weekday:'long',day:'numeric',month:'long'})} · ${levelForDate(upcoming[0]).name} day</h2><p>${recommend(upcoming[0]).rec.length} recommended · ${(state.plans[upcoming[0]]||[]).length} booked</p></div><button class="btn primary" data-act="plan" data-d="${upcoming[0]}">Open assessment planner ${ic('chev')}</button></div>
+</div>
+
   <div class="grid g4">
    <button class="card kpi kpi-action" data-act="overviewPlayers" data-f="all"><span class="metric-label">Academy roster</span><div class="v num">${list.length}</div><div class="l">Active students <span aria-hidden="true">↗</span></div></button>
    <button class="card kpi kpi-action" data-act="insight" data-kind="skill"><span class="metric-label">This month</span><div class="v num">${monthSkill}</div><div class="l">Skill badges earned in ${fmt(state.today+'',{month:'long'})} <span aria-hidden="true">↗</span></div></button>
    <button class="card kpi kpi-action" data-act="insight" data-kind="level"><span class="metric-label">This month</span><div class="v num">${monthLevel}</div><div class="l">Level-ups in ${fmt(state.today,{month:'long'})} <span aria-hidden="true">↗</span></div></button>
    <button class="card kpi kpi-action" data-act="overviewPlayers" data-f="attention"><span class="metric-label">Coaching priority</span><div class="v num" style="color:${att.length?'var(--danger)':'inherit'}">${att.length}</div><div class="l">Need attention (failed a skill 2+ times in a row) <span aria-hidden="true">↗</span></div></button>
   </div>
+  <div class="overview-next"><div class="overview-next-icon">${ic('cal',23)}</div><div class="grow"><span class="eyebrow">Next on the calendar</span><h2>${fmt(upcoming[0],{weekday:'long',day:'numeric',month:'long'})} · ${levelForDate(upcoming[0]).name} day</h2><p>${recommend(upcoming[0]).rec.length} recommended · ${(state.plans[upcoming[0]]||[]).length} booked</p></div><button class="btn primary" data-act="plan" data-d="${upcoming[0]}">Open assessment planner ${ic('chev')}</button></div>
   <div class="card"><div class="ch"><div class="grow"><h2>Where students stand</h2><div class="muted" style="font-size:12px;margin-top:2px">Everyone starts at Spark and moves up one badge per finished column</div></div><span class="pill num">${list.length} students</span></div>
    ${(()=>{const idx=[0,1,2,3].concat(dist[4]?[4]:[]),tot=Math.max(1,list.length);
     return `<div class="dstats" style="grid-template-columns:repeat(${idx.length},minmax(0,1fr))">${idx.map(i=>{const g=STAGES[i],p=Math.round(dist[i]/tot*100);return `<button class="dcard ${dist[i]?'':'zero'}" data-act="overviewPlayers" data-f="${i-1}" style="--c:var(--t-${g.id})" aria-label="View ${dist[i]} ${g.name} players">
@@ -944,8 +945,6 @@ function portalInstallArtwork(){
  emblem=function(level,got){const path={spark:'Spark.png',scout:'Scout.png',star:'Star.png',champ:'Champ.png'}[level.id];if(!path)return nativeEmblem(level,got);return `<img class="em ${got?'earned':'locked'}" src="${path}" alt="${portalEscape(level.name)}${level.final?' skills complete':' level'}" width="100" height="110" decoding="async">`;};
 }
 function portalDecorate(){
- const main=document.getElementById('main');
- if(ui.view==='overview'){const head=main.querySelector('.head');if(head&&!head.classList.contains('portal-overview-banner')){head.classList.add('portal-overview-banner');head.insertAdjacentHTML('afterbegin',`<div class="portal-hero-photo" aria-hidden="true"><img src="assets/badminton-training.jpg" alt="" width="1672" height="941"></div>`);}}
  document.getElementById('portal-section').textContent=({overview:'Academy overview',students:roleKind()==='assistant'?'My players':'Players',team:'Coaches & venues',planner:'Assessment planner',dayplan:'Day plan',curriculum:'Curriculum & rules',mapping:'Skill mapping',settings:'Settings'}[ui.view]||'Workspace');
 }
 // Keep the selected workspace account through refresh in this browser tab.

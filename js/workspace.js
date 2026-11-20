@@ -428,32 +428,37 @@ function recommend(d){
   for(const s of list){const e=ev(s);const missing=skillsOf(L.id).filter(x=>!e.sk[x.id].earned);if(!missing.length)continue;
     if(e.working===L.idx)rec.push({s,missing});else if(e.working<L.idx)stretch.push({s,missing})}
   return {L,rec,stretch}}
+// Manual planner: dates and assignments; scoring remains in assessment workflows.
+function plannerDateIsScheduled(date){return typeof date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&!isNaN(D(date))&&iso(D(date))===date&&!!levelForDate(date)}
+function plannerCompleted(student,date){const L=levelForDate(date);return !!L&&student.attempts.some(a=>a.date===date&&a.level===L.id)}
+function plannerRoster(date){const ids=new Set(state.plans[date]||[]);return visible().filter(st=>ids.has(st.id)).sort((a,b)=>a.name.localeCompare(b.name))}
+function plannerDates(){return [...new Set([...assessmentDays(state.today,8),...Object.keys(state.plans).filter(d=>plannerDateIsScheduled(d)&&plannerRoster(d).length)])].sort()}
+function plannerStatus(date){const list=plannerRoster(date);return list.length&&list.every(st=>plannerCompleted(st,date))?'Completed':'Not completed'}
+function plannerSaveAssignments(date,selected){
+ if(!plannerDateIsScheduled(date)||!Array.isArray(selected))return false;
+ const allowed=new Set(visible().map(st=>st.id)),old=state.plans[date]||[];
+ if(selected.some(id=>!allowed.has(id)))return false;
+ const preserved=old.filter(id=>!allowed.has(id)||(S(id)&&plannerCompleted(S(id),date)));
+ state.plans[date]=[...new Set([...preserved,...selected])];return true;
+}
+function plannerRemoveStudent(date,id){
+ if(!visible().some(st=>st.id===id)||!plannerDateIsScheduled(date)||plannerCompleted(S(id),date))return false;
+ state.plans[date]=(state.plans[date]||[]).filter(x=>x!==id);return true;
+}
+function plannerOpenPicker(){
+ if(!plannerDateIsScheduled(ui.planDay))return;
+ ui.plannerPicker={date:ui.planDay,ids:new Set(plannerRoster(ui.planDay).map(st=>st.id)),query:''};renderModal();
+ document.getElementById('plannerStudentSearch')?.focus();
+}
+function plannerPickerHTML(){
+ const p=ui.plannerPicker,L=levelForDate(p.date),list=visible().filter(st=>st.name.toLowerCase().includes(p.query.toLowerCase())).sort((a,b)=>a.name.localeCompare(b.name));
+ return `<div class="dialog planner-picker" role="dialog" aria-modal="true" aria-labelledby="planner-picker-title"><div class="dh"><div class="grow"><div class="eyebrow">${L.name} assessment · ${fmt(p.date)}</div><h2 id="planner-picker-title">Add students</h2><p class="muted">Choose the students assigned to this assessment.</p></div><button class="x" data-act="closePlannerPicker" aria-label="Cancel adding students">${ic('close')}</button></div><div class="db"><label class="planner-search"><span>Search students</span><input id="plannerStudentSearch" type="search" value="${portalEscape(p.query)}" placeholder="Search by name" autocomplete="off"></label><div class="planner-picker-list">${list.length?list.map(st=>{const complete=plannerCompleted(st,p.date),on=p.ids.has(st.id);return `<label class="planner-picker-row"><input type="checkbox" data-planner-student="${st.id}" ${on?'checked':''} ${complete&&on?'disabled':''}><span class="av">${initials(st.name)}</span><span class="grow"><b>${portalEscape(st.name)}</b><small>${portalEscape(VE[st.venue].name)} · ${portalEscape(CO[st.coachId].name)}</small></span>${complete&&on?'<span class="pill ok">Completed</span>':''}</label>`}).join(''):'<p class="empty">No students match this search.</p>'}</div></div><footer class="dialog-footer"><span id="plannerPickerCount" class="muted">${p.ids.size} selected</span><div class="planner-picker-actions"><button class="btn" data-act="closePlannerPicker">Cancel</button><button class="btn primary" data-act="savePlannerStudents">Save students</button></div></footer></div>`;
+}
 function vPlanner(){
-  const days=assessmentDays(state.today,8);if(!ui.planDay||!days.includes(ui.planDay))ui.planDay=days[0];
-  const d=ui.planDay,{L,rec,stretch}=recommend(d),done=state.done[d];
-  if(PLAN.mode==='auto'&&!done&&!state.plans[d]&&rec.length)state.plans[d]=rec.map(r=>r.s.id);
-  const plan=state.plans[d]||[];
-  const pickRow=({s,missing},kind)=>{const e=ev(s),on=plan.includes(s.id);return `<label class="pick"><input type="checkbox" data-pick="${s.id}" ${on?'checked':''} ${done?'disabled':''}><div class="av">${initials(s.name)}</div><div class="grow"><b>${portalEscape(s.name)}</b><small>${kind==='rec'?`Missing ${missing.length} of 4: ${portalEscape(missing.map(m=>m.name).join(', '))}`:`Working on ${LEVELS[e.working].name}. Earns any ${L.name} skill badge they pass; ${awardTxt(L)} waits until every earlier column is done.`}</small></div>${e.sk[missing[0].id].streak>=2||missing.some(m=>e.sk[m.id].streak>=2)?'<span class="pill danger">attention</span>':''}${lvlChip(e.level)}</label>`};
-  const notifyDate=addDays(d,-PLAN.notice);
-  return `<div class="wrap portal-planner">
-  <div class="head"><div class="grow"><div class="eyebrow">Fixed calendar</div><h1>Assessment planner</h1>
-  <p>${LEVELS.map(L=>`${L.name}: ${dayLabel(L.id)}`).join(' · ')}. ${PLAN.mode==='auto'?'Recommended students are added automatically; the coach removes anyone who shouldn\'t go.':'The system recommends who to add; the coach adds or removes students.'}</p></div>${roleKind()==='admin'?`<button class="btn" data-act="view" data-v="settings">${ic('cal',14)}Planner settings</button>`:''}</div>
-  <ol class="planner-steps" aria-label="Assessment workflow"><li class="is-done"><span>1</span>Choose a date</li><li class="${done?'is-done':'is-current'}"><span>2</span>Select players</li><li class="${done?'is-done':''}"><span>3</span>Record & score</li></ol>
-  <div class="split" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)">
-   <div class="days" aria-label="Assessment dates">${days.map(x=>{const l=levelForDate(x),n=(state.plans[x]||[]).length;return `<button class="day ${x===d?'on':''}" data-act="plan" data-d="${x}" aria-pressed="${x===d}"><div class="date"><small>${fmt(x,{month:'short'})}</small><b class="num">${D(x).getUTCDate()}</b></div><div class="grow"><span class="lvl ${l.id}"><i></i>${l.name} day</span><div class="muted" style="font-size:12px;margin-top:3px">${state.done[x]?'Recorded':n?n+' students booked':'Not planned yet'}</div></div></button>`}).join('')}</div>
-   <div class="grid" style="gap:16px">
-    <div class="card"><div class="ch"><div class="grow"><h2>${fmt(d,{weekday:'long',day:'numeric',month:'long'})} · ${L.name} assessment</h2><div class="muted" style="font-size:12px">Tests the 4 ${L.name} column skills</div><div class="muted" style="margin-top:3px">${dayLabel(L.id)} · ${skillsOf(L.id).length} skills · ${videosOf(L.id).length} videos per student</div></div>
-     ${done?'<span class="pill ok">Recorded</span>':`<button class="btn primary" data-act="runPlan" ${plan.length?'':'disabled'}>Record & score ${plan.length||''} ${plan.length===1?'student':'students'}</button>`}</div>
-     <div class="banner info">Parents are notified ${PLAN.notice} days ahead${notifyDate<state.today?' (window passed)':' — on '+fmt(notifyDate)}. A child absent on the day waits for next month's ${L.name} day.</div></div>
-    <div class="planner-roster-status"><div><b>${plan.length}</b><span>${done?'players assessed':'players selected'}</span></div><p>${done?'This assessment is complete. Scores and badge awards are available in each player’s history.':plan.length?'Ready for recording. Review the roster below before scoring.':'Choose recommended players below to build this assessment roster.'}</p>${plan.length?`<div class="selected-avatars" aria-label="Selected players">${plan.slice(0,5).map(id=>S(id)?`<span class="av" title="${portalEscape(S(id).name)}">${initials(S(id).name)}</span>`:'').join('')}${plan.length>5?`<span class="av">+${plan.length-5}</span>`:''}</div>`:''}</div>
-    <div class="grid g2 planner-workarea">
-     <div class="card"><div class="ch"><h3 class="grow">Recommended (${rec.length})</h3>${rec.length&&!done?`<button class="btn sm" data-act="addAll">Add all</button>`:''}</div>
-      <p class="muted" style="margin:-6px 0 6px;font-size:12px">In the ${L.name} column and still missing skills for ${awardTxt(L)}.</p>
-      ${rec.length?rec.map(r=>pickRow(r,'rec')).join(''):`<div class="empty">No one is due for ${L.name} right now.</div>`}
-      ${stretch.length?`<h3 style="margin-top:14px">Stretch / fast-track (${stretch.length})</h3><p class="muted" style="margin:4px 0;font-size:12px">Coach's call. Useful for transfers and kids who are bored at their level.</p>${stretch.map(r=>pickRow(r,'str')).join('')}`:''}</div>
-     <div class="card recording-guide"><h3>Recording sequence</h3><p class="muted" style="margin:4px 0 10px;font-size:12px">Same fixed order for every child. Nothing is skipped, even badges a child already has — the best score per video counts.</p>
-      <ol class="seq">${videosOf(L.id).map(v=>`<li>${v.label}<span class="subtle" style="margin-left:auto;font-size:11px">${portalEscape(SK[v.id.split('.')[0]].name)}</span></li>`).join('')}</ol></div>
-    </div></div></div></div>`}
+ const days=plannerDates(),upcoming=assessmentDays(state.today,1)[0];if(!ui.planDay||!days.includes(ui.planDay))ui.planDay=upcoming;
+ const d=ui.planDay,L=levelForDate(d),list=plannerRoster(d),status=plannerStatus(d);
+ return `<div class="wrap portal-planner simple-planner"><div class="head"><div class="grow"><div class="eyebrow">Academy schedule</div><h1>Assessment planner</h1><p>Select an assessment day, add students and follow their completion status.</p></div>${roleKind()==='admin'?`<button class="btn" data-act="view" data-v="settings">${ic('cal',14)}Edit assessment days</button>`:''}</div><div class="split planner-layout"><div class="days" aria-label="Assessment dates">${days.map(date=>{const level=levelForDate(date),roster=plannerRoster(date);return `<button class="day ${date===d?'on':''}" data-act="plan" data-d="${date}" aria-pressed="${date===d}"><span class="date"><small>${fmt(date,{month:'short'})}</small><b>${D(date).getUTCDate()}</b></span><span class="grow"><span class="lvl ${level.id}"><i></i>${level.name} assessment</span><span class="planner-date-meta">${roster.length} ${roster.length===1?'student':'students'}${roster.length?' · '+plannerStatus(date):''}</span></span></button>`}).join('')}</div><section class="card planner-assignment"><header class="planner-assignment-head"><div><div class="eyebrow">${fmt(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div><h2>${L.name} assessment</h2><p>${list.length} ${list.length===1?'student':'students'} assigned</p></div><button class="btn primary" data-act="addPlannerStudents">${ic('plus',15)}Add students</button></header><div class="planner-assessment-skills"><span>Assessment skills</span><p>${skillsOf(L.id).map(sk=>portalEscape(sk.name)).join(' · ')}</p></div>${list.length?`<div class="planner-roster-heading"><h3>Assigned students</h3><span class="pill ${status==='Completed'?'ok':''}">${status}</span></div><div class="planner-assigned-list">${list.map(st=>{const complete=plannerCompleted(st,d);return `<div class="planner-assigned-row" data-planner-assigned="${st.id}"><button class="planner-student" data-act="prof" data-id="${st.id}"><span class="av">${initials(st.name)}</span><span><b>${portalEscape(st.name)}</b><small>${L.name} assessment</small></span></button><span class="pill ${complete?'ok':'pending'}">${complete?'Completed':'Not completed'}</span>${complete?`<button class="btn sm" data-act="plannerHistory" data-id="${st.id}">View history</button>`:`<button class="planner-remove" data-act="removePlannerStudent" data-id="${st.id}" aria-label="Remove ${portalEscape(st.name)} from this assessment">${ic('close',15)}</button>`}</div>`}).join('')}</div>`:`<div class="planner-empty"><span>${ic('user',28)}</span><h3>No students assigned</h3><p>Add the students who will take this ${L.name} assessment.</p></div>`}</section></div></div>`;
+}
 
 // Day-plan exception to the reference: group by the next unearned badge, never by level.
 function dayBadgeGroups(students){
@@ -553,7 +558,7 @@ function vSettings(){
   return `<div class="wrap">
   <div class="head"><div class="grow"><div class="eyebrow">Academy account only</div><h1>Settings</h1><p>Academy-wide settings. Changes apply to every venue straight away.</p></div></div>
   <div class="card set-card">
-   <div class="ch"><span class="grp-ic" style="width:36px;height:36px">${ic('cal',18)}</span><div class="grow"><h2>Planner settings</h2><div class="muted" style="font-size:13px">When each level is assessed and how students get onto the list.</div></div></div>
+   <div class="ch"><span class="grp-ic" style="width:36px;height:36px">${ic('cal',18)}</span><div class="grow"><h2>Planner settings</h2><div class="muted" style="font-size:13px">Assessment dates are set by the academy. Coaches assign students to these dates.</div></div></div>
    <div class="set-sec"><h3>Assessment day per level</h3><p class="muted">Every month has a fixed day per level. That day tests the 4 skills of the level's column.</p>
     <div class="set-rows">${LEVELS.map(L=>{const x=PLAN.days[L.id],nx=nextDayFor(L.idx,state.today);return `<div class="set-row" style="--c:var(--t-${L.id})">
       <div class="set-l">${emblem(STAGES[L.idx],true)}<div><b>${L.name}</b><small>Tests the 4 ${L.name} column skills</small></div></div>
@@ -563,8 +568,6 @@ function vSettings(){
     ${clash.length?`<div class="banner" style="margin-top:10px">${ic('alert',16)}<span><b>Two levels share a day:</b> ${clash.map(c=>c.join(' & ')).join(', ')}. Only the first one will be scheduled.</span></div>`:''}</div>
    <div class="set-sec"><h3>5th week of the month</h3>
     <div class="radio">${[['makeup','Make-up day','No assessment. Coaches use it to catch up or re-run drills.'],['off','No session','Nothing is planned in the 5th week.']].map(([v,t,d])=>`<label class="${PLAN.fifth===v?'on':''}"><input type="radio" name="fifth" value="${v}" ${PLAN.fifth===v?'checked':''}><span><b>${t}</b><br><span class="muted">${d}</span></span></label>`).join('')}</div></div>
-   <div class="set-sec"><h3>Who goes on the list</h3>
-    <div class="radio">${[['recommend','System recommends, coach adds','The planner shows who is due. The coach picks who to add.'],['auto','Add recommended automatically','Everyone due is added to the day. The coach removes anyone who shouldn\'t go.']].map(([v,t,d])=>`<label class="${PLAN.mode===v?'on':''}"><input type="radio" name="pmode" value="${v}" ${PLAN.mode===v?'checked':''}><span><b>${t}</b><br><span class="muted">${d}</span></span></label>`).join('')}</div></div>
    <div class="set-sec"><h3>Parent notice</h3>
     <div class="set-inline"><label class="sel">Notify parents <input type="number" id="pNotice" min="1" max="30" value="${PLAN.notice}" aria-label="Days before the assessment"> days before the assessment</label></div></div>
    <div class="set-sec" style="border-bottom:0;padding-bottom:0"><h3>Next 4 assessment days</h3>
@@ -575,6 +578,7 @@ function vSettings(){
 function openProfile(id,tab='badges',sel=null){ui.prof={id,tab,sel};renderModal()}
 function renderModalContent(){
   const m=document.getElementById('modal');
+  if(ui.plannerPicker){m.innerHTML=plannerPickerHTML();m.hidden=false;return}
   if(ui.skill){m.innerHTML=portalSkillHTML();m.hidden=false;return}
   if(ui.insight){m.innerHTML=portalInsightHTML();m.hidden=false;return}
   if(ui.results){m.innerHTML=resultsHTML();m.hidden=false;return}
@@ -771,12 +775,17 @@ document.addEventListener('click',e=>{
     case 'closeRes':ui.results=null;render();break;
     case 'plan':ui.view='planner';ui.planDay=d.d;ui.prof=null;render();break;
     case 'addAll':{const r=recommend(ui.planDay).rec.map(x=>x.s.id);state.plans[ui.planDay]=[...new Set([...(state.plans[ui.planDay]||[]),...r])];render();break}
+    case 'addPlannerStudents':plannerOpenPicker();break;
+    case 'closePlannerPicker':ui.plannerPicker=null;renderModal();break;
+    case 'savePlannerStudents':{const p=ui.plannerPicker;if(p&&plannerSaveAssignments(p.date,[...p.ids])){ui.plannerPicker=null;render();toast('Assessment students saved')}break}
+    case 'removePlannerStudent':if(plannerRemoveStudent(ui.planDay,d.id)){render();toast('Student removed from assessment')}break;
+    case 'plannerHistory':openProfile(d.id,'history');break;
     case 'runPlan':{const day=ui.planDay;runSession(day,levelForDate(day).id,state.plans[day]);break}
     case 'absent':ui.absent.has(d.id)?ui.absent.delete(d.id):ui.absent.add(d.id);render();break;
     case 'openSim':setSim(document.getElementById('sim').hidden);break;
     case 'closeSim':setSim(false);break;
     case 'acctMenu':setAcctMenu(document.getElementById('acctMenu').hidden);break;
-    case 'asRole':portalRememberRole(d.id);ui.skill=null;ui.insight=null;ui.role=d.id;ui.filter='all';ui.coachF='all';ui.venueF='all';ui.absent=new Set();ui.prof=null;ui.form=null;sim.student=null;sim.scores=null;setAcctMenu(false);
+    case 'asRole':ui.plannerPicker=null;portalRememberRole(d.id);ui.skill=null;ui.insight=null;ui.role=d.id;ui.filter='all';ui.coachF='all';ui.venueF='all';ui.absent=new Set();ui.prof=null;ui.form=null;sim.student=null;sim.scores=null;setAcctMenu(false);
       if(roleKind()==='assistant'&&ui.group==='coach')ui.group='venue';render();toast('Now viewing as '+me().name);break;
     case 'group':ui.group=d.g;render();break;
     case 'curSel':portalOpenSkill(d.s);break;
@@ -830,10 +839,11 @@ document.addEventListener('click',e=>{
       toast(d.s==='dry'?'Dry run loaded: 4 athletes at 0 badges':'Seeded academy loaded');render();break;
   }});
 document.addEventListener('change',e=>{const t=e.target;
-  if(t.dataset.plan){PLAN.days[t.dataset.l][t.dataset.plan]=+t.value;ui.planDay=null;render();toast(`${LV[t.dataset.l].name} day is now the ${dayLabel(t.dataset.l)}`);return}
-  if(t.name==='fifth'){PLAN.fifth=t.value;render();toast('5th week setting saved');return}
-  if(t.name==='pmode'){PLAN.mode=t.value;render();toast(t.value==='auto'?'Recommended students will be added automatically':'Coaches will add students themselves');return}
-  if(t.id==='pNotice'){PLAN.notice=Math.max(1,Math.min(30,+t.value||15));render();toast(`Parents notified ${PLAN.notice} days ahead`);return}
+  if(t.dataset.plannerStudent){const p=ui.plannerPicker;if(!p||!visible().some(st=>st.id===t.dataset.plannerStudent))return;if(plannerCompleted(S(t.dataset.plannerStudent),p.date)&&(state.plans[p.date]||[]).includes(t.dataset.plannerStudent))return;t.checked?p.ids.add(t.dataset.plannerStudent):p.ids.delete(t.dataset.plannerStudent);document.getElementById('plannerPickerCount').textContent=p.ids.size+' selected';return}
+  if(t.dataset.plan){if(roleKind()!=='admin')return;PLAN.days[t.dataset.l][t.dataset.plan]=+t.value;ui.planDay=null;render();toast(`${LV[t.dataset.l].name} day is now the ${dayLabel(t.dataset.l)}`);return}
+  if(t.name==='fifth'){if(roleKind()!=='admin')return;PLAN.fifth=t.value;render();toast('5th week setting saved');return}
+  if(t.name==='pmode')return;
+  if(t.id==='pNotice'){if(roleKind()!=='admin')return;PLAN.notice=Math.max(1,Math.min(30,+t.value||15));render();toast(`Parents notified ${PLAN.notice} days ahead`);return}
   if(t.id==='libFree'){ui.libFree=t.checked;render();return}
   if(t.id==='mapName'){const v=t.value.trim();if(v){SK[ui.mapSel].name=v;render();toast('Skill set renamed')}return}
   if(t.id==='mapCol'){moveSet(ui.mapSel,t.value);return}
@@ -842,7 +852,7 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.id==='pSort'){ui.sort=t.value;render();return}
   if(t.name==='frole'){document.querySelectorAll('#fRole label').forEach(l=>l.classList.toggle('on',l.contains(document.querySelector('input[name=frole]:checked'))));return}
   if(t.dataset.coach){S(t.dataset.coach).coachId=t.value;toast(`${S(t.dataset.coach).name} assigned to ${CO[t.value].name}`);render();return}
-  if(t.dataset.pick){const p=state.plans[ui.planDay]=state.plans[ui.planDay]||[];t.checked?p.push(t.dataset.pick):p.splice(p.indexOf(t.dataset.pick),1);render();return}
+  if(t.dataset.pick)return;
   if(t.id==='simStu'){sim.student=t.value;sim.scores=null;renderSim()}
   if(t.id==='simLvl'){sim.level=t.value;sim.scores=null;sim.date=null;renderSim()}
   if(t.id==='simDate'){sim.date=t.value}
@@ -850,13 +860,14 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.name==='place'){document.querySelectorAll('#obPlace label').forEach(l=>l.classList.toggle('on',l.contains(document.querySelector('input[name=place]:checked'))))}
   if(t.id==='thr'){rules.threshold=+t.value;invalidate();toast(`Pass mark set to ${rules.threshold}: badges replayed`);render()}});
 document.addEventListener('input',e=>{const t=e.target;
+  if(t.id==='plannerStudentSearch'&&ui.plannerPicker){const pos=t.selectionStart;ui.plannerPicker.query=t.value;renderModal();const search=document.getElementById('plannerStudentSearch');search.focus();try{search.setSelectionRange(pos,pos)}catch(_){}return}
   if(t.id==='libQ'){ui.libQ=t.value;render();return}
   if(t.id==='q'){ui.q=t.value;render()}
   if(t.dataset.score){const x=+t.value;sim.scores[t.dataset.score]=x;const b=document.getElementById('sv-'+t.dataset.score.replace('.','-'));b.textContent=x;b.className='num '+(x>=rules.threshold?'p':'f')}
   if(t.id==='thr'){document.getElementById('thrV').textContent=t.value}});
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.target.matches&&e.target.matches('[role=button][data-act=prof]')){openProfile(e.target.dataset.id);return}
-  if(e.key==='Escape'){setAcctMenu(false);if(ui.skill||ui.insight||ui.results||ui.prof||ui.form){portalCloseModal()}else setSim(false)}});
+  if(e.key==='Escape'){setAcctMenu(false);if(ui.plannerPicker||ui.skill||ui.insight||ui.results||ui.prof||ui.form){portalCloseModal()}else setSim(false)}});
 
 
 function moveSet(id,col){const st=SK[id];if(!st||st.tier===col)return;st.tier=col;invalidate();render();toast(`${st.name} moved to the ${LV[col].name} badge · badges replayed`)}
@@ -897,7 +908,8 @@ function portalInsightHTML(){
  return `<div class="dialog insight-dialog" role="dialog" aria-modal="true" aria-labelledby="insight-title"><div class="dh"><div class="grow"><div class="eyebrow">${q.kind==='badge'?'Badge progression':fmt(q.month+'-01',{month:'long',year:'numeric'})}${q.coach?' · '+portalEscape(CO[q.coach].name):''}</div><h2 id="insight-title">${portalEscape(title)}</h2><p class="muted">${q.kind==='badge'?rows.filter(r=>r.earned).length+' of '+list.length+' players have earned this badge.':rows.length+' awards across '+new Set(rows.map(r=>r.st.id)).size+' players.'}</p></div><button class="x" data-act="closeInsight" aria-label="Close records">${ic('close')}</button></div><div class="db"><div class="insight-list">${rows.length?rows.map(r=>`<button class="insight-row" data-act="prof" data-id="${r.st.id}"><span class="av">${initials(r.st.name)}</span><span class="grow"><b>${portalEscape(r.st.name)}</b><small>${portalEscape(r.label)}</small></span><span class="insight-date">${r.date?fmt(r.date,{day:'numeric',month:'short'}):''}</span><span aria-hidden="true">›</span></button>`).join(''):'<div class="empty">No awards in this period.</div>'}</div></div><footer class="dialog-footer"><span class="muted">Select a player to view their history.</span><button class="btn" data-act="closeInsight">Close</button></footer></div>`;
 }
 function portalCloseModal(){
- if(ui.skill)ui.skill=null;
+ if(ui.plannerPicker)ui.plannerPicker=null;
+ else if(ui.skill)ui.skill=null;
  else if(ui.insight)ui.insight=null;
  else{ui.results=null;ui.prof=null;ui.form=null;}
  renderModal();
@@ -909,7 +921,7 @@ function renderModal(){
  const open=!m.hidden,shell=document.querySelector('.portal-shell'),simEl=document.getElementById('sim');
  if(shell)shell.inert=open;if(simEl)simEl.inert=open;
  document.body.classList.toggle('portal-modal-open',open);
- if(open){const key=ui.skill?'skill:'+ui.skill.id:ui.insight?'insight:'+ui.insight.kind:ui.results?'results':ui.form?'form:'+ui.form.type:'profile:'+ui.prof?.id;
+ if(open){const key=ui.plannerPicker?'planner-picker':ui.skill?'skill:'+ui.skill.id:ui.insight?'insight:'+ui.insight.kind:ui.results?'results':ui.form?'form:'+ui.form.type:'profile:'+ui.prof?.id;
   if(key!==portalModalKey||!m.contains(document.activeElement)){const returning=portalModalKey?.startsWith('skill:')&&key.startsWith('profile:');const target=returning?[...m.querySelectorAll('[data-act=selSkill]')].find(el=>el.dataset.s===ui.prof?.sel):m.querySelector('.x,button,input,select,[tabindex="0"]');if(target)target.focus({preventScroll:true});}portalModalKey=key;
  }else if(wasOpen){portalModalKey=null;let target=portalModalFocus?.node;
   if(!target?.isConnected&&portalModalFocus?.id)target=document.getElementById(portalModalFocus.id);

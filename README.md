@@ -37,7 +37,7 @@ All scores, video playback placeholders and family-sharing actions are simulated
 
 ## Storage
 
-The workspace uses the reference’s **in-memory state**. Reloading restores the seeded academy and default settings. Scenario changes replace workspace data as in the reference; library/mapping edits follow the reference’s shared runtime configuration.
+The workspace uses the reference’s **in-memory state**. Reloading restores the seeded academy and default settings, while keeping the selected account in the current browser tab via a separate session-storage preference. Scenario changes replace workspace data as in the reference; library/mapping edits follow the reference’s shared runtime configuration.
 
 Previously saved portal records under `visist-demo-v1` are **neither loaded nor overwritten**. The former modules remain in the repository for historical comparison and compatibility checks; `index.html` does not load them.
 
@@ -60,4 +60,4 @@ npm test
 
 The active browser suites are `tests/browser-workspace.js`, `tests/browser-workspace-after-refresh.js`, `tests/browser-workspace-responsive.js`, `tests/browser-day-badges.js` and `tests/browser-experience.js`. Run them only in an isolated browser session. The other browser scripts describe the retired controller and are not acceptance tests for this workspace.
 
-Latest verification: **111 unit/compatibility checks** (13 source-parity/presentation checks, 5 badge-grouping checks and 93 retained compatibility checks) and **398 active browser assertions** passed. Coverage includes full workflows, reload/storage behaviour and every role destination, profile/family view and simulator tab at 1440, 900 and 390 pixels, plus all sixteen curriculum pop-ups, keyboard focus, record drilldowns and profile return at desktop/mobile sizes.
+Latest verification: **112 unit/compatibility checks** (14 source-parity/presentation checks, 5 badge-grouping checks and 93 retained compatibility checks) and **398 active browser assertions** passed. Coverage includes full workflows, reload/storage behaviour and every role destination, profile/family view and simulator tab at 1440, 900 and 390 pixels, plus all sixteen curriculum pop-ups, keyboard focus, record drilldowns and profile return at desktop/mobile sizes.

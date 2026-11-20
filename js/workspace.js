@@ -776,7 +776,7 @@ document.addEventListener('click',e=>{
     case 'openSim':setSim(document.getElementById('sim').hidden);break;
     case 'closeSim':setSim(false);break;
     case 'acctMenu':setAcctMenu(document.getElementById('acctMenu').hidden);break;
-    case 'asRole':ui.skill=null;ui.insight=null;ui.role=d.id;ui.filter='all';ui.coachF='all';ui.venueF='all';ui.absent=new Set();ui.prof=null;ui.form=null;sim.student=null;sim.scores=null;setAcctMenu(false);
+    case 'asRole':portalRememberRole(d.id);ui.skill=null;ui.insight=null;ui.role=d.id;ui.filter='all';ui.coachF='all';ui.venueF='all';ui.absent=new Set();ui.prof=null;ui.form=null;sim.student=null;sim.scores=null;setAcctMenu(false);
       if(roleKind()==='assistant'&&ui.group==='coach')ui.group='venue';render();toast('Now viewing as '+me().name);break;
     case 'group':ui.group=d.g;render();break;
     case 'curSel':portalOpenSkill(d.s);break;
@@ -936,6 +936,15 @@ function portalDecorate(){
  if(ui.view==='overview'){const head=main.querySelector('.head');if(head&&!head.classList.contains('portal-overview-banner')){head.classList.add('portal-overview-banner');head.insertAdjacentHTML('afterbegin',`<div class="portal-hero-photo" aria-hidden="true"><img src="assets/badminton-training.jpg" alt="" width="1672" height="941"></div>`);}}
  document.getElementById('portal-section').textContent=({overview:'Academy overview',students:roleKind()==='assistant'?'My players':'Players',team:'Coaches & venues',planner:'Assessment planner',dayplan:'Day plan',curriculum:'Curriculum & rules',mapping:'Skill mapping',settings:'Settings'}[ui.view]||'Workspace');
 }
+// Keep the selected workspace account through refresh in this browser tab.
+const portalRoleKey='visist-psb-account-role';
+function portalRememberRole(role){
+ if(role!=='admin'&&!CO[role])return;
+ try{sessionStorage.setItem(portalRoleKey,role)}catch(_){}
+}
+function portalRestoreRole(){
+ try{const role=sessionStorage.getItem(portalRoleKey);ui.role=role==='admin'||CO[role]?role:'admin'}catch(_){}
+}
 function portalSetNavigation(open){const mobile=matchMedia('(max-width:760px)').matches;document.body.classList.toggle('portal-nav-open',mobile&&open);const side=document.getElementById('portal-sidebar');side.inert=mobile&&!open;document.querySelector('.portal-backdrop').hidden=!(mobile&&open);document.getElementById('portal-menu').setAttribute('aria-expanded',String(mobile&&open));}
 document.addEventListener('click',event=>{if(event.target.closest('[data-portal-menu]'))portalSetNavigation(!document.body.classList.contains('portal-nav-open'));if(event.target.closest('[data-portal-dismiss],#nav button[data-act=view]'))portalSetNavigation(false);});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')portalSetNavigation(false);});
@@ -944,4 +953,5 @@ portalSetNavigation(false);
 
 document.body.insertAdjacentHTML('afterbegin',svgDefs());
 portalInstallArtwork();
+portalRestoreRole();
 state=seeded();render();

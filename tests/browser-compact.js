@@ -11,11 +11,12 @@
   assert('All headline metrics appear without scrolling',metrics.every(e=>e.getBoundingClientRect().bottom<innerHeight));
   assert('Existing charts and status data remain available',!!$('.cols .bar')&&!!$('.hbar-name')&&$('#main').textContent.includes('Current Badge Status'));
   assert('No document horizontal overflow',document.documentElement.scrollWidth<=innerWidth+1);
-  const lockup=$(innerWidth>760?'.portal-partnership':'.portal-mobile-logo'),logos=[...lockup.querySelectorAll('img')],box=lockup.getBoundingClientRect();
+  const lockup=$(innerWidth>760?'.portal-partnership':'.portal-mobile-logo'),footer=$('.portal-powered-by'),logos=all('.portal-partnership img,.portal-powered-by img,.portal-mobile-logo img'),box=lockup.getBoundingClientRect();
   await Promise.all(logos.map(img=>img.complete?Promise.resolve():new Promise(r=>img.addEventListener('load',r,{once:true}))));
-  assert('Both official logos load',logos.length===2&&logos.every(img=>img.complete&&img.naturalWidth>0));
-  assert('Official logos retain their aspect ratios',logos.every(img=>{const r=img.getBoundingClientRect();return Math.abs(r.width/r.height-img.naturalWidth/img.naturalHeight)<.03}));
-  assert('Logos fit inside the designed lockup',logos.every(img=>{const r=img.getBoundingClientRect();return r.left>=box.left&&r.right<=box.right+1&&r.top>=box.top&&r.bottom<=box.bottom+1}));
+  assert('PSB alone heads the sidebar and mobile header',all('.portal-partnership img').length===1&&all('.portal-mobile-logo img').length===1&&[...lockup.querySelectorAll('img')].every(img=>img.src.includes('/assets/psb-logo.png'))&&!lockup.textContent.includes('×'));
+  assert('VISIST attribution follows navigation',footer.textContent.includes('Powered by')&&footer.querySelector('img').src.includes('/visist-ai-logo.png')&&!!($('#nav').compareDocumentPosition(footer)&Node.DOCUMENT_POSITION_FOLLOWING));
+  assert('Official brand assets load and retain aspect ratios',logos.every(img=>{if(!img.complete||!img.naturalWidth)return false;const r=img.getBoundingClientRect();return !r.width||Math.abs(r.width/r.height-img.naturalWidth/img.naturalHeight)<.03}));
+  assert('PSB fits its designed logo area',[...lockup.querySelectorAll('img')].every(img=>{const r=img.getBoundingClientRect();return r.left>=box.left&&r.right<=box.right+1&&r.top>=box.top&&r.bottom<=box.bottom+1}));
   if(innerWidth>980){assert('Coach chart begins in the first desktop viewport',$('.cols').closest('.card').getBoundingClientRect().top<innerHeight-100);assert('Sidebar branding is compact',box.height<=145);}
   else assert('Mobile controls retain comfortable touch targets',$('#simBtn').getBoundingClientRect().height>=40);
   return {width:innerWidth,height:innerHeight,passed:results.length,failed:0,results};

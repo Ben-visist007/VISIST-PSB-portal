@@ -6,7 +6,7 @@
   localStorage.setItem('visist-demo-v1','legacy-records-untouched');
   assert('Source seeded academy has exactly 18 students',state.students.length===18&&state.today==='2026-11-17');
   assert('Academy menu follows the HTML',all('#nav [data-act="view"]').map(e=>e.dataset.v).join(',')==='overview,students,team,planner,curriculum,mapping,settings');
-  assert('Official partner logos remain visible',all('.portal-partnership img').length===2&&all('.portal-partnership img').every(e=>e.complete&&e.naturalWidth>0));
+  assert('Official partner logos remain visible',all('.portal-partnership img').length===1&&!!$('.portal-powered-by img')&&all('.portal-partnership img,.portal-powered-by img').every(e=>e.complete&&e.naturalWidth>0));
   view('curriculum');assert('All sixteen original skill pins use our existing artwork',all('#main .bdg').length===16&&all('#main .bdg').every(img=>img.tagName==='IMG'&&img.src.includes('/assets/skill-badges/')));view('overview');
   assert('No old clearance, fitness or sandbox workflow is active',!document.body.textContent.includes('Record assessment result')&&!document.body.textContent.includes('Exit simulation')&&!$('#clearance-form'));
   role('hc');assert('Head coach has the exact four source destinations',all('#nav [data-act="view"]').map(e=>e.dataset.v).join(',')==='overview,students,team,planner');view('students');assert('Head coach sees every source player and venue',visible().length===18&&all('[data-act="prof"]').length===18);
